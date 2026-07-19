@@ -1,0 +1,26 @@
+灵山胜境 AI 数字人导游系统
+============================
+
+功能：Live2D 数字人（三月七声线）+ GPT-SoVITS TTS + TencentMap
+      基于 DeepSeek API 的 AI 导游对话
+
+使用步骤：
+  1. 安装 Node.js（https://nodejs.org/）
+  2. 安装 Anaconda 或 Miniconda
+  3. 打开终端，执行：
+       conda env create -f environment.yml
+  4. 双击"启动服务器.bat"
+  5. 浏览器自动打开 http://localhost:3000
+
+首次启动会自动加载 GPT-SoVITS 模型（约 30 秒 ~ 2 分钟）
+无 GPU 时每句语音约需 3 分钟（有 GPU 几秒完成）
+
+DeepSeek API 密钥在 website/js/app.js 中配置
+
+目录结构：
+  ├─ 启动服务器.bat       ← 双击启动
+  ├─ environment.yml       ← Conda 环境定义
+  ├─ website/              ← 前端页面 + Node.js 后端
+  └─ GPT-SoVITS-.../       ← TTS 模型 + 推理脚本
+
+技术栈：Node.js + GPT-SoVITS + Live2D Cubism + TencentMap GL
