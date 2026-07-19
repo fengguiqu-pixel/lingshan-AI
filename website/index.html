@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>灵山胜境 · AI数字人导游系统</title>
+  <meta name="description" content="灵山胜境AI数字人导游系统 - 智能导览、景点介绍、路线规划">
+  <link rel="stylesheet" href="css/style.css?v=14">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%23C8A357'/><text y='68' x='50' font-size='60' text-anchor='middle' fill='white'>灵</text></svg>">
+</head>
+<body>
+
+  <!-- 导航栏 -->
+  <nav class="navbar">
+    <div class="nav-logo" onclick="navigateTo('home')">
+      <div class="nav-logo-icon">灵</div>
+      <div class="nav-logo-text">灵山胜境<span>·AI导览</span></div>
+    </div>
+    <ul class="nav-menu">
+      <li><a data-nav="home" onclick="navigateTo('home')">首页</a></li>
+      <li><a data-nav="map" onclick="navigateTo('map')">景点导览</a></li>
+      <li><a data-nav="routes" onclick="navigateTo('routes')">路线规划</a></li>
+      <li><a data-nav="ai-chat" onclick="navigateTo('ai-chat')">AI导游</a></li>
+      <li><a data-nav="ticket" onclick="navigateTo('ticket')">票务信息</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="nav-btn" onclick="navigateTo('ai-chat')">与小灵对话</button>
+    </div>
+  </nav>
+
+  <!-- 首页 -->
+  <div id="page-home" class="page">
+    <section class="hero">
+      <div class="hero-particles" id="particles"></div>
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="hero-badge-dot"></span>
+          AI数字人导游 · 实时在线
+        </div>
+        <h1 class="hero-title">灵山胜境<br>AI数字人导游系统</h1>
+        <p class="hero-subtitle">
+          融合大语言模型与计算机视觉技术，为每一位游客提供智能、个性化、多语言的沉浸式游览体验。<br>
+          88米灵山大佛、7.2万㎡梵宫艺术殿堂、千年禅寺古刹 —— 开启一场心灵之旅。
+        </p>
+        <div class="hero-buttons">
+          <button class="hero-btn-primary" onclick="navigateTo('map')">
+            <span>🗺️</span> 开始游览
+          </button>
+          <button class="hero-btn-secondary" onclick="navigateTo('ai-chat')">
+            <span>💬</span> 咨询小灵
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="stats-section">
+      <div class="stats-grid" id="statsGrid"></div>
+    </section>
+
+    <section class="ai-guide-section">
+      <div class="ai-guide-container">
+        <div class="section-title">
+          <h2>AI数字人导游 · 小灵</h2>
+          <p>您的专属智能游览伴侣</p>
+        </div>
+        <div class="ai-guide-card">
+          <div class="ai-guide-avatar">
+            <div class="ai-avatar-circle">🧘</div>
+            <div class="ai-guide-name">小灵</div>
+            <div class="ai-guide-title">AI Digital Guide</div>
+          </div>
+          <div class="ai-guide-features" id="aiGuideFeatures"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- 景点导览页 -->
+  <div id="page-map" class="page map-page">
+    <!-- 左侧竖向菜单 -->
+    <div class="map-sidebar">
+      <button class="map-sidebar-btn active" id="sidebarMapBtn" onclick="switchMapMode('map')" title="地图">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
+          <line x1="8" y1="2" x2="8" y2="18"/>
+          <line x1="16" y1="6" x2="16" y2="22"/>
+        </svg>
+        <span>地图</span>
+      </button>
+      <button class="map-sidebar-btn" id="sidebarListBtn" onclick="switchMapMode('list')" title="景点列表">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="8" y1="6" x2="21" y2="6"/>
+          <line x1="8" y1="12" x2="21" y2="12"/>
+          <line x1="8" y1="18" x2="21" y2="18"/>
+          <line x1="3" y1="6" x2="3.01" y2="6"/>
+          <line x1="3" y1="12" x2="3.01" y2="12"/>
+          <line x1="3" y1="18" x2="3.01" y2="18"/>
+        </svg>
+        <span>景点列表</span>
+      </button>
+    </div>
+
+    <!-- 地图模式 -->
+    <div class="map-content" id="mapContent">
+      <!-- 数字人区域（Live2D 面板会通过 CSS 定位到这里） -->
+      <div class="map-char-zone">
+        <div class="map-char-placeholder">
+          <div class="map-char-hint">小灵正在为您导览</div>
+        </div>
+      </div>
+      <!-- 腾讯地图 -->
+      <div class="map-map-zone">
+        <div id="tencentMap" style="width:100%;height:100%;"></div>
+        <!-- 景点信息浮层 -->
+        <div class="map-spot-card" id="mapSpotCard" style="display:none;">
+          <div class="map-spot-card-header">
+            <span class="map-spot-card-num" id="mapSpotNum">1</span>
+            <span class="map-spot-card-name" id="mapSpotName">灵山大佛</span>
+          </div>
+          <div class="map-spot-card-desc" id="mapSpotDesc"></div>
+          <button class="map-spot-card-btn" id="mapSpotDetailBtn">查看详情 →</button>
+        </div>
+      </div>
+      <!-- 地图页常驻对话 -->
+      <div class="map-chat-widget" id="mapChatWidget">
+        <div class="map-chat-panel" id="mapChatPanel">
+            <div class="map-chat-panel-header" id="mapChatHeader">
+              <span class="map-chat-panel-title">💬 问小灵<span class="drag-hint">（按住拖动）</span></span>
+            </div>
+          <div class="map-chat-messages" id="mapChatMessages"></div>
+          <div class="map-chat-input-area">
+            <input type="text" class="map-chat-input" id="mapChatInput" placeholder="输入您的问题..." onkeypress="if(event.key==='Enter') sendMapChatMessage()">
+            <button class="map-chat-send-btn" onclick="sendMapChatMessage()">➤</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 景点列表模式 -->
+    <div class="map-list-content" id="mapListContent" style="display:none;">
+      <div class="map-list-header">
+        <h2>景点列表</h2>
+        <p>选择景点查看详细介绍</p>
+      </div>
+      <div class="map-spot-grid" id="mapSpotGrid"></div>
+    </div>
+  </div>
+
+  <!-- 景点详情页 -->
+  <div id="page-detail" class="page detail-page">
+    <div id="detailContent"></div>
+  </div>
+
+  <!-- 路线规划页 -->
+  <div id="page-routes" class="page routes-page">
+    <div class="routes-header">
+      <h1>智能路线规划</h1>
+      <p>AI根据时间、兴趣与体力，为您推荐三条精选游览路线</p>
+    </div>
+    <div class="routes-container" id="routesContainer"></div>
+  </div>
+
+  <!-- AI导游对话页 -->
+  <div id="page-ai-chat" class="page ai-chat-page">
+    <div class="ai-chat-left">
+      <div class="ai-chat-header">
+        <h1>AI数字人导游 · 小灵</h1>
+        <p>有任何问题都可以问我，我随时为您服务</p>
+      </div>
+      <div class="ai-chat-container">
+        <div class="ai-chat-messages" id="chatMessages"></div>
+        <div class="chat-quick-questions" id="quickQuestions"></div>
+        <div class="chat-input-area">
+          <input type="text" class="chat-input" id="chatInput" placeholder="输入您的问题..." onkeypress="if(event.key==='Enter') sendMessage()">
+          <button class="chat-send-btn" onclick="sendMessage()">➤</button>
+        </div>
+      </div>
+    </div>
+    <div class="ai-chat-right">
+      <div class="ai-chat-char-bg"></div>
+    </div>
+  </div>
+
+  <!-- 票务信息页 -->
+  <div id="page-ticket" class="page" style="padding-top:64px;">
+    <div class="ticket-section">
+      <div class="ticket-card">
+        <div class="ticket-info">
+          <h2>灵山胜境门票</h2>
+          <p>一票通游五大核心景点</p>
+          <ul class="ticket-list" id="ticketList"></ul>
+        </div>
+        <div class="ticket-price-display">
+          <div class="ticket-price">¥210</div>
+          <div class="ticket-price-unit">/人</div>
+          <div class="ticket-price-label">成人通票</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-brand">灵山胜境 · AI数字人导游系统</div>
+    <p>智能导览 · 个性化推荐 · 多语言服务 · 实时定位</p>
+    <p style="margin-top:12px;opacity:0.4;">© 2026 灵山胜境AI数字人导游系统 · 技术演示版</p>
+  </footer>
+
+  <!-- 腾讯地图 JSAPI -->
+  <script charset="utf-8" src="https://map.qq.com/api/gljs?v=1.exp&key=WW2BZ-QDOL4-WNLUD-K3M7J-AISD2-E2BKZ"></script>
+
+  <!-- Live2D 数字人导游 SDK -->
+  <script src="vendor/live2dcubismcore.min.js" data-runtime-src="vendor/live2dcubismcore.min.js"></script>
+  <script src="vendor/cubism/framework/live2d-runtime.min.js"></script>
+  <script src="js/live2d-integration.js?v=14"></script>
+  <script src="js/data.js?v=14"></script>
+  <script src="js/app.js?v=14"></script>
+</body>
+</html>
