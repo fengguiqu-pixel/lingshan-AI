@@ -1,0 +1,2 @@
+
+70855c51db37833deb8ebd957a60c85a52a5cd8c	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/es-set-tostringtag","integrity":null,"time":1784522260490,"size":"262","metadata":{"time":1784522260490,"url":"http://registry.npm.taobao.org/es-set-tostringtag","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:37:42 GMT","location":"https://registry.npmmirror.com/es-set-tostringtag"},"options":{"compress":true},"status":301}}

@@ -1,0 +1,2 @@
+
+1f67d73b149be2e0f7b6db44441566ddf45ae57b	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/acorn-import-phases","integrity":null,"time":1784522614414,"size":"262","metadata":{"time":1784522614413,"url":"http://registry.npm.taobao.org/acorn-import-phases","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:36 GMT","location":"https://registry.npmmirror.com/acorn-import-phases"},"options":{"compress":true},"status":301}}

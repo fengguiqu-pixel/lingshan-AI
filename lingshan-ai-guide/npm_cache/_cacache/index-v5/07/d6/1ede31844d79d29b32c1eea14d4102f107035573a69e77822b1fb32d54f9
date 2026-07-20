@@ -1,0 +1,2 @@
+
+7ff9f69959a8d0d9467875d5f0068e54a940d29c	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/universalify","integrity":null,"time":1784522552469,"size":"262","metadata":{"time":1784522552469,"url":"http://registry.npm.taobao.org/universalify","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:42:34 GMT","location":"https://registry.npmmirror.com/universalify"},"options":{"compress":true},"status":301}}

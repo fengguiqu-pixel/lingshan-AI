@@ -1,0 +1,2 @@
+
+e6fdf62881b86db1e04efe901f13ba0c218353b7	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/has-to-string-tag-x","integrity":null,"time":1784522610473,"size":"262","metadata":{"time":1784522610473,"url":"http://registry.npm.taobao.org/has-to-string-tag-x","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:32 GMT","location":"https://registry.npmmirror.com/has-to-string-tag-x"},"options":{"compress":true},"status":301}}

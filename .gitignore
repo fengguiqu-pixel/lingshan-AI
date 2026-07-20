@@ -1,0 +1,50 @@
+# Python通用忽略
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+venv/
+.venv/
+
+# 你的项目专属缓存&大文件
+Claw/pip/cache/
+2026-07-20-*/
+
+# AI模型大文件（触发100MB报错的根源）
+*.ckpt
+*.pth
+*.bin
+*.safetensors
+
+# 本地数据库
+*.db
+*.sqlite
+
+# 二进制运行库
+*.dll
+*.exe
+*.so
+
+# 日志文件
+*.log
+*.tmp
+
+# 编辑器配置
+.idea/
+.vscode/

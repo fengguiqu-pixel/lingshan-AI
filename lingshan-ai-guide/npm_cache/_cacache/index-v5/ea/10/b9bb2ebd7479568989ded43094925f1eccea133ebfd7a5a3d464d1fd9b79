@@ -1,0 +1,2 @@
+
+876cec2674300a7de70b6f18be36c89c85522825	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/through","integrity":null,"time":1784522611239,"size":"262","metadata":{"time":1784522611239,"url":"http://registry.npm.taobao.org/through","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:33 GMT","location":"https://registry.npmmirror.com/through"},"options":{"compress":true},"status":301}}

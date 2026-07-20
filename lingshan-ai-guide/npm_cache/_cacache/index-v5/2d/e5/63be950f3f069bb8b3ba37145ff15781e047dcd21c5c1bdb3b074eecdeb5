@@ -1,0 +1,2 @@
+
+21e6ea7687228a6065f06a779c993f237807e9b9	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/es-module-lexer","integrity":null,"time":1784522614486,"size":"262","metadata":{"time":1784522614486,"url":"http://registry.npm.taobao.org/es-module-lexer","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:36 GMT","location":"https://registry.npmmirror.com/es-module-lexer"},"options":{"compress":true},"status":301}}

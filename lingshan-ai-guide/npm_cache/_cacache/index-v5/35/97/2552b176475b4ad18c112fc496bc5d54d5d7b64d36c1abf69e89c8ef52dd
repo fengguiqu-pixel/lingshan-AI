@@ -1,0 +1,2 @@
+
+a419e4c47a9e04daa42e467356488c4e916a769d	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/@yarnpkg%2flibzip","integrity":null,"time":1784522609032,"size":"262","metadata":{"time":1784522609032,"url":"http://registry.npm.taobao.org/@yarnpkg%2flibzip","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:31 GMT","location":"https://registry.npmmirror.com/@yarnpkg%2flibzip"},"options":{"compress":true},"status":301}}

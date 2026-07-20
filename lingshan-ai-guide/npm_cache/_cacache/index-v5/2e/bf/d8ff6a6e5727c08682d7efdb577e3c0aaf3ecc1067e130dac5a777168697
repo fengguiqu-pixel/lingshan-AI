@@ -1,0 +1,2 @@
+
+b41cf40b5d8516d432d142324be50858126b393c	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/seek-bzip","integrity":null,"time":1784522610948,"size":"262","metadata":{"time":1784522610948,"url":"http://registry.npm.taobao.org/seek-bzip","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:33 GMT","location":"https://registry.npmmirror.com/seek-bzip"},"options":{"compress":true},"status":301}}

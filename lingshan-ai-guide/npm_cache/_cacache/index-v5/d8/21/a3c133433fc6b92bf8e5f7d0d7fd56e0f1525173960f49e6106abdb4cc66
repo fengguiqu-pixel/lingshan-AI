@@ -1,0 +1,2 @@
+
+28792ab86a8afcfd390c971b95582a6b67c2f67f	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/mkdirp","integrity":null,"time":1784522609047,"size":"262","metadata":{"time":1784522609047,"url":"http://registry.npm.taobao.org/mkdirp","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:31 GMT","location":"https://registry.npmmirror.com/mkdirp"},"options":{"compress":true},"status":301}}

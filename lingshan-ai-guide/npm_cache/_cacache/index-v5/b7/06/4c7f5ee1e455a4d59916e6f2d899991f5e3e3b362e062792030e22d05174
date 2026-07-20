@@ -1,0 +1,2 @@
+
+2257ed7dbb9eee0997113f403956d9df4761409e	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/postject","integrity":null,"time":1784523171664,"size":"262","metadata":{"time":1784523171664,"url":"http://registry.npm.taobao.org/postject","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:52:53 GMT","location":"https://registry.npmmirror.com/postject"},"options":{"compress":true},"status":301}}

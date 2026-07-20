@@ -1,0 +1,2 @@
+
+8d300d65ea638d0de41a978f698da91da210eba3	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/@typescript%2ftypescript-linux-mips64el","integrity":null,"time":1784522614731,"size":"262","metadata":{"time":1784522614731,"url":"http://registry.npm.taobao.org/@typescript%2ftypescript-linux-mips64el","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:36 GMT","location":"https://registry.npmmirror.com/@typescript%2ftypescript-linux-mips64el"},"options":{"compress":true},"status":301}}

@@ -1,0 +1,2 @@
+
+ad554d7584ce37f4caa35a354d45a859034f0e75	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/form-data-encoder","integrity":null,"time":1784522609582,"size":"262","metadata":{"time":1784522609582,"url":"http://registry.npm.taobao.org/form-data-encoder","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:31 GMT","location":"https://registry.npmmirror.com/form-data-encoder"},"options":{"compress":true},"status":301}}

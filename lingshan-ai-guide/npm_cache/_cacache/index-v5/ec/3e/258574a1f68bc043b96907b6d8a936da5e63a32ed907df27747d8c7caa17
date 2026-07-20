@@ -1,0 +1,2 @@
+
+43141c6e7119f9b35ba2e05b11904fb762e4dfe8	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/buffer-alloc","integrity":null,"time":1784522611115,"size":"262","metadata":{"time":1784522611115,"url":"http://registry.npm.taobao.org/buffer-alloc","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:33 GMT","location":"https://registry.npmmirror.com/buffer-alloc"},"options":{"compress":true},"status":301}}

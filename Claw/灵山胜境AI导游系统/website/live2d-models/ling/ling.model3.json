@@ -1,0 +1,73 @@
+{
+	"Version": 3,
+	"FileReferences": {
+		"Moc": "ling.moc3",
+		"Textures": [
+			"textures/texture_00.png",
+			"textures/texture_01.png"
+		],
+		"Physics": "ling.physics3.json",
+		"DisplayInfo": "ling.cdi3.json",
+		"Motions": {
+			"Idle": [
+				{
+					"File": "motions/zhaiyan.motion3.json"
+				},
+				{
+					"File": "motions/zhaoxiang.motion3.json"
+				}
+			]
+		},
+		"Expressions": [
+			{
+				"Name": "normal",
+				"File": "exp/1.exp3.json"
+			},
+			{
+				"Name": "smile",
+				"File": "exp/2.exp3.json"
+			},
+			{
+				"Name": "angry",
+				"File": "exp/3.exp3.json"
+			},
+			{
+				"Name": "sad",
+				"File": "exp/5.exp3.json"
+			},
+			{
+				"Name": "surprise",
+				"File": "exp/6.exp3.json"
+			},
+			{
+				"Name": "think",
+				"File": "exp/7.exp3.json"
+			},
+			{
+				"Name": "shy",
+				"File": "exp/8.exp3.json"
+			},
+			{
+				"Name": "cry",
+				"File": "exp/9.exp3.json"
+			}
+		]
+	},
+	"Groups": [
+		{
+			"Target": "Parameter",
+			"Name": "EyeBlink",
+			"Ids": [
+				"ParamEyeLOpen",
+				"ParamEyeROpen"
+			]
+		},
+		{
+			"Target": "Parameter",
+			"Name": "LipSync",
+			"Ids": [
+				"ParamMouthOpenY"
+			]
+		}
+	]
+}

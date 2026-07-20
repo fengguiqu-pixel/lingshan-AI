@@ -1,0 +1,2 @@
+
+11951bf0762c0e019b3434f041eaf0a82f0ffef7	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/trim-repeated","integrity":null,"time":1784522610753,"size":"262","metadata":{"time":1784522610753,"url":"http://registry.npm.taobao.org/trim-repeated","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:32 GMT","location":"https://registry.npmmirror.com/trim-repeated"},"options":{"compress":true},"status":301}}

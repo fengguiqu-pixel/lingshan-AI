@@ -1,0 +1,2 @@
+
+2bac52156d6107a4a503de9e728c69cbd4d669d5	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/decompress-tarbz2","integrity":null,"time":1784522610754,"size":"262","metadata":{"time":1784522610754,"url":"http://registry.npm.taobao.org/decompress-tarbz2","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:32 GMT","location":"https://registry.npmmirror.com/decompress-tarbz2"},"options":{"compress":true},"status":301}}

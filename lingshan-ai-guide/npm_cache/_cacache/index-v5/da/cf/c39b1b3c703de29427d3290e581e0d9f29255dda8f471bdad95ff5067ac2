@@ -1,0 +1,2 @@
+
+e97cc8f317364871e9d7c3f31ac9febf30e1e02d	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/lodash.difference","integrity":null,"time":1784522610207,"size":"262","metadata":{"time":1784522610207,"url":"http://registry.npm.taobao.org/lodash.difference","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:32 GMT","location":"https://registry.npmmirror.com/lodash.difference"},"options":{"compress":true},"status":301}}

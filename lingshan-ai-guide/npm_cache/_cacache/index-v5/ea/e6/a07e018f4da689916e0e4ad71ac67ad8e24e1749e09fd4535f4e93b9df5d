@@ -1,0 +1,2 @@
+
+703a48c72bcffc9668d6cea09eb3eacd1db635da	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/pkg-fetch","integrity":null,"time":1784522552210,"size":"262","metadata":{"time":1784522552210,"url":"http://registry.npm.taobao.org/pkg-fetch","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:42:34 GMT","location":"https://registry.npmmirror.com/pkg-fetch"},"options":{"compress":true},"status":301}}

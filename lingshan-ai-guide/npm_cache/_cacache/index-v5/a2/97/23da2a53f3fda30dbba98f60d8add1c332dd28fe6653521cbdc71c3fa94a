@@ -1,0 +1,2 @@
+
+af51ebe2d1b940093826bde1c48dd4b90527d59d	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/prepend-http","integrity":null,"time":1784522618324,"size":"262","metadata":{"time":1784522618324,"url":"http://registry.npm.taobao.org/prepend-http","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:40 GMT","location":"https://registry.npmmirror.com/prepend-http"},"options":{"compress":true},"status":301}}

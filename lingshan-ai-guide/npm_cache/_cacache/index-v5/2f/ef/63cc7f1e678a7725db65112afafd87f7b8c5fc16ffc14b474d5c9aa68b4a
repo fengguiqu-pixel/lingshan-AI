@@ -1,0 +1,2 @@
+
+d23657c6a5f26d0a07a54249cb33cc5bf500e5aa	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/sort-keys","integrity":null,"time":1784522611471,"size":"262","metadata":{"time":1784522611470,"url":"http://registry.npm.taobao.org/sort-keys","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:33 GMT","location":"https://registry.npmmirror.com/sort-keys"},"options":{"compress":true},"status":301}}

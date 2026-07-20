@@ -1,0 +1,2 @@
+
+295c97c345d0c67eeb2af4d3eb6d774aa179bfb0	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/@webassemblyjs%2fwasm-opt","integrity":null,"time":1784522615698,"size":"262","metadata":{"time":1784522615698,"url":"http://registry.npm.taobao.org/@webassemblyjs%2fwasm-opt","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:37 GMT","location":"https://registry.npmmirror.com/@webassemblyjs%2fwasm-opt"},"options":{"compress":true},"status":301}}

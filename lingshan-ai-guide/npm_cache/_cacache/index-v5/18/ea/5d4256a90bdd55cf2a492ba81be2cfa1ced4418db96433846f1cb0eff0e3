@@ -1,0 +1,2 @@
+
+5a9369b3a10f002d38513ae05013016a2e8a885b	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/ext-list","integrity":null,"time":1784522610751,"size":"262","metadata":{"time":1784522610751,"url":"http://registry.npm.taobao.org/ext-list","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:32 GMT","location":"https://registry.npmmirror.com/ext-list"},"options":{"compress":true},"status":301}}

@@ -1,0 +1,2 @@
+
+977daf0230262a6f6fae8088d0e23b91b8acf009	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/progress","integrity":null,"time":1784522552584,"size":"262","metadata":{"time":1784522552584,"url":"http://registry.npm.taobao.org/progress","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:42:34 GMT","location":"https://registry.npmmirror.com/progress"},"options":{"compress":true},"status":301}}

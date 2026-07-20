@@ -1,0 +1,2 @@
+
+bc0ecc0a0131c447805af8c20ed4aedfca23a3a2	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/get-intrinsic","integrity":null,"time":1784522261192,"size":"262","metadata":{"time":1784522261192,"url":"http://registry.npm.taobao.org/get-intrinsic","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:37:43 GMT","location":"https://registry.npmmirror.com/get-intrinsic"},"options":{"compress":true},"status":301}}

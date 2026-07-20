@@ -1,0 +1,1402 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="灵山胜境AI数字人导游系统 - 产品总体设计文档">
+<meta name="author" content="灵山AI导游系统团队">
+<title>产品总体设计文档 — 灵山胜境AI数字人导游系统</title>
+<style>
+  /* ========== 基础重置 ========== */
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.75;
+    color: #1a1a1a;
+    background: #fafaf8;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ========== 布局 ========== */
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+  /* ========== 顶部头部 ========== */
+  header.site-header {
+    background: #0a0a0a;
+    color: #fff;
+    padding: 56px 0 48px;
+    border-bottom: 3px solid #002FA7;
+  }
+  header.site-header .wrap { text-align: center; }
+  header.site-header h1 {
+    margin: 0 0 12px;
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  header.site-header .subtitle {
+    font-size: 16px;
+    color: #b0b0b0;
+    margin: 0 0 24px;
+  }
+  header.site-header .meta-bar {
+    display: inline-flex;
+    gap: 24px;
+    font-size: 13px;
+    color: #888;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  header.site-header .meta-bar span { display: inline-flex; align-items: center; gap: 6px; }
+  header.site-header .meta-bar strong { color: #fff; font-weight: 600; }
+
+  /* ========== 目录 ========== */
+  nav.toc {
+    background: #fff;
+    border: 1px solid #e8e8e6;
+    border-radius: 8px;
+    padding: 28px 32px;
+    margin: 32px 0 48px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  nav.toc h2 {
+    margin: 0 0 16px;
+    font-size: 18px;
+    color: #002FA7;
+    border-bottom: 2px solid #002FA7;
+    padding-bottom: 8px;
+  }
+  nav.toc ol { margin: 0; padding-left: 20px; columns: 2; column-gap: 32px; }
+  nav.toc ol li { margin-bottom: 6px; break-inside: avoid; }
+  nav.toc ol li a {
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.15s;
+  }
+  nav.toc ol li a:hover { color: #002FA7; }
+  nav.toc ol ol { margin-top: 4px; columns: 1; }
+  nav.toc ol ol li { font-size: 13px; }
+
+  /* ========== 正文章节 ========== */
+  main { padding-bottom: 80px; }
+  section.chapter { margin-bottom: 56px; scroll-margin-top: 20px; }
+  section.chapter > h2 {
+    font-size: 24px;
+    color: #002FA7;
+    margin: 0 0 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #002FA7;
+    font-weight: 700;
+  }
+  section.chapter > h3 {
+    font-size: 18px;
+    color: #1a1a1a;
+    margin: 32px 0 14px;
+    padding-left: 12px;
+    border-left: 4px solid #002FA7;
+    font-weight: 600;
+  }
+  section.chapter > h4 {
+    font-size: 16px;
+    color: #333;
+    margin: 22px 0 10px;
+    font-weight: 600;
+  }
+  section.chapter p { margin: 0 0 14px; }
+  section.chapter ul, section.chapter ol { margin: 0 0 14px; padding-left: 22px; }
+  section.chapter li { margin-bottom: 6px; }
+  section.chapter strong { color: #002FA7; font-weight: 600; }
+
+  /* ========== 链接 ========== */
+  a { color: #002FA7; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ========== 代码块 ========== */
+  code {
+    font-family: "JetBrains Mono", "Fira Code", "Consolas", "Courier New", monospace;
+    font-size: 13px;
+  }
+  p code, li code, td code {
+    background: #eef2ff;
+    color: #002FA7;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 13px;
+  }
+  pre {
+    background: #1a1a2e;
+    color: #e0e0e0;
+    padding: 18px 20px;
+    border-radius: 8px;
+    overflow-x: auto;
+    line-height: 1.6;
+    margin: 0 0 16px;
+    border: 1px solid #2a2a3e;
+  }
+  pre code {
+    background: none;
+    color: inherit;
+    padding: 0;
+    font-size: 13px;
+  }
+
+  /* ========== 表格 ========== */
+  .table-wrap { overflow-x: auto; margin: 0 0 16px; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  thead { background: #0a0a0a; }
+  thead th {
+    color: #fff;
+    text-align: left;
+    padding: 12px 16px;
+    font-weight: 600;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  tbody td {
+    padding: 10px 16px;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+  }
+  tbody tr:nth-child(even) { background: #f7f7f5; }
+  tbody tr:hover { background: #eef2ff; }
+  tbody tr:last-child td { border-bottom: none; }
+
+  /* ========== 提示框 ========== */
+  .note {
+    background: #eef2ff;
+    border-left: 4px solid #002FA7;
+    padding: 14px 18px;
+    border-radius: 0 6px 6px 0;
+    margin: 0 0 16px;
+    font-size: 14px;
+  }
+  .note strong { color: #002FA7; }
+  .warn {
+    background: #fff8e1;
+    border-left: 4px solid #ff9800;
+    padding: 14px 18px;
+    border-radius: 0 6px 6px 0;
+    margin: 0 0 16px;
+    font-size: 14px;
+  }
+  .warn strong { color: #e65100; }
+
+  /* ========== ASCII 架构图 ========== */
+  .arch-diagram {
+    background: #1a1a2e;
+    color: #d4d4d4;
+    padding: 20px;
+    border-radius: 8px;
+    font-family: "JetBrains Mono", "Consolas", "Courier New", monospace;
+    font-size: 12px;
+    line-height: 1.5;
+    overflow-x: auto;
+    margin: 0 0 16px;
+    border: 1px solid #2a2a3e;
+    white-space: pre;
+  }
+
+  /* ========== 数据流图 ========== */
+  .flow-diagram {
+    background: #1a1a2e;
+    color: #c3e88d;
+    padding: 18px 20px;
+    border-radius: 8px;
+    font-family: "JetBrains Mono", "Consolas", monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    overflow-x: auto;
+    margin: 0 0 16px;
+    border: 1px solid #2a2a3e;
+    white-space: pre;
+  }
+
+  /* ========== 数据库树 ========== */
+  .db-tree {
+    background: #1a1a2e;
+    color: #d4d4d4;
+    padding: 18px 20px;
+    border-radius: 8px;
+    font-family: "JetBrains Mono", "Consolas", monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    overflow-x: auto;
+    margin: 0 0 16px;
+    border: 1px solid #2a2a3e;
+  }
+  .db-tree .table { color: #82aaff; font-weight: 600; }
+  .db-tree .col { color: #c3e88d; }
+  .db-tree .type { color: #ffcb6b; }
+  .db-tree .rel { color: #f07178; }
+
+  /* ========== 标签 ========== */
+  .tag {
+    display: inline-block;
+    background: #002FA7;
+    color: #fff;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-right: 4px;
+  }
+  .tag.green { background: #2e7d32; }
+  .tag.orange { background: #ef6c00; }
+  .tag.gray { background: #666; }
+  .tag.purple { background: #7b1fa2; }
+
+  /* ========== 模块卡片 ========== */
+  .module-card {
+    background: #fff;
+    border: 1px solid #e8e8e6;
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  .module-card h4 {
+    margin: 0 0 10px;
+    color: #002FA7;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  /* ========== 页脚 ========== */
+  footer {
+    background: #0a0a0a;
+    color: #888;
+    text-align: center;
+    padding: 32px 0;
+    font-size: 13px;
+    border-top: 3px solid #002FA7;
+  }
+  footer p { margin: 4px 0; }
+
+  /* ========== 打印 ========== */
+  @media print {
+    body { background: #fff; font-size: 12px; }
+    .wrap { max-width: 100%; padding: 0; }
+    header.site-header { padding: 24px 0; }
+    nav.toc { break-after: page; box-shadow: none; }
+    section.chapter { break-inside: avoid; margin-bottom: 24px; }
+    pre, .arch-diagram, .flow-diagram, .db-tree { white-space: pre-wrap; word-wrap: break-word; }
+    a { color: #002FA7; }
+  }
+
+  /* ========== 响应式 ========== */
+  @media (max-width: 768px) {
+    nav.toc ol { columns: 1; }
+    header.site-header h1 { font-size: 22px; }
+    section.chapter > h2 { font-size: 20px; }
+    table { font-size: 13px; }
+    thead th, tbody td { padding: 8px 10px; }
+    .arch-diagram, .flow-diagram, .db-tree { font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== 头部 ========== -->
+<header class="site-header">
+  <div class="wrap">
+    <h1>产品总体设计文档</h1>
+    <p class="subtitle">灵山胜境AI数字人导游系统 v2.0</p>
+    <div class="meta-bar">
+      <span>版本：<strong>v2.0</strong></span>
+      <span>日期：<strong>2026-07-20</strong></span>
+      <span>密级：<strong>内部</strong></span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ========== 目录 ========== -->
+<nav class="toc">
+  <h2>目 录</h2>
+  <ol>
+    <li><a href="#ch1">文档概述</a></li>
+    <li><a href="#ch2">系统概述</a></li>
+    <li><a href="#ch3">系统架构设计</a>
+      <ol>
+        <li><a href="#ch3-1">整体架构图</a></li>
+        <li><a href="#ch3-2">技术选型说明</a></li>
+      </ol>
+    </li>
+    <li><a href="#ch4">模块设计</a>
+      <ol>
+        <li><a href="#ch4-1">景点导览模块</a></li>
+        <li><a href="#ch4-2">AI对话模块</a></li>
+        <li><a href="#ch4-3">Live2D数字人模块</a></li>
+        <li><a href="#ch4-4">TTS语音合成模块</a></li>
+        <li><a href="#ch4-5">路线规划模块</a></li>
+        <li><a href="#ch4-6">票务信息模块</a></li>
+        <li><a href="#ch4-7">个性推荐模块</a></li>
+        <li><a href="#ch4-8">数字人形象管理模块</a></li>
+        <li><a href="#ch4-9">管理后台模块</a></li>
+        <li><a href="#ch4-10">数据可视化模块</a></li>
+      </ol>
+    </li>
+    <li><a href="#ch5">数据库设计</a></li>
+    <li><a href="#ch6">API接口设计</a></li>
+    <li><a href="#ch7">数据流设计</a>
+      <ol>
+        <li><a href="#ch7-1">用户对话数据流</a></li>
+        <li><a href="#ch7-2">TTS语音合成数据流</a></li>
+        <li><a href="#ch7-3">景点导览数据流</a></li>
+        <li><a href="#ch7-4">个性化推荐数据流</a></li>
+      </ol>
+    </li>
+    <li><a href="#ch8">安全设计</a></li>
+    <li><a href="#ch9">性能设计</a></li>
+    <li><a href="#ch10">部署架构</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ========== 第1章 ========== -->
+<section class="chapter" id="ch1">
+  <h2>1. 文档概述</h2>
+
+  <h3>1.1 项目信息</h3>
+  <div class="table-wrap">
+  <table>
+    <tbody>
+      <tr><td style="width:140px;"><strong>项目名称</strong></td><td>灵山胜境AI数字人导游系统</td></tr>
+      <tr><td><strong>版本号</strong></td><td>v2.0</td></tr>
+      <tr><td><strong>文档版本</strong></td><td>v2.0</td></tr>
+      <tr><td><strong>编写日期</strong></td><td>2026-07-20</td></tr>
+      <tr><td><strong>文档密级</strong></td><td>内部</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>1.2 编写目的</h3>
+  <p>本文档从系统架构、模块设计、数据库设计、接口设计、数据流、安全与性能等维度，全面阐述灵山胜境AI数字人导游系统的总体技术方案。旨在为开发、测试、运维及项目干系人提供统一的技术参考，确保各方对系统有清晰一致的理解。</p>
+
+  <h3>1.3 适用范围</h3>
+  <ul>
+    <li>系统开发人员：作为架构与编码参考</li>
+    <li>测试人员：作为功能与接口验证依据</li>
+    <li>运维人员：作为部署与维护指导</li>
+    <li>项目管理与干系人：作为技术评审与决策参考</li>
+  </ul>
+
+  <h3>1.4 术语定义</h3>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th style="width:120px;">术语</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>Live2D</td><td>一种 2D 动画渲染技术，通过分层贴图实现类似 3D 的动态效果，广泛用于虚拟形象</td></tr>
+      <tr><td>RAG</td><td>Retrieval-Augmented Generation，检索增强生成，将知识库检索结果注入 LLM Prompt 提升回答准确性</td></tr>
+      <tr><td>TTS</td><td>Text-To-Speech，文本转语音</td></tr>
+      <tr><td>GPT-SoVITS</td><td>少样本语音克隆合成框架，支持中文自然发音</td></tr>
+      <tr><td>SEA</td><td>Single Executable Application，Node.js 单可执行文件打包方案</td></tr>
+      <tr><td>WAL</td><td>Write-Ahead Logging，SQLite 日志模式，提升并发读写性能</td></tr>
+      <tr><td>JWT</td><td>JSON Web Token，用于无状态身份认证</td></tr>
+      <tr><td>DeepSeek</td><td>国产大语言模型，本系统使用 deepseek-chat 模型</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- ========== 第2章 ========== -->
+<section class="chapter" id="ch2">
+  <h2>2. 系统概述</h2>
+
+  <h3>2.1 产品定位</h3>
+  <p>灵山胜境AI数字人导游系统是一款面向景区的 AI 数字人导游解决方案。以 Live2D 数字人"小灵"为交互形象，融合 DeepSeek 大模型对话能力与 GPT-SoVITS 语音合成技术，为游客提供沉浸式智能导览服务。系统同时为景区运营方提供内容管理、知识库维护与数据可视化分析能力。</p>
+
+  <h3>2.2 核心能力</h3>
+  <ul>
+    <li><strong>智能对话</strong>：基于 DeepSeek Chat 大模型 + 知识库 RAG 检索，实现景区问答的准确、自然、多轮对话。</li>
+    <li><strong>语音讲解</strong>：GPT-SoVITS 合成自然流畅的中文语音，数字人口型同步，GPU 加速约 6.5 秒/句。</li>
+    <li><strong>可视化导览</strong>：腾讯地图集成，景点地图/列表双模式，直观展示景区布局与景点详情。</li>
+    <li><strong>个性化推荐</strong>：基于兴趣标签的偏好注入，智能推荐景点与游览路线。</li>
+    <li><strong>数字人交互</strong>：8 种表情、2 组动作、口型同步、情绪映射，呈现生动的导游体验。</li>
+    <li><strong>运营管理</strong>：景点/路线/FAQ/票务/知识库全链路管理后台，JWT 认证保障安全。</li>
+    <li><strong>数据可视化</strong>：ECharts 大屏展示游客统计、消费结构、年龄分布、景点热度等。</li>
+  </ul>
+
+  <h3>2.3 系统边界</h3>
+  <p>系统由以下五大组成部分协同工作：</p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th style="width:120px;">组成部分</th><th>技术栈</th><th>职责</th></tr></thead>
+    <tbody>
+      <tr><td><strong>前端（浏览器）</strong></td><td>HTML5 + 原生 JS + Live2D Cubism SDK + 腾讯地图 JSAPI + ECharts</td><td>游客导览界面、管理后台、数据大屏</td></tr>
+      <tr><td><strong>后端（Express）</strong></td><td>Node.js 22.22.2 + Express 4.19.2 + better-sqlite3</td><td>API 服务、静态文件服务、TTS 代理、JWT 认证</td></tr>
+      <tr><td><strong>AI（DeepSeek）</strong></td><td>DeepSeek Chat API（deepseek-chat 模型）</td><td>自然语言对话生成，支持 RAG 上下文注入</td></tr>
+      <tr><td><strong>TTS（GPT-SoVITS）</strong></td><td>GPT-SoVITS v2pro + Python + PyTorch</td><td>文本转语音合成，子进程方式运行</td></tr>
+      <tr><td><strong>Live2D</strong></td><td>Live2D Cubism SDK 5 + 小灵模型</td><td>数字人形象渲染、表情、动作、口型同步</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- ========== 第3章 ========== -->
+<section class="chapter" id="ch3">
+  <h2>3. 系统架构设计</h2>
+
+  <h3 id="ch3-1">3.1 整体架构图</h3>
+  <p>系统采用分层架构，所有服务通过单端口（3000）统一对外提供。以下是整体架构示意图：</p>
+  <div class="arch-diagram">┌─────────────────────────────────────────────────────────────┐
+│                     用户浏览器                               │
+│  ┌──────────┐  ┌──────────┐  ┌──────────────────┐         │
+│  │  前端网站  │  │  管理后台  │  │  数据可视化大屏   │         │
+│  └────┬─────┘  └────┬─────┘  └────────┬─────────┘         │
+└───────┼─────────────┼────────────────┼────────────────────┘
+        │             │                │
+        └─────────────┬┴────────────────┘
+                      │ HTTP API
+┌─────────────────────┼───────────────────────────────────────┐
+│              Express 服务器 (server.js)                       │
+│  ┌──────────────────┼─────────────────────────────────────┐ │
+│  │  10个 API 路由模块                                         │ │
+│  │  scenic-spots/faqs/chat/routes/stats/character/          │ │
+│  │  ticket/admin/visualization/knowledge                   │ │
+│  └──────┬───────────┬──────────────────┬──────────────────┘ │
+│         │           │                  │                    │
+│    ┌────┴───┐  ┌────┴──────┐  ┌───────┴──────┐            │
+│    │SQLite  │  │ DeepSeek  │  │GPT-SoVITS   │            │
+│    │13张表  │  │  API      │  │Python Worker│            │
+│    └────────┘  └───────────┘  └──────────────┘            │
+└─────────────────────────────────────────────────────────────┘</div>
+
+  <p>架构说明：</p>
+  <ul>
+    <li><strong>表现层</strong>：三个前端入口共享同一端口，通过路径区分（<code>/</code> 主前端、<code>/admin</code> 后台、<code>/admin/visualization</code> 大屏）。</li>
+    <li><strong>服务层</strong>：Express 服务器统一处理静态文件与 API 请求，10 个路由模块各司其职。</li>
+    <li><strong>数据层</strong>：SQLite 嵌入式数据库，13 张表覆盖全部业务数据，WAL 模式支持并发读写。</li>
+    <li><strong>AI 层</strong>：DeepSeek API 提供对话能力，知识库 RAG 检索增强回答准确性。</li>
+    <li><strong>TTS 层</strong>：GPT-SoVITS 以 Python 子进程方式运行，通过 stdin/stdout 二进制协议通信。</li>
+  </ul>
+
+  <h3 id="ch3-2">3.2 技术选型说明</h3>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th style="width:80px;">层次</th><th style="width:160px;">技术</th><th style="width:120px;">版本</th><th>选型理由</th></tr></thead>
+    <tbody>
+      <tr><td>后端</td><td>Node.js + Express</td><td>22.22.2 + 4.19.2</td><td>高性能异步 IO，适合 I/O 密集型场景；生态丰富；单语言全栈</td></tr>
+      <tr><td>数据库</td><td>better-sqlite3</td><td>12.11</td><td>同步 API、零配置、嵌入式、性能优异；无需独立数据库服务</td></tr>
+      <tr><td>AI</td><td>DeepSeek Chat API</td><td>v1</td><td>国产大模型、中文理解力强、性价比高、API 兼容 OpenAI 格式</td></tr>
+      <tr><td>TTS</td><td>GPT-SoVITS</td><td>v2pro</td><td>少样本语音克隆、中文发音自然、支持 GPU 加速</td></tr>
+      <tr><td>数字人</td><td>Live2D Cubism</td><td>SDK 5</td><td>丰富的表情动作、低性能开销、Web 端原生支持</td></tr>
+      <tr><td>地图</td><td>腾讯地图 JSAPI</td><td>GL v1</td><td>免费、国内地图精度高、与国内用户习惯匹配</td></tr>
+      <tr><td>图表</td><td>ECharts</td><td>5.4</td><td>丰富的可视化图表类型、国产开源、文档完善</td></tr>
+      <tr><td>认证</td><td>jsonwebtoken</td><td>9.0</td><td>无状态 JWT 认证、跨域友好、成熟稳定</td></tr>
+      <tr><td>文件上传</td><td>multer</td><td>2.2</td><td>Express 文件上传中间件、支持存储策略定制</td></tr>
+      <tr><td>文档解析</td><td>mammoth</td><td>1.12</td><td>解析 .docx 提取纯文本、轻量无依赖</td></tr>
+      <tr><td>HTTP 客户端</td><td>axios</td><td>1.6.8</td><td>Promise 风格、拦截器机制、浏览器与 Node 双端支持</td></tr>
+      <tr><td>配置管理</td><td>dotenv</td><td>16.4.5</td><td>环境变量管理、敏感信息隔离</td></tr>
+      <tr><td>打包分发</td><td>Node.js SEA</td><td>—</td><td>单可执行文件分发、内嵌 Node 运行时、免安装</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- ========== 第4章 ========== -->
+<section class="chapter" id="ch4">
+  <h2>4. 模块设计</h2>
+
+  <h3 id="ch4-1">4.1 景点导览模块</h3>
+  <div class="module-card">
+    <h4>功能描述</h4>
+    <p>提供景区景点的浏览、检索与详情展示，支持地图模式与列表模式两种视图。</p>
+    <h4>设计要点</h4>
+    <ul>
+      <li><strong>数据结构</strong>：<code>scenic_spots</code> 主表 + <code>highlights</code>（亮点）+ <code>tips</code>（贴士）子表，一对多关联。</li>
+      <li><strong>双模式视图</strong>：地图模式基于腾讯地图 JSAPI 渲染标记点；列表模式以卡片展示。前端通过同一 API 获取数据，视图层切换。</li>
+      <li><strong>景点详情</strong>：包含名称、副标题、评分、标签、建议时长、最佳时间、描述、坐标、亮点列表、贴士列表。</li>
+      <li><strong>排序</strong>：按 <code>order_num</code> 字段排序，支持管理后台调整。</li>
+    </ul>
+    <h4>核心接口</h4>
+    <pre><code>GET  /api/scenic-spots          # 获取所有景点（含亮点+贴士）
+GET  /api/scenic-spots/:id      # 获取单个景点详情
+POST /api/scenic-spots          # 新增景点（管理后台）
+PUT  /api/scenic-spots/:id      # 更新景点（含亮点+贴士级联更新）
+DELETE /api/scenic-spots/:id    # 删除景点（级联删除亮点+贴士）</code></pre>
+  </div>
+
+  <h3 id="ch4-2">4.2 AI对话模块（含知识库增强 RAG 流程）</h3>
+  <div class="module-card">
+    <h4>功能描述</h4>
+    <p>基于 DeepSeek Chat 大模型，结合景区知识库与 FAQ 进行检索增强生成（RAG），提供准确自然的智能问答。</p>
+    <h4>RAG 检索增强流程</h4>
+    <div class="flow-diagram">用户问题
+    │
+    ▼
+┌─────────────────────────────┐
+│  ① 关键词提取（分词+停用词过滤）  │
+└──────────────┬──────────────┘
+               │
+    ┌──────────┼──────────┐
+    ▼          ▼          ▼
+┌────────┐ ┌────────┐ ┌────────────┐
+│② 景点   │ │③ FAQ   │ │④ 知识库文档  │
+│  信息   │ │  检索   │ │  检索(LIKE) │
+│(全量)   │ │(关键词) │ │(关键词+排序) │
+└────┬───┘ └────┬───┘ └─────┬──────┘
+     └─────────┬┴───────────┘
+               │
+               ▼
+┌─────────────────────────────┐
+│  ⑤ 上下文组装（限 5000 字符）    │
+│  景点信息 + 票务 + FAQ + 文档   │
+└──────────────┬──────────────┘
+               │
+               ▼
+┌─────────────────────────────┐
+│  ⑥ System Prompt 构建          │
+│  + 个性化偏好注入              │
+│  + 历史对话（最近10轮）         │
+└──────────────┬──────────────┘
+               │
+               ▼
+┌─────────────────────────────┐
+│  ⑦ DeepSeek Chat API 调用      │
+│  model: deepseek-chat         │
+│  temperature: 0.7             │
+└──────────────┬──────────────┘
+               │
+               ▼
+        AI 回复 → 存入 chat_interactions</div>
+    <h4>降级策略</h4>
+    <p>当 DeepSeek API 不可用时（网络异常、密钥无效），系统自动降级为本地兜底回复：根据关键词匹配返回预设的票务、景点基础信息，并提示游客联系景区客服。</p>
+    <h4>个性化偏好注入</h4>
+    <p>当用户通过个性推荐模块选择兴趣标签后，偏好内容会注入 System Prompt，指导 AI 调整回答风格与推荐侧重，实现个性化对话体验。</p>
+  </div>
+
+  <h3 id="ch4-3">4.3 Live2D数字人模块（含表情/动作/口型系统）</h3>
+  <div class="module-card">
+    <h4>功能描述</h4>
+    <p>渲染 Live2D 数字人"小灵"，实现表情切换、动作播放、口型同步，作为系统的视觉交互形象。</p>
+    <h4>模型参数</h4>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>项目</th><th>规格</th></tr></thead>
+      <tbody>
+        <tr><td>模型名称</td><td>小灵（ling）</td></tr>
+        <tr><td>模型文件</td><td>ling.moc3 + ling.model3.json</td></tr>
+        <tr><td>物理模拟</td><td>ling.physics3.json（头发、衣物摆动）</td></tr>
+        <tr><td>表情数量</td><td>8 种（normal/smile/angry/sad/surprise/think/shy/cry）</td></tr>
+        <tr><td>动作数量</td><td>2 组（眨眼 zhaiyan / 照相 zhaoxiang，均属 Idle 组）</td></tr>
+        <tr><td>口型同步参数</td><td>ParamMouthOpenY</td></tr>
+        <tr><td>眨眼参数</td><td>ParamEyeLOpen / ParamEyeROpen</td></tr>
+        <tr><td>贴图数量</td><td>2 张（texture_00.png / texture_01.png）</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <h4>表情映射系统</h4>
+    <p>系统支持 12 种情绪触发词到 Live2D 表情的映射。每种映射包含：</p>
+    <ul>
+      <li><code>trigger</code>：情绪触发词（如 happy、sad、excited）</li>
+      <li><code>kind</code>：类型（expression 或 motion）</li>
+      <li><code>name</code>：表情名称（如 smile、surprise）</li>
+      <li><code>group</code>：动作组名（如 Idle）</li>
+      <li><code>index</code>：动作索引</li>
+    </ul>
+    <h4>口型同步机制</h4>
+    <p>口型同步基于 TTS 合成的 WAV 音频实时分析。前端通过 Web Audio API 提取音频振幅，映射到 Live2D 的 <code>ParamMouthOpenY</code> 参数，实现数字人嘴巴开合与语音同步。可调整灵敏度、平滑系数、振幅阈值等参数。</p>
+    <h4>动作管理</h4>
+    <ul>
+      <li><strong>空闲动作自动播放</strong>：可配置开关、间隔时间（默认 12 秒）、是否随机选择</li>
+      <li><strong>启用的空闲动作</strong>：从可用动作中勾选参与自动播放的子集</li>
+      <li><strong>情绪触发动作</strong>：为特定情绪词配置触发的动作组与索引</li>
+      <li><strong>表情联动</strong>：可配置表情切换时是否自动播放对应动作</li>
+    </ul>
+  </div>
+
+  <h3 id="ch4-4">4.4 TTS语音合成模块（含进程通信协议）</h3>
+  <div class="module-card">
+    <h4>功能描述</h4>
+    <p>基于 GPT-SoVITS v2pro 引擎，使用"三月七 March7th v3"声线，将文本合成为 WAV 音频，供数字人语音播报。</p>
+    <h4>架构设计</h4>
+    <p>TTS 模块采用子进程架构，GPT-SoVITS 作为独立 Python 进程运行，通过 stdin/stdout 与 Express 服务器通信：</p>
+    <div class="flow-diagram">Express 服务器                    GPT-SoVITS Worker (Python)
+┌──────────────┐                 ┌──────────────────────┐
+│  POST /api/tts│                 │  tts_worker.py        │
+│       │       │                 │       │               │
+│  ┌────┴────┐  │   stdin (JSON)  │  ┌────┴────┐          │
+│  │ ttsQueue│──┼────────────────▶│  │模型推理  │          │
+│  │ (队列)  │  │  {text,lang}\n  │  │(GPU/CPU)│          │
+│  └────┬────┘  │                 │  └────┬────┘          │
+│       │       │  stdout (二进制) │       │               │
+│  ┌────┴────┐  │◀────────────────│  WAV 音频数据          │
+│  │解析响应 │  │  [4字节长度][WAV]│  (或 0长度+错误信息)    │
+│  └────┬────┘  │                 └──────────────────────┘
+│       │       │
+│  返回 audio/wav
+└──────────────┘</div>
+    <h4>进程通信协议</h4>
+    <pre><code>// 请求（stdin，UTF-8 JSON + 换行符）
+{"text": "欢迎来到灵山胜境", "text_language": "zh"}\n
+
+// 响应（stdout，二进制帧）
+// ┌─────────────────┬───────────────────────────────┐
+// │  4 字节长度      │  WAV 音频数据 / UTF-8 错误信息   │
+// │  (UInt32LE)     │  (长度为0时为错误信息)           │
+// └─────────────────┴───────────────────────────────┘</code></pre>
+    <h4>队列与并发控制</h4>
+    <ul>
+      <li><strong>ttsQueue</strong>：请求队列，FIFO 顺序处理</li>
+      <li><strong>ttsProcessing</strong>：处理中标志，同一时间仅处理一个 TTS 请求</li>
+      <li><strong>workerBuf</strong>：响应缓冲区，累积 stdout 数据直到完整帧到达</li>
+      <li><strong>异常处理</strong>：Worker 退出时清空队列并返回 503 状态码</li>
+    </ul>
+    <h4>缓存重定向</h4>
+    <p>所有 Python 缓存目录（HuggingFace、PyTorch、pip 等）通过环境变量重定向到工作空间，避免污染系统目录，便于便携部署。</p>
+    <h4>性能对比</h4>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>模式</th><th>推理速度</th><th>依赖</th></tr></thead>
+      <tbody>
+        <tr><td>GPU 加速</td><td>约 6.5 秒/句</td><td>NVIDIA 显卡 + CUDA 12.x + PyTorch GPU 版</td></tr>
+        <tr><td>CPU 推理</td><td>约 64 秒/句</td><td>无特殊依赖，PyTorch CPU 版</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <h3 id="ch4-5">4.5 路线规划模块</h3>
+  <div class="module-card">
+    <h4>功能描述</h4>
+    <p>提供景区推荐游览路线的展示与管理，每条路线包含多个有序站点。</p>
+    <h4>数据结构</h4>
+    <ul>
+      <li><code>routes</code>：路线主表（名称、描述、时长、难度）</li>
+      <li><code>route_stops</code>：站点表（时间、景点、活动、时长、排序），与路线一对多关联</li>
+    </ul>
+    <h4>预置路线</h4>
+    <ul>
+      <li>轻松游览路线（2-3小时，轻松，3 站）</li>
+      <li>深度文化体验路线（4-5小时，适中，5 站）</li>
+      <li>亲子互动路线（3-4小时，轻松，4 站）</li>
+    </ul>
+    <h4>前端展示</h4>
+    <p>以时间轴形式展示每条路线的站点顺序，包含时间、景点名、活动描述与停留时长，难度以彩色标签区分。</p>
+  </div>
+
+  <h3 id="ch4-6">4.6 票务信息模块</h3>
+  <div class="module-card">
+    <h4>功能描述</h4>
+    <p>展示景区门票价格、优惠政策、开放时间与包含项目，支持管理后台编辑。</p>
+    <h4>数据结构</h4>
+    <p><code>ticket_info</code> 单行表，包含全价票、半价票、免票政策、开放时间、包含项目字段。</p>
+    <h4>设计要点</h4>
+    <ul>
+      <li>票务信息全局唯一（LIMIT 1），管理后台 PUT 更新</li>
+      <li>AI 对话时自动检索票务信息注入上下文</li>
+      <li>前端独立票务信息面板，清晰展示价格与政策</li>
+    </ul>
+  </div>
+
+  <h3 id="ch4-7">4.7 个性推荐模块</h3>
+  <div class="module-card">
+    <h4>功能描述</h4>
+    <p>根据游客兴趣标签（历史文化、亲子互动、摄影打卡、佛教艺术、自然风光等）提供个性化景点推荐与对话风格调整。</p>
+    <h4>设计要点</h4>
+    <ul>
+      <li><strong>标签选择</strong>：前端提供兴趣标签多选，支持自定义</li>
+      <li><strong>偏好注入</strong>：所选标签内容作为 <code>preferences</code> 参数传入 AI 对话接口</li>
+      <li><strong>Prompt 影响</strong>：偏好注入 System Prompt 的"游客个性化偏好"段落，指导 AI 调整回答侧重与风格</li>
+      <li><strong>推荐联动</strong>：可跳转到 AI 对话，数字人将基于偏好进行个性化讲解</li>
+    </ul>
+    <h4>偏好注入示例</h4>
+    <pre><code>【游客个性化偏好 - 务必遵循】
+该游客通过个性化推荐选择了以下兴趣偏好：历史文化, 佛教艺术
+
+请严格按以下讲解方向调整回答风格和侧重：
+- 历史文化：侧重景点历史沿革、文化内涵、文物故事
+- 佛教艺术：侧重佛教艺术价值、建筑特色、壁画雕塑
+
+注意：
+- 要在回答中体现对游客兴趣的理解和回应
+- 优先推荐与偏好相关的景点和活动
+- 语气要贴合游客的兴趣特征</code></pre>
+  </div>
+
+  <h3 id="ch4-8">4.8 数字人形象管理模块</h3>
+  <div class="module-card">
+    <h4>功能描述</h4>
+    <p>提供数字人"小灵"的全面配置管理，涵盖外观、服装、声线、表情、口型、动作六大维度。</p>
+    <h4>配置存储设计</h4>
+    <p>所有数字人配置统一存储在 <code>character_configs</code> 表，采用键值对（Key-Value）模式：</p>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>category</th><th>配置键示例</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td>appearance</td><td>avatar_name / avatar_color / avatar_image</td><td>外观设置</td></tr>
+        <tr><td>clothing</td><td>current_outfit / outfit_1 ~ outfit_6</td><td>服装方案（6套预设）</td></tr>
+        <tr><td>voice</td><td>voice_type / voice_speed / voice_pitch / voice_volume / voice_emotion</td><td>声线参数</td></tr>
+        <tr><td>expression</td><td>expr_happy / expr_sad / expr_excited ...</td><td>表情映射（12种情绪）</td></tr>
+        <tr><td>lipsync</td><td>lipsync_sensitivity / lipsync_smooth ...</td><td>口型同步参数</td></tr>
+        <tr><td>motion</td><td>motion_idle_auto / motion_trigger_* / motion_list</td><td>动作配置</td></tr>
+        <tr><td>behavior</td><td>greeting / response_delay</td><td>行为参数</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <h4>核心能力</h4>
+    <ul>
+      <li><strong>结构化 Profile API</strong>：<code>GET /api/character/profile</code> 返回结构化形象方案对象</li>
+      <li><strong>批量保存</strong>：<code>POST /api/character/profile</code> 事务式批量更新多个分类配置</li>
+      <li><strong>头像上传</strong>：multer 处理图片上传，同步到 website/assets 与 public/avatars</li>
+      <li><strong>服装切换</strong>：一键切换 6 套预设服装，状态实时持久化</li>
+      <li><strong>表情/动作 CRUD</strong>：支持表情映射与触发动作的增删改查</li>
+      <li><strong>动作预览</strong>：<code>POST /api/character/motion-preview</code> 返回动作参数供前端 Live2D 执行</li>
+    </ul>
+  </div>
+
+  <h3 id="ch4-9">4.9 管理后台模块</h3>
+  <div class="module-card">
+    <h4>功能描述</h4>
+    <p>为景区运营方提供完整的内容管理与数据分析后台，JWT 认证保障安全。</p>
+    <h4>认证机制</h4>
+    <ul>
+      <li>登录：<code>POST /api/admin/login</code> 验证账号密码，签发 24 小时有效 JWT</li>
+      <li>验证：受保护接口通过 <code>verifyToken</code> 中间件校验 Authorization Header</li>
+      <li>默认账号：admin / admin123（建议部署后修改）</li>
+    </ul>
+    <h4>管理功能矩阵</h4>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>功能</th><th>API 模块</th><th>能力</th></tr></thead>
+      <tbody>
+        <tr><td>景点管理</td><td>scenic-spots</td><td>CRUD + 亮点/贴士级联</td></tr>
+        <tr><td>路线管理</td><td>routes</td><td>CRUD + 站点级联</td></tr>
+        <tr><td>FAQ管理</td><td>faqs</td><td>CRUD + 分类管理</td></tr>
+        <tr><td>票务管理</td><td>ticket</td><td>读取 + 更新</td></tr>
+        <tr><td>知识库管理</td><td>knowledge</td><td>上传/CRUD/搜索/发布/CSV导入FAQ</td></tr>
+        <tr><td>数字人管理</td><td>character</td><td>外观/服装/声线/表情/口型/动作</td></tr>
+        <tr><td>数据统计</td><td>stats</td><td>概览/访问记录/对话趋势</td></tr>
+        <tr><td>数据大屏</td><td>visualization</td><td>游客/消费/年龄/性别/票务可视化</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <h3 id="ch4-10">4.10 数据可视化模块</h3>
+  <div class="module-card">
+    <h4>功能描述</h4>
+    <p>以 ECharts 大屏形式展示景区运营数据，支持多维度可视化分析。</p>
+    <h4>可视化图表</h4>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>图表</th><th>类型</th><th>数据维度</th></tr></thead>
+      <tbody>
+        <tr><td>核心指标卡</td><td>数值卡片</td><td>总访问量、平均停留、平均消费、满意度</td></tr>
+        <tr><td>景点热度排行</td><td>柱状图</td><td>各景点访问次数排名</td></tr>
+        <tr><td>月度访问趋势</td><td>折线图</td><td>12 个月访问量变化</td></tr>
+        <tr><td>年龄分布</td><td>饼图</td><td>6 个年龄段占比</td></tr>
+        <tr><td>性别分布</td><td>饼图</td><td>男女比例</td></tr>
+        <tr><td>出游类型</td><td>饼图</td><td>家庭/情侣/朋友/独自/团队</td></tr>
+        <tr><td>消费结构</td><td>饼图</td><td>餐饮/购物/交通/娱乐</td></tr>
+        <tr><td>30天访客趋势</td><td>折线图</td><td>每日访问量与新用户</td></tr>
+        <tr><td>票务统计</td><td>柱状图</td><td>全价/半价/免票数量与收入</td></tr>
+        <tr><td>热门景点详情</td><td>表格</td><td>访问量/平均时长/平均消费</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <h4>数据来源</h4>
+    <p>可视化数据来自两个渠道：<code>data/visualization-data.json</code> 静态数据文件与 <code>visitor_behavior</code> 数据库表。当静态文件不存在时，系统使用内置的默认数据生成图表。</p>
+  </div>
+</section>
+
+<!-- ========== 第5章 ========== -->
+<section class="chapter" id="ch5">
+  <h2>5. 数据库设计</h2>
+  <p>系统采用 SQLite 嵌入式数据库，开启 WAL 模式与外键约束。共 13 张表，覆盖景点、路线、对话、数字人、票务、管理员、访客、知识库等全部业务领域。</p>
+
+  <h3>5.1 表关系树形结构</h3>
+  <div class="db-tree">
+<span class="table">scenic_spots</span> <span class="rel">(景点主表)</span>
+├── <span class="col">id</span> <span class="type">INTEGER PK</span>
+├── <span class="col">spot_id</span> <span class="type">TEXT UNIQUE</span>          <span class="rel"># 业务ID如 'linghan-dafo'</span>
+├── <span class="col">name / subtitle / description</span>
+├── <span class="col">rating / tag / tag_color</span>
+├── <span class="col">position_x / position_y / coordinates</span>
+├── <span class="col">order_num</span> <span class="type">INTEGER</span>
+├── <span class="rel">├── highlights</span> <span class="rel">(景点亮点，1:N)</span>
+│   └── <span class="col">spot_id</span> <span class="type">FK → scenic_spots.id</span> <span class="rel">ON DELETE CASCADE</span>
+│       <span class="col">icon / title / text</span>
+└── <span class="rel">└── tips</span> <span class="rel">(游览贴士，1:N)</span>
+    └── <span class="col">spot_id</span> <span class="type">FK → scenic_spots.id</span> <span class="rel">ON DELETE CASCADE</span>
+        <span class="col">icon / title / text</span>
+
+<span class="table">routes</span> <span class="rel">(游览路线主表)</span>
+├── <span class="col">id</span> <span class="type">INTEGER PK</span>
+├── <span class="col">route_id</span> <span class="type">TEXT UNIQUE</span>
+├── <span class="col">name / description / duration / difficulty</span>
+└── <span class="rel">└── route_stops</span> <span class="rel">(路线站点，1:N)</span>
+    └── <span class="col">route_id</span> <span class="type">FK → routes.id</span> <span class="rel">ON DELETE CASCADE</span>
+        <span class="col">time / spot / activity / duration / stop_order</span>
+
+<span class="table">character_configs</span> <span class="rel">(数字人配置，KV模式)</span>
+├── <span class="col">id</span> <span class="type">INTEGER PK</span>
+├── <span class="col">config_key</span> <span class="type">TEXT UNIQUE</span>
+├── <span class="col">config_value</span> <span class="type">TEXT</span>            <span class="rel"># 可存JSON</span>
+├── <span class="col">category</span> <span class="type">TEXT</span>                <span class="rel"># appearance/clothing/voice/expression/lipsync/motion/behavior</span>
+└── <span class="col">description</span>
+
+<span class="table">chat_interactions</span> <span class="rel">(AI对话记录)</span>
+├── <span class="col">id</span> <span class="type">INTEGER PK</span>
+├── <span class="col">user_id</span> <span class="type">TEXT</span>                  <span class="rel"># 默认 'guest'</span>
+├── <span class="col">user_message / ai_response</span>
+└── <span class="col">created_at</span>
+
+<span class="table">faqs</span> <span class="rel">(常见问题)</span>
+├── <span class="col">id</span> <span class="type">INTEGER PK</span>
+├── <span class="col">question / answer</span>
+├── <span class="col">category</span> <span class="type">TEXT</span>                <span class="rel"># time/ticket/spot/route/service/rule/other</span>
+└── <span class="col">order_num</span>
+
+<span class="table">ticket_info</span> <span class="rel">(票务信息，单行表)</span>
+├── <span class="col">id</span> <span class="type">INTEGER PK</span>
+├── <span class="col">price / half_price / free</span>
+├── <span class="col">open_time / includes</span>
+└── <span class="col">created_at / updated_at</span>
+
+<span class="table">admin_users</span> <span class="rel">(管理员账户)</span>
+├── <span class="col">id</span> <span class="type">INTEGER PK</span>
+├── <span class="col">username</span> <span class="type">TEXT UNIQUE</span>
+├── <span class="col">password</span> <span class="type">TEXT</span>                <span class="rel"># 明文存储(建议加固)</span>
+├── <span class="col">role</span> <span class="type">TEXT</span>                    <span class="rel"># 默认 'admin'</span>
+└── <span class="col">last_login</span>
+
+<span class="table">visitor_stats</span> <span class="rel">(景点访问统计)</span>
+├── <span class="col">id</span> <span class="type">INTEGER PK</span>
+├── <span class="col">spot_id</span> <span class="type">FK → scenic_spots.id</span> <span class="rel">ON DELETE CASCADE</span>
+├── <span class="col">user_id</span> <span class="type">TEXT</span>
+└── <span class="col">created_at</span>
+
+<span class="table">visitor_behavior</span> <span class="rel">(游客行为详细记录)</span>
+├── <span class="col">id</span> <span class="type">INTEGER PK</span>
+├── <span class="col">tourist_id / user_nickname</span>
+├── <span class="col">age / gender</span>
+├── <span class="col">attraction_name / attraction_content / attraction_type</span>
+├── <span class="col">visit_date / stay_duration</span>
+├── <span class="col">ticket_cost / food_cost / shopping_cost / transport_cost / entertainment_cost</span>
+└── <span class="col">...更多消费与行为字段</span>
+
+<span class="table">knowledge_documents</span> <span class="rel">(知识库文档)</span>
+├── <span class="col">id</span> <span class="type">INTEGER PK</span>
+├── <span class="col">title / category</span> <span class="type">TEXT</span>         <span class="rel"># 通用/景点讲解/常见问题等</span>
+├── <span class="col">content</span> <span class="type">TEXT</span>                <span class="rel"># 文档正文</span>
+├── <span class="col">filename / file_type / file_size</span>
+├── <span class="col">word_count</span>
+├── <span class="col">status</span> <span class="type">TEXT</span>                  <span class="rel"># published / draft</span>
+└── <span class="col">created_at / updated_at</span>
+  </div>
+
+  <h3>5.2 表清单汇总</h3>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th style="width:40px;">#</th><th>表名</th><th>说明</th><th>主要关联</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td><code>scenic_spots</code></td><td>景点主表</td><td>→ highlights, tips, visitor_stats</td></tr>
+      <tr><td>2</td><td><code>highlights</code></td><td>景点亮点</td><td>FK → scenic_spots.id</td></tr>
+      <tr><td>3</td><td><code>tips</code></td><td>游览贴士</td><td>FK → scenic_spots.id</td></tr>
+      <tr><td>4</td><td><code>routes</code></td><td>游览路线</td><td>→ route_stops</td></tr>
+      <tr><td>5</td><td><code>route_stops</code></td><td>路线站点</td><td>FK → routes.id</td></tr>
+      <tr><td>6</td><td><code>faqs</code></td><td>常见问题</td><td>独立</td></tr>
+      <tr><td>7</td><td><code>chat_interactions</code></td><td>AI对话记录</td><td>独立</td></tr>
+      <tr><td>8</td><td><code>character_configs</code></td><td>数字人配置(KV)</td><td>独立</td></tr>
+      <tr><td>9</td><td><code>ticket_info</code></td><td>票务信息</td><td>独立</td></tr>
+      <tr><td>10</td><td><code>admin_users</code></td><td>管理员账户</td><td>独立</td></tr>
+      <tr><td>11</td><td><code>visitor_stats</code></td><td>景点访问统计</td><td>FK → scenic_spots.id</td></tr>
+      <tr><td>12</td><td><code>visitor_behavior</code></td><td>游客行为记录</td><td>独立</td></tr>
+      <tr><td>13</td><td><code>knowledge_documents</code></td><td>知识库文档</td><td>独立</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- ========== 第6章 ========== -->
+<section class="chapter" id="ch6">
+  <h2>6. API接口设计</h2>
+  <p>系统共 10 个 API 路由模块，所有接口以 <code>/api</code> 为前缀，返回 JSON 格式（<code>{ success: boolean, data?: any, error?: string }</code>）。以下是各模块端点汇总。</p>
+
+  <h3>6.1 景点导览 API（/api/scenic-spots）</h3>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th style="width:70px;">方法</th><th>路径</th><th>功能</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag green">GET</span></td><td><code>/api/scenic-spots</code></td><td>获取所有景点（含亮点+贴士）</td></tr>
+      <tr><td><span class="tag green">GET</span></td><td><code>/api/scenic-spots/:id</code></td><td>获取单个景点详情（支持 spot_id 或数字 id）</td></tr>
+      <tr><td><span class="tag">POST</span></td><td><code>/api/scenic-spots</code></td><td>新增景点（含亮点+贴士）</td></tr>
+      <tr><td><span class="tag orange">PUT</span></td><td><code>/api/scenic-spots/:id</code></td><td>更新景点（级联更新亮点+贴士）</td></tr>
+      <tr><td><span class="tag gray">DEL</span></td><td><code>/api/scenic-spots/:id</code></td><td>删除景点（级联删除亮点+贴士）</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>6.2 AI对话 API（/api/chat）</h3>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th style="width:70px;">方法</th><th>路径</th><th>功能</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag">POST</span></td><td><code>/api/chat</code></td><td>AI对话（body: message, user_id, history, preferences, interests）</td></tr>
+      <tr><td><span class="tag green">GET</span></td><td><code>/api/chat/history</code></td><td>获取对话历史（query: user_id, limit）</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>6.3 路线规划 API（/api/routes）</h3>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th style="width:70px;">方法</th><th>路径</th><th>功能</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag green">GET</span></td><td><code>/api/routes</code></td><td>获取所有路线（含站点）</td></tr>
+      <tr><td><span class="tag green">GET</span></td><td><code>/api/routes/:id</code></td><td>获取单条路线详情</td></tr>
+      <tr><td><span class="tag">POST</span></td><td><code>/api/routes</code></td><td>新增路线（含站点）</td></tr>
+      <tr><td><span class="tag orange">PUT</span></td><td><code>/api/routes/:id</code></td><td>更新路线（级联更新站点）</td></tr>
+      <tr><td><span class="tag gray">DEL</span></td><td><code>/api/routes/:id</code></td><td>删除路线（级联删除站点）</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>6.4 FAQ API（/api/faqs）</h3>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th style="width:70px;">方法</th><th>路径</th><th>功能</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag green">GET</span></td><td><code>/api/faqs</code></td><td>获取FAQ列表（query: category）</td></tr>
+      <tr><td><span class="tag green">GET</span></td><td><code>/api/faqs/:id</code></td><td>获取单条FAQ</td></tr>
+      <tr><td><span class="tag green">GET</span></td><td><code>/api/faqs/categories/list</code></td><td>获取FAQ分类列表</td></tr>
+      <tr><td><span class="tag">POST</span></td><td><code>/api/faqs</code></td><td>新增FAQ</td></tr>
+      <tr><td><span class="tag orange">PUT</span></td><td><code>/api/faqs/:id</code></td><td>更新FAQ</td></tr>
+      <tr><td><span class="tag gray">DEL</span></td><td><code>/api/faqs/:id</code></td><td>删除FAQ</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>6.5 统计 API（/api/stats）</h3>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th style="width:70px;">方法</th><th>路径</th><th>功能</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag green">GET</span></td><td><code>/api/stats</code></td><td>统计概览（景点/FAQ/对话数、月度统计、热门景点）</td></tr>
+      <tr><td><span class="tag green">GET</span></td><td><code>/api/stats/overview</code></td><td>综合概览（含知识库、访客、今日对话、近7天趋势）</td></tr>
+      <tr><td><span class="tag">POST</span></td><td><code>/api/stats/visit</code></td><td>记录景点访问（body: spot_id, user_id）</td></tr>
+      <tr><td><span class="tag green">GET</span></td><td><code>/api/stats/visitors</code></td><td>获取访问记录（query: spot_id, limit）</td></tr>
+      <tr><td><span class="tag green">GET</span></td><td><code>/api/stats/chat-trends</code></td><td>近7天对话趋势</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>6.6 数字人管理 API（/api/character）</h3>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th style="width:70px;">方法</th><th>路径</th><th>功能</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag green">GET</span></td><td><code>/api/character/config</code></td><td>获取配置（query: category）</td></tr>
+      <tr><td><span class="tag green">GET</span></td><td><code>/api/character/config/:key</code></td><td>获取单个配置项</td></tr>
+      <tr><td><span class="tag">POST</span></td><td><code>/api/character/config</code></td><td>新增配置项</td></tr>
+      <tr><td><span class="tag orange">PUT</span></td><td><code>/api/character/config/:key</code></td><td>更新配置项</td></tr>
+      <tr><td><span class="tag gray">DEL</span></td><td><code>/api/character/config/:key</code></td><td>删除配置项</td></tr>
+      <tr><td><span class="tag green">GET</span></td><td><code>/api/character/categories</code></td><td>获取配置分类列表</td></tr>
+      <tr><td><span class="tag green">GET</span></td><td><code>/api/character/profile</code></td><td>获取结构化形象方案</td></tr>
+      <tr><td><span class="tag">POST</span></td><td><code>/api/character/profile</code></td><td>批量保存形象方案（事务）</td></tr>
+      <tr><td><span class="tag">POST</span></td><td><code>/api/character/avatar</code></td><td>上传头像（multipart）</td></tr>
+      <tr><td><span class="tag green">GET</span></td><td><code>/api/character/outfits</code></td><td>获取服装列表</td></tr>
+      <tr><td><span class="tag orange">PUT</span></td><td><code>/api/character/outfit</code></td><td>切换服装</td></tr>
+      <tr><td><span class="tag green">GET</span></td><td><code>/api/character/voice</code></td><td>获取声线配置</td></tr>
+      <tr><td><span class="tag orange">PUT</span></td><td><code>/api/character/voice</code></td><td>更新声线设置</td></tr>
+      <tr><td><span class="tag green">GET</span></td><td><code>/api/character/expressions</code></td><td>获取表情映射</td></tr>
+      <tr><td><span class="tag">POST</span></td><td><code>/api/character/expressions</code></td><td>创建/更新表情映射</td></tr>
+      <tr><td><span class="tag gray">DEL</span></td><td><code>/api/character/expressions/:trigger</code></td><td>删除表情映射</td></tr>
+      <tr><td><span class="tag green">GET</span></td><td><code>/api/character/lip-sync</code></td><td>获取口型同步配置</td></tr>
+      <tr><td><span class="tag orange">PUT</span></td><td><code>/api/character/lip-sync</code></td><td>更新口型同步配置</td></tr>
+      <tr><td><span class="tag green">GET</span></td><td><code>/api/character/motions</code></td><td>获取可用动作列表</td></tr>
+      <tr><td><span class="tag green">GET</span></td><td><code>/api/character/motion-config</code></td><td>获取动作配置</td></tr>
+      <tr><td><span class="tag orange">PUT</span></td><td><code>/api/character/motion-config</code></td><td>更新动作配置</td></tr>
+      <tr><td><span class="tag">POST</span></td><td><code>/api/character/motion-trigger</code></td><td>添加触发动作映射</td></tr>
+      <tr><td><span class="tag gray">DEL</span></td><td><code>/api/character/motion-trigger/:trigger</code></td><td>删除触发动作映射</td></tr>
+      <tr><td><span class="tag">POST</span></td><td><code>/api/character/motion-preview</code></td><td>预览动作（返回参数供前端执行）</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>6.7 票务 API（/api/ticket）</h3>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th style="width:70px;">方法</th><th>路径</th><th>功能</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag green">GET</span></td><td><code>/api/ticket</code></td><td>获取票务信息</td></tr>
+      <tr><td><span class="tag orange">PUT</span></td><td><code>/api/ticket/:id</code></td><td>更新票务信息</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>6.8 管理员 API（/api/admin）</h3>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th style="width:70px;">方法</th><th>路径</th><th>功能</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag">POST</span></td><td><code>/api/admin/login</code></td><td>登录（返回 JWT）</td></tr>
+      <tr><td><span class="tag">POST</span></td><td><code>/api/admin/register</code></td><td>注册新管理员</td></tr>
+      <tr><td><span class="tag green">GET</span></td><td><code>/api/admin/profile</code></td><td>获取当前用户信息（需Token）</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>6.9 数据可视化 API（/api/visualization）</h3>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th style="width:70px;">方法</th><th>路径</th><th>功能</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag green">GET</span></td><td><code>/api/visualization/dashboard</code></td><td>获取大屏全部数据（概览/排行/分布/趋势/票务）</td></tr>
+      <tr><td><span class="tag green">GET</span></td><td><code>/api/visualization/real-data</code></td><td>获取原始可视化数据文件</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>6.10 知识库 API（/api/knowledge）</h3>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th style="width:70px;">方法</th><th>路径</th><th>功能</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag">POST</span></td><td><code>/api/knowledge/upload</code></td><td>上传文档（multipart，自动解析存库）</td></tr>
+      <tr><td><span class="tag">POST</span></td><td><code>/api/knowledge</code></td><td>手动创建知识文档</td></tr>
+      <tr><td><span class="tag green">GET</span></td><td><code>/api/knowledge</code></td><td>获取文档列表（query: category, search, status）</td></tr>
+      <tr><td><span class="tag green">GET</span></td><td><code>/api/knowledge/categories/list</code></td><td>获取分类列表</td></tr>
+      <tr><td><span class="tag green">GET</span></td><td><code>/api/knowledge/search/query</code></td><td>搜索知识库（query: q, limit）</td></tr>
+      <tr><td><span class="tag green">GET</span></td><td><code>/api/knowledge/:id</code></td><td>获取文档详情</td></tr>
+      <tr><td><span class="tag orange">PUT</span></td><td><code>/api/knowledge/:id</code></td><td>更新文档</td></tr>
+      <tr><td><span class="tag gray">DEL</span></td><td><code>/api/knowledge/:id</code></td><td>删除文档（含文件清理）</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>6.11 其他接口</h3>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th style="width:70px;">方法</th><th>路径</th><th>功能</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag green">GET</span></td><td><code>/api/health</code></td><td>健康检查（返回运行状态与景点数）</td></tr>
+      <tr><td><span class="tag">POST</span></td><td><code>/api/tts</code></td><td>TTS语音合成（body: text，返回 audio/wav）</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- ========== 第7章 ========== -->
+<section class="chapter" id="ch7">
+  <h2>7. 数据流设计</h2>
+
+  <h3 id="ch7-1">7.1 用户对话数据流</h3>
+  <div class="flow-diagram">游客浏览器                    Express 服务器                DeepSeek API
+│                             │                           │
+│  1. POST /api/chat          │                           │
+│  {message, history,         │                           │
+│   preferences}              │                           │
+│ ──────────────────────────▶ │                           │
+│                             │                           │
+│                             │  2. 关键词提取              │
+│                             │  3. 检索景点+FAQ+知识库     │
+│                             │     (SQLite LIKE 查询)     │
+│                             │  4. 组装 System Prompt      │
+│                             │     + 偏好注入 + 历史       │
+│                             │                           │
+│                             │  5. POST /v1/chat/completions
+│                             │ ──────────────────────────▶│
+│                             │                           │
+│                             │                           │ 6. AI 生成回复
+│                             │  7. 返回 JSON              │
+│                             │ ◀──────────────────────────│
+│                             │                           │
+│                             │  8. 存入 chat_interactions  │
+│                             │  9. 返回 {success, reply}   │
+│ ◀──────────────────────────│                           │
+│                             │                           │
+│ 10. 前端显示回复             │                           │
+│ 11. 可选: 调用 /api/tts      │                           │
+│     进行语音播报             │                           │</div>
+
+  <h3 id="ch7-2">7.2 TTS语音合成数据流</h3>
+  <div class="flow-diagram">游客浏览器          Express 服务器        GPT-SoVITS Worker
+│                   │                     │
+│ 1. POST /api/tts  │                     │
+│   {text}          │                     │
+│ ────────────────▶│                     │
+│                   │                     │
+│                   │ 2. 加入 ttsQueue     │
+│                   │ 3. processNext()     │
+│                   │    写入 stdin:       │
+│                   │    {text,lang}\n     │
+│                   │ ───────────────────▶│
+│                   │                     │
+│                   │                     │ 4. 模型推理
+│                   │                     │    (GPU~6.5s/CPU~64s)
+│                   │                     │
+│                   │ 5. stdout 返回:      │
+│                   │    [4字节长度][WAV]  │
+│                   │ ◀───────────────────│
+│                   │                     │
+│                   │ 6. drainWorkerBuf()  │
+│                   │    解析二进制帧       │
+│                   │ 7. 返回 audio/wav    │
+│ ◀────────────────│                     │
+│                   │                     │
+│ 8. 前端播放音频    │                     │
+│    Web Audio API  │                     │
+│    → 提取振幅      │                     │
+│    → ParamMouthOpenY (口型同步)          │
+│    → 表情切换                            │</div>
+
+  <h3 id="ch7-3">7.3 景点导览数据流</h3>
+  <div class="flow-diagram">游客浏览器                    Express 服务器               SQLite
+│                             │                           │
+│ 1. GET /api/scenic-spots    │                           │
+│ ──────────────────────────▶│                           │
+│                             │ 2. SELECT * FROM scenic_spots
+│                             │    ORDER BY order_num     │
+│                             │ ─────────────────────────▶│
+│                             │                           │
+│                             │ 3. 对每个景点:              │
+│                             │    SELECT * FROM highlights
+│                             │    SELECT * FROM tips      │
+│                             │ ─────────────────────────▶│
+│                             │                           │
+│                             │ 4. 组装 JSON (含亮点+贴士)  │
+│                             │    返回 {success, data[]}  │
+│ ◀──────────────────────────│                           │
+│                             │                           │
+│ 5. 前端渲染:                 │                           │
+│    - 地图模式: 腾讯地图标记   │                           │
+│    - 列表模式: 卡片列表       │                           │
+│ 6. 点击景点 → 详情展示       │                           │
+│ 7. 可选: POST /api/stats/visit (记录访问)                │</div>
+
+  <h3 id="ch7-4">7.4 个性化推荐数据流</h3>
+  <div class="flow-diagram">游客浏览器                    Express 服务器
+│                             │
+│ 1. 选择兴趣标签              │
+│    (历史文化/亲子/摄影/...)  │
+│                             │
+│ 2. 前端生成 preferences 文本 │
+│    "侧重历史文化与佛教艺术"   │
+│                             │
+│ 3. POST /api/chat           │
+│    {message,                │
+│     preferences,             │
+│     interests}              │
+│ ──────────────────────────▶│
+│                             │
+│                             │ 4. 偏好注入 System Prompt:
+│                             │    【游客个性化偏好-务必遵循】
+│                             │    侧重方向: 历史文化、佛教艺术
+│                             │    调整风格与推荐侧重
+│                             │
+│                             │ 5. 调用 DeepSeek API
+│                             │ 6. AI 按偏好生成回复
+│                             │
+│ ◀──────────────────────────│
+│                             │
+│ 7. 数字人按偏好风格讲解      │
+│    优先推荐相关景点           │
+│    语气贴合兴趣特征           │</div>
+</section>
+
+<!-- ========== 第8章 ========== -->
+<section class="chapter" id="ch8">
+  <h2>8. 安全设计</h2>
+
+  <h3>8.1 JWT认证机制</h3>
+  <ul>
+    <li><strong>签发</strong>：管理员登录成功后，使用 <code>JWT_SECRET</code> 签发 24 小时有效的 Token</li>
+    <li><strong>验证</strong>：<code>verifyToken</code> 中间件校验 <code>Authorization: Bearer &lt;token&gt;</code> Header</li>
+    <li><strong>受保护接口</strong>：<code>GET /api/admin/profile</code> 等接口需携带有效 Token</li>
+    <li><strong>密钥管理</strong>：<code>JWT_SECRET</code> 通过 <code>.env</code> 环境变量配置，不硬编码</li>
+  </ul>
+  <div class="warn">
+    <strong>安全建议：</strong>当前管理员密码为明文存储，生产环境建议升级为 bcrypt 哈希存储。管理后台的写操作接口建议增加 Token 验证中间件。
+  </div>
+
+  <h3>8.2 CORS配置</h3>
+  <p>系统使用 <code>cors</code> 中间件，默认允许所有来源跨域访问。由于系统为单端口部署（前端与 API 同源），实际跨域风险较低。生产环境如需收紧，可配置白名单：</p>
+  <pre><code>app.use(cors({
+  origin: ['http://localhost:3000', 'https://your-domain.com'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE']
+}));</code></pre>
+
+  <h3>8.3 文件上传安全</h3>
+  <ul>
+    <li><strong>类型限制</strong>：头像仅允许 PNG/JPG/GIF/WEBP；知识库文档仅允许 txt/md/docx/pdf/html/json/csv</li>
+    <li><strong>大小限制</strong>：头像 10MB；知识库文档 50MB</li>
+    <li><strong>文件名处理</strong>：上传文件重命名（原名+时间戳），防止路径遍历攻击</li>
+    <li><strong>存储隔离</strong>：上传文件存储在 <code>data/uploads/</code> 目录，不与代码混放</li>
+  </ul>
+
+  <h3>8.4 密码存储</h3>
+  <p>当前管理员密码采用明文存储于 <code>admin_users</code> 表。默认账号 <code>admin/admin123</code>。</p>
+  <div class="warn">
+    <strong>加固建议：</strong>① 使用 bcrypt 哈希存储密码；② 部署后立即修改默认密码；③ 限制登录失败次数防止暴力破解；④ 定期轮换 JWT_SECRET。
+  </div>
+
+  <h3>8.5 输入校验</h3>
+  <ul>
+    <li>所有 API 接口对必填参数进行校验，缺失时返回 400 错误</li>
+    <li>SQL 查询使用 better-sqlite3 的参数化查询（<code>?</code> 占位符），防止 SQL 注入</li>
+    <li>JSON Body 大小限制为 50MB（<code>express.json({ limit: '50mb' })</code>）</li>
+  </ul>
+</section>
+
+<!-- ========== 第9章 ========== -->
+<section class="chapter" id="ch9">
+  <h2>9. 性能设计</h2>
+
+  <h3>9.1 SQLite WAL模式</h3>
+  <p>数据库开启 WAL（Write-Ahead Logging）模式，提升并发读写性能：</p>
+  <ul>
+    <li><strong>读写并发</strong>：读操作不阻塞写操作，写操作不阻塞读操作</li>
+    <li><strong>性能提升</strong>：相比默认的 DELETE 模式，WAL 模式写入性能提升 2-3 倍</li>
+    <li><strong>崩溃恢复</strong>：WAL 日志支持数据库崩溃后的自动恢复</li>
+    <li><strong>文件说明</strong>：<code>.db-wal</code> 为日志文件，<code>.db-shm</code> 为共享内存索引</li>
+  </ul>
+  <pre><code>// database.js 配置
+const db = new Database(dbPath);
+db.pragma('foreign_keys = ON');
+// WAL 模式由 better-sqlite3 默认开启</code></pre>
+
+  <h3>9.2 GPU加速TTS推理</h3>
+  <ul>
+    <li><strong>GPU 模式</strong>：NVIDIA 显卡 + CUDA 12.x + PyTorch GPU 版，推理约 6.5 秒/句</li>
+    <li><strong>CPU 模式</strong>：无 GPU 时自动降级，推理约 64 秒/句</li>
+    <li><strong>队列串行</strong>：TTS 请求通过 ttsQueue 串行处理，避免显存溢出</li>
+    <li><strong>缓存重定向</strong>：模型缓存重定向到工作空间，避免重复下载</li>
+  </ul>
+
+  <h3>9.3 Live2D性能优化</h3>
+  <ul>
+    <li><strong>低开销渲染</strong>：Live2D 基于 2D 贴图变形，性能开销远低于 3D 模型</li>
+    <li><strong>眨眼优化</strong>：通过 EyeBlink 参数组自动眨眼，无需额外计算</li>
+    <li><strong>口型同步优化</strong>：基于音频振幅实时映射，计算量极小</li>
+    <li><strong>动作按需播放</strong>：空闲动作间隔 12 秒，避免频繁渲染</li>
+    <li><strong>物理模拟</strong>：physics3.json 提供头发/衣物自然摆动，GPU 加速</li>
+  </ul>
+
+  <h3>9.4 缓存策略</h3>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>缓存层</th><th>策略</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>浏览器缓存</td><td>静态资源</td><td>Express static 中间件默认启用 ETag/Cache-Control</td></tr>
+      <tr><td>TTS 音频</td><td>不缓存</td><td><code>Cache-Control: no-store</code>，避免重复播放旧音频</td></tr>
+      <tr><td>AI 回复</td><td>不缓存</td><td>每次对话实时调用 DeepSeek API，保证回答新鲜度</td></tr>
+      <tr><td>知识库检索</td><td>实时查询</td><td>每次对话实时 LIKE 检索，确保最新知识库内容</td></tr>
+      <tr><td>Python 模型缓存</td><td>持久缓存</td><td>HuggingFace/PyTorch 模型缓存到工作空间，避免重复下载</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>9.5 数据库查询优化</h3>
+  <ul>
+    <li><strong>参数化查询</strong>：better-sqlite3 同步 API，预编译语句（PreparedStatement）复用</li>
+    <li><strong>外键级联</strong>：highlights/tips/route_stops 设置 <code>ON DELETE CASCADE</code>，自动清理关联数据</li>
+    <li><strong>事务批量操作</strong>：数字人配置批量更新使用 <code>db.transaction()</code>，保证原子性</li>
+    <li><strong>结果限制</strong>：FAQ 检索 LIMIT 5，知识库检索 LIMIT 5，对话历史 LIMIT 10，控制上下文长度</li>
+    <li><strong>上下文截断</strong>：RAG 上下文超过 5000 字符时自动截断，防止 Token 超限</li>
+  </ul>
+</section>
+
+<!-- ========== 第10章 ========== -->
+<section class="chapter" id="ch10">
+  <h2>10. 部署架构</h2>
+
+  <h3>10.1 单机部署方案</h3>
+  <p>系统采用单机一体化部署，所有组件运行于同一台 Windows 主机：</p>
+  <div class="arch-diagram">┌─────────────────────────────────────────┐
+│           Windows 主机 (单机)             │
+│                                         │
+│  ┌─────────┐   ┌──────────────────────┐ │
+│  │ 灵山AI  │   │  Express 服务器       │ │
+│  │ 导游.exe│──▶│  (server.js)          │ │
+│  │ (SEA)   │   │  端口: 3000           │ │
+│  └─────────┘   └──────┬───────────────┘ │
+│                       │                 │
+│         ┌─────────────┼─────────────┐   │
+│         ▼             ▼             ▼   │
+│  ┌──────────┐  ┌──────────┐  ┌──────┐  │
+│  │ SQLite   │  │ GPT-     │  │DeepSeek│ │
+│  │ DB       │  │ SoVITS   │  │API(外网)│ │
+│  │ (本地)   │  │ (子进程)  │  │      │  │
+│  └──────────┘  └──────────┘  └──────┘  │
+│                                         │
+│  ┌───────────────────────────────────┐  │
+│  │  浏览器 (Chrome/Edge/Firefox)      │  │
+│  │  → 前端 + 后台 + 大屏              │  │
+│  └───────────────────────────────────┘  │
+└─────────────────────────────────────────┘</div>
+
+  <h3>10.2 一体化集成说明</h3>
+  <ul>
+    <li><strong>单端口运行</strong>：前端、后台、API、TTS 代理统一通过 3000 端口提供服务</li>
+    <li><strong>内嵌运行时</strong>：<code>runtime/node.exe</code>（v22.22.2）内嵌于分发包，无需系统安装 Node.js</li>
+    <li><strong>零配置启动</strong>：双击 exe 即可启动，启动器自动清理端口、打开浏览器</li>
+    <li><strong>本地数据库</strong>：SQLite 嵌入式数据库，无需独立数据库服务</li>
+    <li><strong>子进程隔离</strong>：GPT-SoVITS 作为独立 Python 子进程运行，崩溃不影响主服务</li>
+  </ul>
+
+  <h3>10.3 桌面分发方案（SEA打包）</h3>
+  <p>系统采用 Node.js SEA（Single Executable Application）方案进行桌面分发：</p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th style="width:140px;">项目</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td><strong>打包方式</strong></td><td>Node.js SEA（launcher.js 编译为 .exe）</td></tr>
+      <tr><td><strong>入口文件</strong></td><td><code>灵山AI导游.exe</code>（启动器）</td></tr>
+      <tr><td><strong>启动流程</strong></td><td>exe → 清理端口 → 启动 runtime/node.exe → 运行 server.js → 3秒后打开浏览器</td></tr>
+      <tr><td><strong>内嵌组件</strong></td><td>Node.js 运行时、server.js、routes/、config/、website/、public/、data/</td></tr>
+      <tr><td><strong>外部依赖</strong></td><td>GPT-SoVITS 目录（可选）、Python 环境（可选）、DeepSeek API（必需）</td></tr>
+      <tr><td><strong>分发体积</strong></td><td>约 87MB（exe）+ 33MB（zip）</td></tr>
+      <tr><td><strong>目标平台</strong></td><td>Windows 10/11（64位）</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>10.4 端口与路径规划</h3>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>入口</th><th>路径</th><th>静态文件目录</th></tr></thead>
+    <tbody>
+      <tr><td>主前端</td><td><code>/</code></td><td><code>website/</code></td></tr>
+      <tr><td>管理后台</td><td><code>/admin</code></td><td><code>public/</code></td></tr>
+      <tr><td>数据大屏</td><td><code>/admin/visualization</code></td><td><code>public/visualization.html</code></td></tr>
+      <tr><td>API</td><td><code>/api/*</code></td><td>10 个路由模块</td></tr>
+      <tr><td>TTS</td><td><code>/api/tts</code></td><td>代理至 GPT-SoVITS 子进程</td></tr>
+      <tr><td>SPA Fallback</td><td><code>/*</code></td><td>非 API/非静态 → 返回 index.html</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="note">
+    <strong>架构优势：</strong>单机一体化部署方案具有零安装、零配置、便携分发、开箱即用等优势，特别适合景区售票处、游客中心等场景的快速部署。系统关闭后所有服务即停止，不留后台进程。
+  </div>
+</section>
+
+</main>
+</div>
+
+<!-- ========== 页脚 ========== -->
+<footer>
+  <p>灵山胜境AI数字人导游系统 v2.0 — 产品总体设计文档</p>
+  <p>文档版本：v2.0 &nbsp;|&nbsp; 更新日期：2026-07-20</p>
+</footer>
+
+</body>
+</html>

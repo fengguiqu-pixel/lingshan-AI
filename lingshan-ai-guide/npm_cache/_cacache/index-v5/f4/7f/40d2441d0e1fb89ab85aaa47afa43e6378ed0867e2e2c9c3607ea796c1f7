@@ -1,0 +1,2 @@
+
+3306f9dc0d05432f5de96a50c4af1f7761e3aecb	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/unbzip2-stream","integrity":null,"time":1784522610950,"size":"262","metadata":{"time":1784522610950,"url":"http://registry.npm.taobao.org/unbzip2-stream","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:33 GMT","location":"https://registry.npmmirror.com/unbzip2-stream"},"options":{"compress":true},"status":301}}

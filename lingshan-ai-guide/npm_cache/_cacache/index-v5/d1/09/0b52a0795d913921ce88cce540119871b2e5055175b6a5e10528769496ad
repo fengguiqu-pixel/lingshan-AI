@@ -1,0 +1,2 @@
+
+3388803a9d3ca95920f9c1b89a0eaed90f3e5d7d	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/filename-reserved-regex","integrity":null,"time":1784522610752,"size":"262","metadata":{"time":1784522610752,"url":"http://registry.npm.taobao.org/filename-reserved-regex","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:32 GMT","location":"https://registry.npmmirror.com/filename-reserved-regex"},"options":{"compress":true},"status":301}}

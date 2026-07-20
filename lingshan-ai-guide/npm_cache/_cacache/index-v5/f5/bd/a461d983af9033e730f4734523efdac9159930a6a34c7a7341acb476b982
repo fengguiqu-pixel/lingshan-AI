@@ -1,0 +1,2 @@
+
+1c8b99ea05ba7c8e540f27223e6bb6d08e5332da	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/caw","integrity":null,"time":1784522609047,"size":"262","metadata":{"time":1784522609047,"url":"http://registry.npm.taobao.org/caw","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:31 GMT","location":"https://registry.npmmirror.com/caw"},"options":{"compress":true},"status":301}}

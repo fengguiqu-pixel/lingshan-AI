@@ -1,0 +1,2 @@
+
+86864228c9cf383f45869b906a7c43e77b3de9a9	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/p-limit","integrity":null,"time":1784522615215,"size":"262","metadata":{"time":1784522615215,"url":"http://registry.npm.taobao.org/p-limit","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:37 GMT","location":"https://registry.npmmirror.com/p-limit"},"options":{"compress":true},"status":301}}

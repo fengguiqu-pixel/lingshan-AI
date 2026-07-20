@@ -1,0 +1,2 @@
+
+0f32b2f525eed49d80f9957eb2aac9bc07531db4	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/events","integrity":null,"time":1784522614503,"size":"262","metadata":{"time":1784522614503,"url":"http://registry.npm.taobao.org/events","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:36 GMT","location":"https://registry.npmmirror.com/events"},"options":{"compress":true},"status":301}}

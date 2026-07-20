@@ -1,0 +1,2 @@
+
+3fd7064471cc62cbc1479e049ae5f3b52881013c	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/xmlbuilder","integrity":null,"time":1784522260314,"size":"262","metadata":{"time":1784522260313,"url":"http://registry.npm.taobao.org/xmlbuilder","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:37:42 GMT","location":"https://registry.npmmirror.com/xmlbuilder"},"options":{"compress":true},"status":301}}

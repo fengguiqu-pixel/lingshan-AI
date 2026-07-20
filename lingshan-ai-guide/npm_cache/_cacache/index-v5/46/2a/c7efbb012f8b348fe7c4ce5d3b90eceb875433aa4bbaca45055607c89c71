@@ -1,0 +1,2 @@
+
+f84f89ce1ec99565d16d16e8541a22ef8c430978	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/proto-list","integrity":null,"time":1784522612756,"size":"262","metadata":{"time":1784522612756,"url":"http://registry.npm.taobao.org/proto-list","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:34 GMT","location":"https://registry.npmmirror.com/proto-list"},"options":{"compress":true},"status":301}}

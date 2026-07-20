@@ -1,0 +1,2 @@
+
+257dbb4317923915468cb125529ec351ec80da7c	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/asynckit","integrity":null,"time":1784522260491,"size":"262","metadata":{"time":1784522260491,"url":"http://registry.npm.taobao.org/asynckit","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:37:42 GMT","location":"https://registry.npmmirror.com/asynckit"},"options":{"compress":true},"status":301}}

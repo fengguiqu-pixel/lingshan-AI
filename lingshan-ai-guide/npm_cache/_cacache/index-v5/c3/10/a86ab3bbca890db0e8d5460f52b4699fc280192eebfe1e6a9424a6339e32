@@ -1,0 +1,2 @@
+
+5055f5e38c5ba5a67efdd13aea674c99b465c945	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/tr46","integrity":null,"time":1784522554372,"size":"262","metadata":{"time":1784522554372,"url":"http://registry.npm.taobao.org/tr46","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:42:36 GMT","location":"https://registry.npmmirror.com/tr46"},"options":{"compress":true},"status":301}}

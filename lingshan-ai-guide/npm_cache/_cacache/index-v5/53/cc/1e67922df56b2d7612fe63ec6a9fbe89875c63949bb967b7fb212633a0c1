@@ -1,0 +1,2 @@
+
+d4f799f1973f88b1375070c6af367b1c28dd52a1	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/better-sqlite3","integrity":null,"time":1784522258873,"size":"262","metadata":{"time":1784522258873,"url":"http://registry.npm.taobao.org/better-sqlite3","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:37:40 GMT","location":"https://registry.npmmirror.com/better-sqlite3"},"options":{"compress":true},"status":301}}

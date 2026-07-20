@@ -1,0 +1,2 @@
+
+e5afdcd04ae8fcecf5e366d51a8d884a828d25aa	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/cliui","integrity":null,"time":1784522554232,"size":"262","metadata":{"time":1784522554232,"url":"http://registry.npm.taobao.org/cliui","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:42:36 GMT","location":"https://registry.npmmirror.com/cliui"},"options":{"compress":true},"status":301}}

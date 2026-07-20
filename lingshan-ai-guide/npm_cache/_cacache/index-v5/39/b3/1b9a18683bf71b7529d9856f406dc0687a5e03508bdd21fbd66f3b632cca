@@ -1,0 +1,2 @@
+
+0961c500d93175ef35525e2c1a488043a3ed8a47	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/toidentifier","integrity":null,"time":1784522260806,"size":"262","metadata":{"time":1784522260806,"url":"http://registry.npm.taobao.org/toidentifier","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:37:42 GMT","location":"https://registry.npmmirror.com/toidentifier"},"options":{"compress":true},"status":301}}

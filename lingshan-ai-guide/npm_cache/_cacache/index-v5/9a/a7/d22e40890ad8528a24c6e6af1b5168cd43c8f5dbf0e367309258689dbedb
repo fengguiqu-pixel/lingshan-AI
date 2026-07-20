@@ -1,0 +1,2 @@
+
+79487c50a1c5476a1800c3d4cee1fd131d662bdd	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/frac","integrity":null,"time":1784522263145,"size":"262","metadata":{"time":1784522263145,"url":"http://registry.npm.taobao.org/frac","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:37:45 GMT","location":"https://registry.npmmirror.com/frac"},"options":{"compress":true},"status":301}}

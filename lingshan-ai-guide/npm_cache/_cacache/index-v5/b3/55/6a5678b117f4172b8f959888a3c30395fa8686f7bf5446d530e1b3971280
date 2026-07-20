@@ -1,0 +1,2 @@
+
+6bd7bb7f5be26cba7b56c58b63381adb1c38c18b	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/tar-fs","integrity":null,"time":1784522260635,"size":"262","metadata":{"time":1784522260635,"url":"http://registry.npm.taobao.org/tar-fs","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:37:42 GMT","location":"https://registry.npmmirror.com/tar-fs"},"options":{"compress":true},"status":301}}

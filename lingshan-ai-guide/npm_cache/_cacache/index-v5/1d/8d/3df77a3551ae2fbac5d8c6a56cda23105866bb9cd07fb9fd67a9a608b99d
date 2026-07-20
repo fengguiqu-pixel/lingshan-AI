@@ -1,0 +1,2 @@
+
+18f19532f45e64a615832bd621db364c1ea8b5b7	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/lodash.isinteger","integrity":null,"time":1784522260157,"size":"262","metadata":{"time":1784522260157,"url":"http://registry.npm.taobao.org/lodash.isinteger","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:37:42 GMT","location":"https://registry.npmmirror.com/lodash.isinteger"},"options":{"compress":true},"status":301}}

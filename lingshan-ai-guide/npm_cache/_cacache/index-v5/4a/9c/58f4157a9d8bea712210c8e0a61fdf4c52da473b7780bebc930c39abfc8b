@@ -1,0 +1,2 @@
+
+d2a1c58a4ed28dadd3499824ab0ea4a6bb07309c	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/@types%2fwebpack-sources","integrity":null,"time":1784522614380,"size":"262","metadata":{"time":1784522614380,"url":"http://registry.npm.taobao.org/@types%2fwebpack-sources","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:36 GMT","location":"https://registry.npmmirror.com/@types%2fwebpack-sources"},"options":{"compress":true},"status":301}}

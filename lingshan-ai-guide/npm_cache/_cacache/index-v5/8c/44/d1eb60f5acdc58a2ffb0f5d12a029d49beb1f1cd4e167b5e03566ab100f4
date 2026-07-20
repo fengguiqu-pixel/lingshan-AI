@@ -1,0 +1,2 @@
+
+06227ad2a8f9d8e9babbaeef7b599e47d34520a7	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/to-fast-properties","integrity":null,"time":1784522552469,"size":"262","metadata":{"time":1784522552469,"url":"http://registry.npm.taobao.org/to-fast-properties","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:42:34 GMT","location":"https://registry.npmmirror.com/to-fast-properties"},"options":{"compress":true},"status":301}}

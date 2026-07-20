@@ -1,0 +1,2 @@
+
+2bcfa46ed8901f1edc951ff256876d66bff0b24a	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/p-cancelable","integrity":null,"time":1784522609621,"size":"262","metadata":{"time":1784522609621,"url":"http://registry.npm.taobao.org/p-cancelable","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:31 GMT","location":"https://registry.npmmirror.com/p-cancelable"},"options":{"compress":true},"status":301}}

@@ -1,0 +1,2 @@
+
+9670fd68253ef1b2e1496a663fe2af82ae40925c	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/strip-dirs","integrity":null,"time":1784522610754,"size":"262","metadata":{"time":1784522610754,"url":"http://registry.npm.taobao.org/strip-dirs","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:32 GMT","location":"https://registry.npmmirror.com/strip-dirs"},"options":{"compress":true},"status":301}}

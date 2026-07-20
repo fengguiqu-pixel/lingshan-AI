@@ -1,0 +1,2 @@
+
+6d9db7cd5c9b801cf8402b04c6d827bf847948a9	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/is-fullwidth-code-point","integrity":null,"time":1784522554511,"size":"262","metadata":{"time":1784522554511,"url":"http://registry.npm.taobao.org/is-fullwidth-code-point","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:42:36 GMT","location":"https://registry.npmmirror.com/is-fullwidth-code-point"},"options":{"compress":true},"status":301}}

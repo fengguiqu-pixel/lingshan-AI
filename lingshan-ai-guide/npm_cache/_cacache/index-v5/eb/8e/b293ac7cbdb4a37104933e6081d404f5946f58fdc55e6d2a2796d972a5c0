@@ -1,0 +1,2 @@
+
+1c75db39302dd8fa631aae07abdedc608ca25ad1	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/@typescript%2ftypescript-linux-riscv64","integrity":null,"time":1784522614731,"size":"262","metadata":{"time":1784522614731,"url":"http://registry.npm.taobao.org/@typescript%2ftypescript-linux-riscv64","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:36 GMT","location":"https://registry.npmmirror.com/@typescript%2ftypescript-linux-riscv64"},"options":{"compress":true},"status":301}}

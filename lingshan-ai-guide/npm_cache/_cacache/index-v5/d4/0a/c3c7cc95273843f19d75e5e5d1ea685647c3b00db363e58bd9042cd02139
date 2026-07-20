@@ -1,0 +1,2 @@
+
+d8635aefa0da002cbf2c69df1b1694721667d52a	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/pako","integrity":null,"time":1784522261779,"size":"262","metadata":{"time":1784522261779,"url":"http://registry.npm.taobao.org/pako","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:37:43 GMT","location":"https://registry.npmmirror.com/pako"},"options":{"compress":true},"status":301}}

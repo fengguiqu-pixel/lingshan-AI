@@ -1,0 +1,2 @@
+
+b1f46f59aacc494fe11586e2dbc6e2f78bc608f0	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/multer","integrity":null,"time":1784522259494,"size":"262","metadata":{"time":1784522259494,"url":"http://registry.npm.taobao.org/multer","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:37:41 GMT","location":"https://registry.npmmirror.com/multer"},"options":{"compress":true},"status":301}}

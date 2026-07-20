@@ -1,0 +1,2 @@
+
+7b5d5a43ae2ae399eae6908d536b3759ee78493a	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/compress-commons","integrity":null,"time":1784522610217,"size":"262","metadata":{"time":1784522610217,"url":"http://registry.npm.taobao.org/compress-commons","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:32 GMT","location":"https://registry.npmmirror.com/compress-commons"},"options":{"compress":true},"status":301}}

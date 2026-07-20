@@ -1,0 +1,2 @@
+
+632ddde9d23bad6d8b4ee53db6df90200bfcf1d7	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/ieee754","integrity":null,"time":1784522263025,"size":"262","metadata":{"time":1784522263025,"url":"http://registry.npm.taobao.org/ieee754","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:37:45 GMT","location":"https://registry.npmmirror.com/ieee754"},"options":{"compress":true},"status":301}}

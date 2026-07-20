@@ -1,0 +1,2 @@
+
+8760de7a3e98a9763371ae6a55b10c7fdcd01bb5	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/webpack-config-prefabs","integrity":null,"time":1784522609064,"size":"262","metadata":{"time":1784522609063,"url":"http://registry.npm.taobao.org/webpack-config-prefabs","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:31 GMT","location":"https://registry.npmmirror.com/webpack-config-prefabs"},"options":{"compress":true},"status":301}}

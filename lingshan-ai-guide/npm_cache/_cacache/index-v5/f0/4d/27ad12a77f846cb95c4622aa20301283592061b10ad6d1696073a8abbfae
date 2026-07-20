@@ -1,0 +1,2 @@
+
+f4d4eac23b87c37bb1edd7f6567ccaa1209c1794	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/github-from-package","integrity":null,"time":1784522260622,"size":"262","metadata":{"time":1784522260622,"url":"http://registry.npm.taobao.org/github-from-package","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:37:42 GMT","location":"https://registry.npmmirror.com/github-from-package"},"options":{"compress":true},"status":301}}

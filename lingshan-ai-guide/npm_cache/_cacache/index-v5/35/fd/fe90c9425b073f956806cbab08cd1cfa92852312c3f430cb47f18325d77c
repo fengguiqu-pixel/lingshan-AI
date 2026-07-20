@@ -1,0 +1,2 @@
+
+cf4e7d4f36211f7c5d4e3d177665c55688c349a5	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/lowercase-keys","integrity":null,"time":1784522609618,"size":"262","metadata":{"time":1784522609618,"url":"http://registry.npm.taobao.org/lowercase-keys","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:31 GMT","location":"https://registry.npmmirror.com/lowercase-keys"},"options":{"compress":true},"status":301}}

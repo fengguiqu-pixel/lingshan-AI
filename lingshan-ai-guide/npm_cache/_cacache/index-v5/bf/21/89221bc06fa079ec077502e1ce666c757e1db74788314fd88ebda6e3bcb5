@@ -1,0 +1,2 @@
+
+447e97c3a290aa45c369af79036373a3161c781b	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/duplexer3","integrity":null,"time":1784522610752,"size":"262","metadata":{"time":1784522610752,"url":"http://registry.npm.taobao.org/duplexer3","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:32 GMT","location":"https://registry.npmmirror.com/duplexer3"},"options":{"compress":true},"status":301}}

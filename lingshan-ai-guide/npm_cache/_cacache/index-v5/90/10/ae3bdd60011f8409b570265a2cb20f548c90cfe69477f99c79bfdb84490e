@@ -1,0 +1,2 @@
+
+03707e0ac2bca803b3570ea37303b9272fc17c53	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/pend","integrity":null,"time":1784522617280,"size":"262","metadata":{"time":1784522617280,"url":"http://registry.npm.taobao.org/pend","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:39 GMT","location":"https://registry.npmmirror.com/pend"},"options":{"compress":true},"status":301}}

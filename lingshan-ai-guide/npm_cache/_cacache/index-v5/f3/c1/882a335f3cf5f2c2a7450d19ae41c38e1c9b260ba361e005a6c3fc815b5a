@@ -1,0 +1,2 @@
+
+e9981e25a317ff3fddcd88ef56f55ebb404ae59f	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/mammoth","integrity":null,"time":1784522259393,"size":"262","metadata":{"time":1784522259393,"url":"http://registry.npm.taobao.org/mammoth","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:37:41 GMT","location":"https://registry.npmmirror.com/mammoth"},"options":{"compress":true},"status":301}}

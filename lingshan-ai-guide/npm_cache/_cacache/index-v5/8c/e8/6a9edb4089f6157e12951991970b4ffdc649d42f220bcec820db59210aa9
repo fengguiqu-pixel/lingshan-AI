@@ -1,0 +1,2 @@
+
+ce5bf6b2e377e54ce8fbcca95ae96a8757ddee96	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/simple-concat","integrity":null,"time":1784522262204,"size":"262","metadata":{"time":1784522262204,"url":"http://registry.npm.taobao.org/simple-concat","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:37:44 GMT","location":"https://registry.npmmirror.com/simple-concat"},"options":{"compress":true},"status":301}}

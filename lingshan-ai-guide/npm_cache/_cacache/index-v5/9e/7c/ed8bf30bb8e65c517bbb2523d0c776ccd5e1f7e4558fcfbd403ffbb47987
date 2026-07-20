@@ -1,0 +1,2 @@
+
+53ca410a4bb66d1e5e8364325597f1d9ec799faf	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/tunnel-agent","integrity":null,"time":1784522260634,"size":"262","metadata":{"time":1784522260634,"url":"http://registry.npm.taobao.org/tunnel-agent","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:37:42 GMT","location":"https://registry.npmmirror.com/tunnel-agent"},"options":{"compress":true},"status":301}}

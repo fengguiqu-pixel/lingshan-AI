@@ -1,0 +1,2 @@
+
+870f4f051994ccceba321b107c9cdc07bfdceeeb	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/pinkie","integrity":null,"time":1784522618220,"size":"262","metadata":{"time":1784522618220,"url":"http://registry.npm.taobao.org/pinkie","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:40 GMT","location":"https://registry.npmmirror.com/pinkie"},"options":{"compress":true},"status":301}}

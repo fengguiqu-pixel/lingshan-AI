@@ -1,0 +1,2 @@
+
+13e3a326a60b6c03a3fb120789c51e7b95e320f4	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/sprintf-js","integrity":null,"time":1784522261785,"size":"262","metadata":{"time":1784522261785,"url":"http://registry.npm.taobao.org/sprintf-js","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:37:43 GMT","location":"https://registry.npmmirror.com/sprintf-js"},"options":{"compress":true},"status":301}}

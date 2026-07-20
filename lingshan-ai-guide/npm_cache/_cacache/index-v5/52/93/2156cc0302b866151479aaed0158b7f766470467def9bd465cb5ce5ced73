@@ -1,0 +1,2 @@
+
+a2aea02271ca59605b16e84ff700fe345c500966	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/strip-outer","integrity":null,"time":1784522610753,"size":"262","metadata":{"time":1784522610753,"url":"http://registry.npm.taobao.org/strip-outer","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:32 GMT","location":"https://registry.npmmirror.com/strip-outer"},"options":{"compress":true},"status":301}}

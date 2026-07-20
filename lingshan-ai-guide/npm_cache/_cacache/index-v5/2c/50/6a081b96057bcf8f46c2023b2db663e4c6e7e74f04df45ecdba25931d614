@@ -1,0 +1,2 @@
+
+6630b122a1500dcf6a5efd3b7111297c0f867320	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/lodash.isstring","integrity":null,"time":1784522260181,"size":"262","metadata":{"time":1784522260181,"url":"http://registry.npm.taobao.org/lodash.isstring","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:37:42 GMT","location":"https://registry.npmmirror.com/lodash.isstring"},"options":{"compress":true},"status":301}}

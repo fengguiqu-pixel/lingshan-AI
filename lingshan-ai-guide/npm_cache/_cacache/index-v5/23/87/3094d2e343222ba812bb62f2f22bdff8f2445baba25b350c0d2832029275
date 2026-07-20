@@ -1,0 +1,2 @@
+
+4f076b30344d82fa3d326aa3337e543bd9e210b9	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/@typescript%2ftypescript-darwin-x64","integrity":null,"time":1784522614596,"size":"262","metadata":{"time":1784522614596,"url":"http://registry.npm.taobao.org/@typescript%2ftypescript-darwin-x64","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:36 GMT","location":"https://registry.npmmirror.com/@typescript%2ftypescript-darwin-x64"},"options":{"compress":true},"status":301}}

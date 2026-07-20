@@ -1,0 +1,2 @@
+
+6491ba7a691786fdc5964b1425c408e4255e812d	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/pump","integrity":null,"time":1784522260624,"size":"262","metadata":{"time":1784522260624,"url":"http://registry.npm.taobao.org/pump","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:37:42 GMT","location":"https://registry.npmmirror.com/pump"},"options":{"compress":true},"status":301}}

@@ -1,0 +1,2 @@
+
+d00e87bce9ab54713ed15aeef6625aeee396bd82	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/ajv-keywords","integrity":null,"time":1784522615433,"size":"262","metadata":{"time":1784522615432,"url":"http://registry.npm.taobao.org/ajv-keywords","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:37 GMT","location":"https://registry.npmmirror.com/ajv-keywords"},"options":{"compress":true},"status":301}}

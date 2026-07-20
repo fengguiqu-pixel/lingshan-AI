@@ -1,0 +1,2 @@
+
+75b25833c6c35baacd44db68a39849a0f5937094	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/toml","integrity":null,"time":1784522613946,"size":"262","metadata":{"time":1784522613946,"url":"http://registry.npm.taobao.org/toml","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:36 GMT","location":"https://registry.npmmirror.com/toml"},"options":{"compress":true},"status":301}}

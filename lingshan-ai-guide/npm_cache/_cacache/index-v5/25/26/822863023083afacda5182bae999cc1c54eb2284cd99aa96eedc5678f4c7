@@ -1,0 +1,2 @@
+
+80320c59a94c984dd681df3871a646a60afccbce	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/streamsearch","integrity":null,"time":1784522262040,"size":"262","metadata":{"time":1784522262040,"url":"http://registry.npm.taobao.org/streamsearch","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:37:44 GMT","location":"https://registry.npmmirror.com/streamsearch"},"options":{"compress":true},"status":301}}

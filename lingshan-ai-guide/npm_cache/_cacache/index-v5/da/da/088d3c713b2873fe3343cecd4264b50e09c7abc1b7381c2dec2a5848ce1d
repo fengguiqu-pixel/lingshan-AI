@@ -1,0 +1,2 @@
+
+fe345585878c5c43d83ae4a9f7dfc1955e706480	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/resolve-alpn","integrity":null,"time":1784522612069,"size":"262","metadata":{"time":1784522612069,"url":"http://registry.npm.taobao.org/resolve-alpn","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:34 GMT","location":"https://registry.npmmirror.com/resolve-alpn"},"options":{"compress":true},"status":301}}

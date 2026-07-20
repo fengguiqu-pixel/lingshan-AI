@@ -1,0 +1,2 @@
+
+7700eb1aa77b7300213cd270c6ba1cec46f06cf8	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/xtend","integrity":null,"time":1784522611124,"size":"262","metadata":{"time":1784522611124,"url":"http://registry.npm.taobao.org/xtend","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:33 GMT","location":"https://registry.npmmirror.com/xtend"},"options":{"compress":true},"status":301}}

@@ -1,0 +1,2 @@
+
+705f391dd6c4bb7c3072b8f359bf2b94ad2a81d4	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/nexe","integrity":null,"time":1784522608768,"size":"262","metadata":{"time":1784522608768,"url":"http://registry.npm.taobao.org/nexe","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:30 GMT","location":"https://registry.npmmirror.com/nexe"},"options":{"compress":true},"status":301}}

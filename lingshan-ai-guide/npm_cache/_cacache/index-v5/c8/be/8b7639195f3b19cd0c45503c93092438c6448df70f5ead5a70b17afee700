@@ -1,0 +1,2 @@
+
+573eec0101e4bbb8855f9a37efb3cc53da7ea8c2	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/meriyah","integrity":null,"time":1784522609044,"size":"262","metadata":{"time":1784522609044,"url":"http://registry.npm.taobao.org/meriyah","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:31 GMT","location":"https://registry.npmmirror.com/meriyah"},"options":{"compress":true},"status":301}}

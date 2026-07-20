@@ -1,0 +1,2 @@
+
+28eb58ec8c5dd37329b37e80501fb92d9cc056a4	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/undici-types","integrity":null,"time":1784522615012,"size":"262","metadata":{"time":1784522615012,"url":"http://registry.npm.taobao.org/undici-types","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:37 GMT","location":"https://registry.npmmirror.com/undici-types"},"options":{"compress":true},"status":301}}

@@ -1,0 +1,2 @@
+
+1fd50aabc8b655a22389abd5ede3bba9bfd6976d	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/wrappy","integrity":null,"time":1784522262345,"size":"262","metadata":{"time":1784522262345,"url":"http://registry.npm.taobao.org/wrappy","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:37:44 GMT","location":"https://registry.npmmirror.com/wrappy"},"options":{"compress":true},"status":301}}

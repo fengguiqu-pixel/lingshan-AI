@@ -1,0 +1,2 @@
+
+c0b751ff504389a94c11ab56feb585ebc51b9b77	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/escape-html","integrity":null,"time":1784522259880,"size":"262","metadata":{"time":1784522259880,"url":"http://registry.npm.taobao.org/escape-html","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:37:41 GMT","location":"https://registry.npmmirror.com/escape-html"},"options":{"compress":true},"status":301}}

@@ -1,0 +1,2 @@
+
+2e37284726af371029af215be2a5e7c27375c361	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/filenamify","integrity":null,"time":1784522609503,"size":"262","metadata":{"time":1784522609503,"url":"http://registry.npm.taobao.org/filenamify","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:31 GMT","location":"https://registry.npmmirror.com/filenamify"},"options":{"compress":true},"status":301}}

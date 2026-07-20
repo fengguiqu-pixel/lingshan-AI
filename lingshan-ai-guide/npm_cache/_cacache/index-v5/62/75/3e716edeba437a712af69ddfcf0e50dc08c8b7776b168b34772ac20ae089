@@ -1,0 +1,2 @@
+
+4b3e912b47d470e03bd6fab9661ed506e61a5494	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/fd-slicer","integrity":null,"time":1784522611349,"size":"262","metadata":{"time":1784522611349,"url":"http://registry.npm.taobao.org/fd-slicer","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:33 GMT","location":"https://registry.npmmirror.com/fd-slicer"},"options":{"compress":true},"status":301}}

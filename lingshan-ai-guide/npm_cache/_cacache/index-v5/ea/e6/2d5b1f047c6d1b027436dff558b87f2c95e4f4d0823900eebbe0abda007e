@@ -1,0 +1,2 @@
+
+ff1be21a466fac1dc84aec86a118b8789fa4ab6f	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/minimizer-webpack-plugin","integrity":null,"time":1784522614530,"size":"262","metadata":{"time":1784522614530,"url":"http://registry.npm.taobao.org/minimizer-webpack-plugin","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:36 GMT","location":"https://registry.npmmirror.com/minimizer-webpack-plugin"},"options":{"compress":true},"status":301}}

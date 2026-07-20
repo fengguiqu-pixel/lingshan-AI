@@ -1,0 +1,2 @@
+
+6b1eb59252c59f5423aed61a19ecf7a7bf54a6e8	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/strict-uri-encode","integrity":null,"time":1784522618579,"size":"262","metadata":{"time":1784522618579,"url":"http://registry.npm.taobao.org/strict-uri-encode","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:40 GMT","location":"https://registry.npmmirror.com/strict-uri-encode"},"options":{"compress":true},"status":301}}

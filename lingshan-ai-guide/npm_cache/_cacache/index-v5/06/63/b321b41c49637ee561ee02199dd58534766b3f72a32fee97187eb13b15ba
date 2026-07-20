@@ -1,0 +1,2 @@
+
+e3bcf22acf613b5a95492a990325ce1fccdf3fc5	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/resolve-dependencies","integrity":null,"time":1784522609048,"size":"262","metadata":{"time":1784522609048,"url":"http://registry.npm.taobao.org/resolve-dependencies","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:31 GMT","location":"https://registry.npmmirror.com/resolve-dependencies"},"options":{"compress":true},"status":301}}

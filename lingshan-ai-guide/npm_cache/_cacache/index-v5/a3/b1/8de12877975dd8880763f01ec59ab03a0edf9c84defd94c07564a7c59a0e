@@ -1,0 +1,2 @@
+
+2ee1ea20a9e9c7dd055454777c5caf1b642fdf3f	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/xlsx","integrity":null,"time":1784522259714,"size":"262","metadata":{"time":1784522259714,"url":"http://registry.npm.taobao.org/xlsx","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:37:41 GMT","location":"https://registry.npmmirror.com/xlsx"},"options":{"compress":true},"status":301}}

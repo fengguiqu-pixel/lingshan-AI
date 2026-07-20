@@ -1,0 +1,2 @@
+
+a733e220dc96775aefb93882f7fb13d726e9830c	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/crc-32","integrity":null,"time":1784522260349,"size":"262","metadata":{"time":1784522260349,"url":"http://registry.npm.taobao.org/crc-32","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:37:42 GMT","location":"https://registry.npmmirror.com/crc-32"},"options":{"compress":true},"status":301}}

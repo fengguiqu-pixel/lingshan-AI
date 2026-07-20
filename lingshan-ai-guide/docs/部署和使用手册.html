@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="灵山胜境AI数字人导游系统 - 产品部署和使用手册">
+<meta name="author" content="灵山AI导游系统团队">
+<title>产品部署和使用手册 — 灵山胜境AI数字人导游系统</title>
+<style>
+  /* ========== 基础重置 ========== */
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.75;
+    color: #1a1a1a;
+    background: #fafaf8;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ========== 布局 ========== */
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+  /* ========== 顶部头部 ========== */
+  header.site-header {
+    background: #0a0a0a;
+    color: #fff;
+    padding: 56px 0 48px;
+    border-bottom: 3px solid #002FA7;
+  }
+  header.site-header .wrap { text-align: center; }
+  header.site-header h1 {
+    margin: 0 0 12px;
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  header.site-header .subtitle {
+    font-size: 16px;
+    color: #b0b0b0;
+    margin: 0 0 24px;
+  }
+  header.site-header .meta-bar {
+    display: inline-flex;
+    gap: 24px;
+    font-size: 13px;
+    color: #888;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  header.site-header .meta-bar span { display: inline-flex; align-items: center; gap: 6px; }
+  header.site-header .meta-bar strong { color: #fff; font-weight: 600; }
+
+  /* ========== 目录 ========== */
+  nav.toc {
+    background: #fff;
+    border: 1px solid #e8e8e6;
+    border-radius: 8px;
+    padding: 28px 32px;
+    margin: 32px 0 48px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  nav.toc h2 {
+    margin: 0 0 16px;
+    font-size: 18px;
+    color: #002FA7;
+    border-bottom: 2px solid #002FA7;
+    padding-bottom: 8px;
+  }
+  nav.toc ol { margin: 0; padding-left: 20px; columns: 2; column-gap: 32px; }
+  nav.toc ol li { margin-bottom: 6px; break-inside: avoid; }
+  nav.toc ol li a {
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.15s;
+  }
+  nav.toc ol li a:hover { color: #002FA7; }
+  nav.toc ol ol { margin-top: 4px; columns: 1; }
+  nav.toc ol ol li { font-size: 13px; }
+
+  /* ========== 正文章节 ========== */
+  main { padding-bottom: 80px; }
+  section.chapter { margin-bottom: 56px; scroll-margin-top: 20px; }
+  section.chapter > h2 {
+    font-size: 24px;
+    color: #002FA7;
+    margin: 0 0 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #002FA7;
+    font-weight: 700;
+  }
+  section.chapter > h3 {
+    font-size: 18px;
+    color: #1a1a1a;
+    margin: 32px 0 14px;
+    padding-left: 12px;
+    border-left: 4px solid #002FA7;
+    font-weight: 600;
+  }
+  section.chapter > h4 {
+    font-size: 16px;
+    color: #333;
+    margin: 22px 0 10px;
+    font-weight: 600;
+  }
+  section.chapter p { margin: 0 0 14px; }
+  section.chapter ul, section.chapter ol { margin: 0 0 14px; padding-left: 22px; }
+  section.chapter li { margin-bottom: 6px; }
+  section.chapter strong { color: #002FA7; font-weight: 600; }
+
+  /* ========== 链接 ========== */
+  a { color: #002FA7; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ========== 代码块 ========== */
+  code {
+    font-family: "JetBrains Mono", "Fira Code", "Consolas", "Courier New", monospace;
+    font-size: 13px;
+  }
+  p code, li code, td code {
+    background: #eef2ff;
+    color: #002FA7;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 13px;
+  }
+  pre {
+    background: #1a1a2e;
+    color: #e0e0e0;
+    padding: 18px 20px;
+    border-radius: 8px;
+    overflow-x: auto;
+    line-height: 1.6;
+    margin: 0 0 16px;
+    border: 1px solid #2a2a3e;
+  }
+  pre code {
+    background: none;
+    color: inherit;
+    padding: 0;
+    font-size: 13px;
+  }
+
+  /* ========== 表格 ========== */
+  .table-wrap { overflow-x: auto; margin: 0 0 16px; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  thead { background: #0a0a0a; }
+  thead th {
+    color: #fff;
+    text-align: left;
+    padding: 12px 16px;
+    font-weight: 600;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  tbody td {
+    padding: 10px 16px;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+  }
+  tbody tr:nth-child(even) { background: #f7f7f5; }
+  tbody tr:hover { background: #eef2ff; }
+  tbody tr:last-child td { border-bottom: none; }
+
+  /* ========== 提示框 ========== */
+  .note {
+    background: #eef2ff;
+    border-left: 4px solid #002FA7;
+    padding: 14px 18px;
+    border-radius: 0 6px 6px 0;
+    margin: 0 0 16px;
+    font-size: 14px;
+  }
+  .note strong { color: #002FA7; }
+  .warn {
+    background: #fff8e1;
+    border-left: 4px solid #ff9800;
+    padding: 14px 18px;
+    border-radius: 0 6px 6px 0;
+    margin: 0 0 16px;
+    font-size: 14px;
+  }
+  .warn strong { color: #e65100; }
+
+  /* ========== 目录树 ========== */
+  .tree {
+    background: #1a1a2e;
+    color: #d4d4d4;
+    padding: 18px 20px;
+    border-radius: 8px;
+    font-family: "JetBrains Mono", "Consolas", monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    overflow-x: auto;
+    margin: 0 0 16px;
+    border: 1px solid #2a2a3e;
+  }
+  .tree .dir { color: #82aaff; }
+  .tree .file { color: #c3e88d; }
+  .tree .desc { color: #888; }
+
+  /* ========== FAQ ========== */
+  .faq-item {
+    background: #fff;
+    border: 1px solid #e8e8e6;
+    border-radius: 8px;
+    padding: 18px 22px;
+    margin-bottom: 14px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .faq-item h4 {
+    margin: 0 0 8px;
+    color: #002FA7;
+    font-size: 15px;
+    font-weight: 600;
+  }
+  .faq-item p { margin: 0; font-size: 14px; color: #444; }
+
+  /* ========== 标签 ========== */
+  .tag {
+    display: inline-block;
+    background: #002FA7;
+    color: #fff;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-right: 6px;
+  }
+  .tag.green { background: #2e7d32; }
+  .tag.orange { background: #ef6c00; }
+  .tag.gray { background: #666; }
+
+  /* ========== 页脚 ========== */
+  footer {
+    background: #0a0a0a;
+    color: #888;
+    text-align: center;
+    padding: 32px 0;
+    font-size: 13px;
+    border-top: 3px solid #002FA7;
+  }
+  footer p { margin: 4px 0; }
+
+  /* ========== 打印 ========== */
+  @media print {
+    body { background: #fff; font-size: 12px; }
+    .wrap { max-width: 100%; padding: 0; }
+    header.site-header { padding: 24px 0; }
+    nav.toc { break-after: page; box-shadow: none; }
+    section.chapter { break-inside: avoid; margin-bottom: 24px; }
+    pre, .tree { white-space: pre-wrap; word-wrap: break-word; }
+    a { color: #002FA7; }
+  }
+
+  /* ========== 响应式 ========== */
+  @media (max-width: 768px) {
+    nav.toc ol { columns: 1; }
+    header.site-header h1 { font-size: 22px; }
+    section.chapter > h2 { font-size: 20px; }
+    table { font-size: 13px; }
+    thead th, tbody td { padding: 8px 10px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== 头部 ========== -->
+<header class="site-header">
+  <div class="wrap">
+    <h1>产品部署和使用手册</h1>
+    <p class="subtitle">灵山胜境AI数字人导游系统 v2.0</p>
+    <div class="meta-bar">
+      <span>版本：<strong>v2.0</strong></span>
+      <span>日期：<strong>2026-07-20</strong></span>
+      <span>密级：<strong>公开</strong></span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ========== 目录 ========== -->
+<nav class="toc">
+  <h2>目 录</h2>
+  <ol>
+    <li><a href="#ch1">产品简介</a></li>
+    <li><a href="#ch2">环境要求</a></li>
+    <li><a href="#ch3">快速开始</a></li>
+    <li><a href="#ch4">目录结构说明</a></li>
+    <li><a href="#ch5">功能使用指南</a>
+      <ol>
+        <li><a href="#ch5-1">景点导览</a></li>
+        <li><a href="#ch5-2">AI对话</a></li>
+        <li><a href="#ch5-3">路线规划</a></li>
+        <li><a href="#ch5-4">票务信息</a></li>
+        <li><a href="#ch5-5">个性推荐</a></li>
+        <li><a href="#ch5-6">数字人形象管理</a></li>
+        <li><a href="#ch5-7">管理后台功能</a></li>
+      </ol>
+    </li>
+    <li><a href="#ch6">配置文件说明</a></li>
+    <li><a href="#ch7">TTS语音合成配置</a></li>
+    <li><a href="#ch8">常见问题</a></li>
+    <li><a href="#ch9">维护与更新</a></li>
+    <li><a href="#ch10">技术参数</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ========== 第1章 ========== -->
+<section class="chapter" id="ch1">
+  <h2>1. 产品简介</h2>
+  <p>灵山胜境AI数字人导游系统是一款面向无锡灵山胜境景区的智能导览解决方案。系统集成 Live2D 数字人、DeepSeek AI 对话引擎、GPT-SoVITS 语音合成三大核心技术，为游客提供沉浸式智能导游体验。</p>
+
+  <h3>核心能力</h3>
+  <ul>
+    <li><strong>智能对话</strong>：基于 DeepSeek Chat 大模型，结合景区知识库增强检索（RAG），实现自然流畅的中文对话。</li>
+    <li><strong>语音讲解</strong>：采用 GPT-SoVITS 语音合成引擎，使用"三月七 March7th v3"声线，为数字人赋予自然动听的声音。</li>
+    <li><strong>可视化导览</strong>：集成腾讯地图，提供景点地图模式与列表模式切换，直观展示景区布局。</li>
+    <li><strong>数字人交互</strong>：Live2D 模型"小灵"拥有 8 种表情、2 组动作，支持口型同步与情绪映射，呈现生动的导览体验。</li>
+    <li><strong>个性化推荐</strong>：根据游客兴趣标签（历史文化、亲子互动、摄影打卡等）智能推荐景点与路线。</li>
+    <li><strong>管理后台</strong>：提供景点管理、知识库管理、数据统计、数字人形象配置等完整后台功能。</li>
+  </ul>
+
+  <h3>适用场景</h3>
+  <ul>
+    <li>景区游客自助导览与智能问答</li>
+    <li>景区运营方内容管理与数据分析</li>
+    <li>数字化景区建设与智慧旅游展示</li>
+  </ul>
+</section>
+
+<!-- ========== 第2章 ========== -->
+<section class="chapter" id="ch2">
+  <h2>2. 环境要求</h2>
+  <p>本系统为 Windows 桌面应用，采用一体化打包分发，无需额外安装运行时环境。以下为运行与可选加速的硬件、软件要求。</p>
+
+  <div class="table-wrap">
+  <table>
+    <thead>
+      <tr><th style="width:140px;">项目</th><th>要求说明</th><th style="width:120px;">是否必需</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>操作系统</strong></td><td>Windows 10 / Windows 11（64位）</td><td><span class="tag">必需</span></td></tr>
+      <tr><td><strong>内存</strong></td><td>8GB 以上；若启用 GPU 推理 TTS 建议 16GB</td><td><span class="tag">必需</span></td></tr>
+      <tr><td><strong>磁盘空间</strong></td><td>5GB 以上可用空间（含 TTS 模型）</td><td><span class="tag">必需</span></td></tr>
+      <tr><td><strong>GPU</strong></td><td>NVIDIA 显卡，CUDA 12.x，用于 TTS 推理加速</td><td><span class="tag orange">可选</span></td></tr>
+      <tr><td><strong>浏览器</strong></td><td>Chrome / Edge / Firefox 最新版</td><td><span class="tag">必需</span></td></tr>
+      <tr><td><strong>Python</strong></td><td>Python 3.10+，用于 TTS 语音合成（GPT-SoVITS）</td><td><span class="tag orange">可选</span></td></tr>
+      <tr><td><strong>Node.js</strong></td><td>内嵌于 <code>runtime/node.exe</code>，无需系统安装</td><td><span class="tag gray">已内置</span></td></tr>
+      <tr><td><strong>网络</strong></td><td>需要互联网访问（调用 DeepSeek API）</td><td><span class="tag">必需</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="note">
+    <strong>提示：</strong>未配置 GPU 时系统仍可正常运行，TTS 语音合成将自动切换为 CPU 推理模式（速度约 64 秒/句），其余功能不受影响。
+  </div>
+</section>
+
+<!-- ========== 第3章 ========== -->
+<section class="chapter" id="ch3">
+  <h2>3. 快速开始</h2>
+  <h3>3.1 启动流程</h3>
+  <ol>
+    <li>双击 <code>灵山AI导游.exe</code> 启动程序。</li>
+    <li>启动器自动清理可能残留的 3000 端口占用，随后启动 Node.js 服务器。</li>
+    <li>约 <strong>3 秒</strong>后系统自动打开默认浏览器访问 <code>http://localhost:3000</code>。</li>
+    <li>启动成功后，控制台窗口将显示访问地址与运行状态，保持窗口打开即可持续运行。</li>
+  </ol>
+
+  <h3>3.2 手动访问地址</h3>
+  <p>如浏览器未自动打开，可在浏览器地址栏手动输入以下地址：</p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>入口</th><th>访问地址</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>主前端</td><td><code>http://localhost:3000/</code></td><td>游客使用的导览主界面</td></tr>
+      <tr><td>管理后台</td><td><code>http://localhost:3000/admin</code></td><td>运营管理后台（需登录）</td></tr>
+      <tr><td>数据大屏</td><td><code>http://localhost:3000/admin/visualization</code></td><td>数据可视化大屏</td></tr>
+      <tr><td>健康检查</td><td><code>http://localhost:3000/api/health</code></td><td>系统运行状态接口</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>3.3 停止服务</h3>
+  <p>关闭启动器控制台窗口即可停止所有服务。系统会在退出时自动安全关闭数据库连接。</p>
+
+  <div class="warn">
+    <strong>注意：</strong>关闭窗口将立即停止服务，所有正在进行的对话与 TTS 合成会中断。请确保无重要操作进行中再关闭。
+  </div>
+</section>
+
+<!-- ========== 第4章 ========== -->
+<section class="chapter" id="ch4">
+  <h2>4. 目录结构说明</h2>
+  <p>以下是系统根目录下的关键文件与目录结构：</p>
+  <div class="tree">
+<span class="dir">lingshan-ai-guide/</span>
+├── <span class="file">灵山AI导游.exe</span>              <span class="desc"># 启动器（SEA 打包，含 launcher.js）</span>
+├── <span class="file">server.js</span>                   <span class="desc"># 一体化服务器入口（Express + TTS 代理）</span>
+├── <span class="file">launcher.js</span>                 <span class="desc"># 启动器源码（端口清理、浏览器自动打开）</span>
+├── <span class="file">package.json</span>                <span class="desc"># 依赖与脚本声明</span>
+├── <span class="file">package-lock.json</span>           <span class="desc"># 依赖锁定文件</span>
+├── <span class="file">.env</span>                        <span class="desc"># 环境变量配置（端口、API密钥等）</span>
+│
+├── <span class="dir">config/</span>
+│   └── <span class="file">database.js</span>             <span class="desc"># SQLite 数据库连接与配置</span>
+│
+├── <span class="dir">routes/</span>                      <span class="desc"># 10 个 API 路由模块</span>
+│   ├── <span class="file">scenic-spots.js</span>         <span class="desc"># 景点导览 API</span>
+│   ├── <span class="file">faqs.js</span>                 <span class="desc"># 常见问题 API</span>
+│   ├── <span class="file">chat.js</span>                 <span class="desc"># AI 对话 API（DeepSeek + RAG）</span>
+│   ├── <span class="file">routes.js</span>               <span class="desc"># 路线规划 API</span>
+│   ├── <span class="file">stats.js</span>                <span class="desc"># 访问统计 API</span>
+│   ├── <span class="file">character.js</span>            <span class="desc"># 数字人形象管理 API</span>
+│   ├── <span class="file">ticket.js</span>               <span class="desc"># 票务信息 API</span>
+│   ├── <span class="file">admin.js</span>                <span class="desc"># 管理员认证 API（JWT）</span>
+│   ├── <span class="file">visualization.js</span>        <span class="desc"># 数据可视化 API</span>
+│   └── <span class="file">knowledge.js</span>            <span class="desc"># 知识库管理 API（文档上传/检索）</span>
+│
+├── <span class="dir">website/</span>                     <span class="desc"># 主前端（游客界面）</span>
+│   ├── <span class="file">index.html</span>              <span class="desc"># 主页</span>
+│   ├── <span class="dir">css/</span>                     <span class="desc"># 样式文件</span>
+│   ├── <span class="dir">js/</span>                      <span class="desc"># 前端脚本（app.js / data.js / live2d-integration.js）</span>
+│   ├── <span class="dir">assets/</span>                  <span class="desc"># 图片资源（景点图、头像）</span>
+│   ├── <span class="dir">vendor/</span>                  <span class="desc"># 第三方库（Live2D SDK 等）</span>
+│   └── <span class="dir">live2d-models/</span>           <span class="desc"># Live2D 模型文件</span>
+│       └── <span class="dir">ling/</span>                <span class="desc"># 数字人"小灵"模型</span>
+│
+├── <span class="dir">public/</span>                      <span class="desc"># 管理后台静态文件</span>
+│   ├── <span class="file">index.html</span>              <span class="desc"># 管理后台页面</span>
+│   ├── <span class="file">visualization.html</span>      <span class="desc"># 数据大屏页面</span>
+│   └── <span class="dir">avatars/</span>                 <span class="desc"># 头像上传目录</span>
+│
+├── <span class="dir">data/</span>
+│   ├── <span class="file">lingshan.db</span>             <span class="desc"># SQLite 数据库文件（13张表）</span>
+│   ├── <span class="file">lingshan.db-wal</span>         <span class="desc"># WAL 日志</span>
+│   ├── <span class="file">lingshan.db-shm</span>         <span class="desc"># 共享内存文件</span>
+│   └── <span class="dir">uploads/</span>                 <span class="desc"># 知识库文档上传目录</span>
+│
+├── <span class="dir">scripts/</span>                     <span class="desc"># 数据库初始化与数据导入脚本</span>
+│   ├── <span class="file">init-db.js</span>              <span class="desc"># 数据库初始化</span>
+│   ├── <span class="file">setup-all.js</span>            <span class="desc"># 完整建表（含 visitor_behavior / knowledge_documents）</span>
+│   └── <span class="file">seed-*.js</span>               <span class="desc"># 种子数据脚本</span>
+│
+└── <span class="dir">runtime/</span>
+    └── <span class="file">node.exe</span>                <span class="desc"># 内嵌 Node.js 运行时（v22.22.2）</span>
+  </div>
+</section>
+
+<!-- ========== 第5章 ========== -->
+<section class="chapter" id="ch5">
+  <h2>5. 功能使用指南</h2>
+
+  <h3 id="ch5-1">5.1 景点导览</h3>
+  <p>景点导览模块提供两种浏览模式，游客可在主界面顶部自由切换：</p>
+  <ul>
+    <li><strong>地图模式</strong>：基于腾讯地图 JSAPI 展示景区布局，景点以标记点形式呈现，点击标记可查看详情。地图支持缩放、拖动操作。</li>
+    <li><strong>列表模式</strong>：以卡片列表形式展示所有景点，包含评分、标签、建议游览时长、最佳游览时间等信息。</li>
+  </ul>
+  <p>每个景点详情页包含以下内容：</p>
+  <ul>
+    <li><strong>景点亮点</strong>：3 条核心亮点介绍（含图标）</li>
+    <li><strong>游览贴士</strong>：3 条实用贴士（时间、着装、礼仪等）</li>
+    <li><strong>坐标信息</strong>：经纬度坐标，便于导航</li>
+  </ul>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>当前景点数据</th><th>标签</th><th>建议时长</th></tr></thead>
+    <tbody>
+      <tr><td>灵山大佛</td><td>青铜巨佛·地标打卡</td><td>约40分钟</td></tr>
+      <tr><td>灵山梵宫</td><td>佛教艺术·必游打卡</td><td>约60分钟</td></tr>
+      <tr><td>九龙灌浴</td><td>演艺体验·亲子推荐</td><td>约30分钟</td></tr>
+      <tr><td>五印坛城</td><td>藏传佛教·文化体验</td><td>约45分钟</td></tr>
+      <tr><td>祥符禅寺</td><td>历史文化·祈福纳祥</td><td>约30分钟</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3 id="ch5-2">5.2 AI对话</h3>
+  <p>AI对话是系统的核心交互功能，由数字人"小灵"作为对话角色，提供自然流畅的智能问答。</p>
+  <h4>使用方式</h4>
+  <ul>
+    <li><strong>输入问题</strong>：在对话框中输入任意关于灵山胜境的问题，如"灵山大佛有多高？"、"九龙灌浴几点开始？"</li>
+    <li><strong>快捷问题</strong>：点击预设的快捷问题按钮，快速发起常见咨询。</li>
+    <li><strong>语音播报</strong>：AI 回复后可点击播放按钮，通过 TTS 语音合成播报回复内容，数字人将同步进行口型同步与表情变化。</li>
+    <li><strong>上下文记忆</strong>：系统保留最近 10 轮对话历史，支持多轮连续对话。</li>
+  </ul>
+  <div class="note">
+    <strong>知识库增强（RAG）：</strong>AI 回复前会自动检索景区知识库文档与 FAQ，确保回答准确可靠。若知识库中无相关信息，将基于常识回答并提醒游客联系景区客服确认。
+  </div>
+
+  <h3 id="ch5-3">5.3 路线规划</h3>
+  <p>系统预置 3 条精选游览路线，游客可根据时间与偏好选择：</p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>路线名称</th><th>时长</th><th>难度</th><th>适合人群</th></tr></thead>
+    <tbody>
+      <tr><td>轻松游览路线</td><td>2-3小时</td><td><span class="tag green">轻松</span></td><td>时间有限的游客</td></tr>
+      <tr><td>深度文化体验路线</td><td>4-5小时</td><td><span class="tag orange">适中</span></td><td>文化爱好者</td></tr>
+      <tr><td>亲子互动路线</td><td>3-4小时</td><td><span class="tag green">轻松</span></td><td>亲子家庭</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>每条路线包含详细的时间安排、途经景点、活动内容与停留时长，以时间轴形式直观展示。</p>
+
+  <h3 id="ch5-4">5.4 票务信息</h3>
+  <p>票务信息模块展示景区门票价格与优惠政策：</p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>项目</th><th>内容</th></tr></thead>
+    <tbody>
+      <tr><td>全价票</td><td>210元/人</td></tr>
+      <tr><td>半价票</td><td>105元/人（1.2-1.5米儿童、60-69岁老人）</td></tr>
+      <tr><td>免票</td><td>1.2米以下儿童、70岁以上老人、残疾人</td></tr>
+      <tr><td>开放时间</td><td>07:30 - 17:30（冬季）/ 07:00 - 17:30（夏季）</td></tr>
+      <tr><td>包含项目</td><td>灵山大佛 + 灵山梵宫 + 九龙灌浴 + 五印坛城 + 祥符禅寺</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3 id="ch5-5">5.5 个性推荐</h3>
+  <p>个性化推荐模块根据游客兴趣标签智能推荐景点与游览方案。</p>
+  <h4>使用步骤</h4>
+  <ol>
+    <li>在个性推荐面板选择兴趣标签（可多选），如：历史文化、亲子互动、摄影打卡、佛教艺术、自然风光等。</li>
+    <li>系统根据所选标签生成个性化推荐内容。</li>
+    <li>点击"开始对话"后，AI 数字人将根据您的偏好调整讲解风格与推荐侧重。</li>
+  </ol>
+  <div class="note">
+    <strong>偏好注入：</strong>选择的兴趣标签会作为个性化偏好注入 AI 的 System Prompt，影响后续所有对话的回答方向。
+  </div>
+
+  <h3 id="ch5-6">5.6 数字人形象管理</h3>
+  <p>数字人形象管理提供对 Live2D 数字人"小灵"的全面配置，可通过管理后台 → 数字人管理进入。包含以下功能模块：</p>
+
+  <h4>① 外观设置</h4>
+  <ul>
+    <li><strong>数字人名称</strong>：自定义数字人称呼（默认"小灵"）</li>
+    <li><strong>主题色</strong>：设置数字人主题色（默认 <code>#C8A357</code>）</li>
+    <li><strong>头像上传</strong>：支持上传 PNG/JPG/GIF/WEBP 格式头像（最大 10MB）</li>
+  </ul>
+
+  <h4>② 服装切换</h4>
+  <p>系统预置 6 套服装方案，可在管理后台一键切换。当前服装状态实时保存到数据库，前端自动同步更新。</p>
+
+  <h4>③ 声线设置</h4>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>参数</th><th>说明</th><th>默认值</th></tr></thead>
+    <tbody>
+      <tr><td>声线模型</td><td>三月七 March7th v3（GPT-SoVITS v3 权重）</td><td>march7th</td></tr>
+      <tr><td>语速</td><td>语音播放速度倍率</td><td>1.0</td></tr>
+      <tr><td>音调</td><td>语音音调调整</td><td>默认</td></tr>
+      <tr><td>音量</td><td>语音音量大小</td><td>默认</td></tr>
+      <tr><td>情感</td><td>语音情感风格</td><td>默认</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h4>④ 表情映射</h4>
+  <p>系统支持 12 种情绪到 Live2D 表情的映射配置。数字人模型"小灵"内置 8 种表情：</p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>表情名称</th><th>说明</th><th>文件</th></tr></thead>
+    <tbody>
+      <tr><td>normal</td><td>平静/默认</td><td>1.exp3.json</td></tr>
+      <tr><td>smile</td><td>微笑</td><td>2.exp3.json</td></tr>
+      <tr><td>angry</td><td>生气</td><td>3.exp3.json</td></tr>
+      <tr><td>sad</td><td>悲伤</td><td>5.exp3.json</td></tr>
+      <tr><td>surprise</td><td>惊讶</td><td>6.exp3.json</td></tr>
+      <tr><td>think</td><td>思考</td><td>7.exp3.json</td></tr>
+      <tr><td>shy</td><td>害羞</td><td>8.exp3.json</td></tr>
+      <tr><td>cry</td><td>哭泣</td><td>9.exp3.json</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>可通过管理后台为每种情绪触发词（如 happy、sad、excited 等）配置对应的表情类型与索引。</p>
+
+  <h4>⑤ 口型同步参数</h4>
+  <p>口型同步基于 Live2D 的 <code>ParamMouthOpenY</code> 参数实现，可调整以下参数：</p>
+  <ul>
+    <li>口型张开灵敏度</li>
+    <li>口型平滑系数</li>
+    <li>音频采样率</li>
+    <li>振幅阈值</li>
+  </ul>
+
+  <h4>⑥ 动作管理</h4>
+  <p>数字人内置 2 组动作，支持空闲动作自动播放与情绪触发动作配置：</p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>动作</th><th>文件</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>眨眼</td><td>zhaiyan.motion3.json</td><td>Idle 组动作，眼睛眨动</td></tr>
+      <tr><td>照相</td><td>zhaoxiang.motion3.json</td><td>Idle 组动作，照相姿势</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>可配置项包括：</p>
+  <ul>
+    <li><strong>自动空闲动作</strong>：开关，开启后数字人空闲时自动播放动作</li>
+    <li><strong>空闲动作间隔</strong>：默认 12 秒</li>
+    <li><strong>随机选择</strong>：是否从启用动作中随机选择</li>
+    <li><strong>启用的空闲动作</strong>：勾选要参与自动播放的动作</li>
+    <li><strong>情绪触发动作</strong>：为特定情绪词配置触发的动作组与索引</li>
+  </ul>
+
+  <h3 id="ch5-7">5.7 管理后台功能</h3>
+  <p>访问 <code>http://localhost:3000/admin</code> 进入管理后台，默认账号 <code>admin</code> / 密码 <code>admin123</code>。</p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>功能模块</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>数据概览</td><td>景点数、FAQ数、对话数、路线数、知识库文档数、今日对话数、访客数等</td></tr>
+      <tr><td>景点管理</td><td>增删改查景点信息，管理亮点与贴士</td></tr>
+      <tr><td>路线管理</td><td>增删改查游览路线与站点</td></tr>
+      <tr><td>FAQ管理</td><td>增删改查常见问题，按分类管理</td></tr>
+      <tr><td>票务管理</td><td>编辑门票价格与优惠政策</td></tr>
+      <tr><td>知识库管理</td><td>上传文档（txt/md/docx/pdf/csv）、手动创建文档、检索、发布/下架</td></tr>
+      <tr><td>数字人管理</td><td>外观、服装、声线、表情、口型、动作全面配置</td></tr>
+      <tr><td>数据统计</td><td>对话趋势、热门景点、访问记录</td></tr>
+      <tr><td>数据大屏</td><td>可视化展示游客统计、消费结构、年龄分布等</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- ========== 第6章 ========== -->
+<section class="chapter" id="ch6">
+  <h2>6. 配置文件说明</h2>
+
+  <h3>6.1 环境变量配置（.env）</h3>
+  <p>系统根目录下的 <code>.env</code> 文件包含核心运行参数：</p>
+  <pre><code># 服务端口
+PORT=3000
+
+# 数据库文件路径
+DB_PATH=data/lingshan.db
+
+# DeepSeek API 密钥（AI对话必需）
+DEEPSEEK_API_KEY=sk-your-api-key-here
+
+# JWT 密钥（管理后台认证）
+JWT_SECRET=your-jwt-secret-key</code></pre>
+
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th style="width:180px;">变量名</th><th>说明</th><th>默认值</th><th>必需</th></tr></thead>
+    <tbody>
+      <tr><td><code>PORT</code></td><td>服务器监听端口</td><td>3000</td><td>是</td></tr>
+      <tr><td><code>DB_PATH</code></td><td>SQLite 数据库文件路径</td><td>data/lingshan.db</td><td>是</td></tr>
+      <tr><td><code>DEEPSEEK_API_KEY</code></td><td>DeepSeek API 密钥，用于 AI 对话</td><td>无</td><td>是</td></tr>
+      <tr><td><code>JWT_SECRET</code></td><td>JWT 签名密钥，用于管理后台认证</td><td>无</td><td>是</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="warn">
+    <strong>重要：</strong><code>DEEPSEEK_API_KEY</code> 必须配置有效的 DeepSeek API 密钥，否则 AI 对话功能将降级为本地兜底回复。请在 <a href="https://platform.deepseek.com" target="_blank">DeepSeek 开放平台</a>申请密钥。
+  </div>
+
+  <h3>6.2 数据库文件</h3>
+  <ul>
+    <li><code>data/lingshan.db</code> — SQLite 主数据库文件，包含 13 张数据表</li>
+    <li><code>data/lingshan.db-wal</code> — WAL（Write-Ahead Logging）日志文件</li>
+    <li><code>data/lingshan.db-shm</code> — 共享内存索引文件</li>
+  </ul>
+  <p>数据库采用 WAL 模式运行，支持并发读写，<code>.db-wal</code> 与 <code>.db-shm</code> 为自动生成的辅助文件，请勿手动删除。</p>
+
+  <h3>6.3 缓存路径配置</h3>
+  <p>系统运行 TTS 语音合成时，所有缓存目录重定向到工作空间，避免污染系统目录：</p>
+  <pre><code># 缓存目录（由 server.js 自动配置环境变量）
+HF_HOME              = {WORKSPACE}/hf_cache          # HuggingFace 模型缓存
+TRANSFORMERS_CACHE   = {WORKSPACE}/hf_cache/transformers
+TORCH_HOME           = {WORKSPACE}/torch_cache        # PyTorch 模型缓存
+PIP_CACHE_DIR        = {WORKSPACE}/pip_cache          # pip 安装缓存
+XDG_CACHE_HOME       = {WORKSPACE}/xdg_cache          # 通用缓存
+TEMP/TMP/TMPDIR      = {WORKSPACE}/system_temp        # 系统临时目录</code></pre>
+</section>
+
+<!-- ========== 第7章 ========== -->
+<section class="chapter" id="ch7">
+  <h2>7. TTS语音合成配置</h2>
+  <p>TTS 语音合成基于 GPT-SoVITS 引擎，使用"三月七 March7th v3"声线模型，为数字人提供自然流畅的中文语音。</p>
+
+  <h3>7.1 Python 环境要求</h3>
+  <ul>
+    <li>Python 3.10 或更高版本</li>
+    <li>PyTorch（支持 CUDA 12.x 的版本，用于 GPU 加速）</li>
+    <li>GPT-SoVITS v2pro 依赖包</li>
+  </ul>
+  <p>系统按以下优先级查找 Python 解释器：</p>
+  <ol>
+    <li><code>{GSV_DIR}/runtime/python.exe</code>（GPT-SoVITS 内置运行时）</li>
+    <li><code>D:\python\python.exe</code></li>
+    <li><code>%USERPROFILE%/anaconda3/envs/gsv/python.exe</code></li>
+    <li><code>%USERPROFILE%/miniconda3/envs/gsv/python.exe</code></li>
+    <li>系统 PATH 中的 <code>python.exe</code></li>
+  </ol>
+
+  <h3>7.2 GPT-SoVITS 模型加载</h3>
+  <p>系统按以下顺序查找 GPT-SoVITS 目录：</p>
+  <ol>
+    <li><code>./GPT-SoVITS-v2pro-20250604-nvidia50</code></li>
+    <li><code>../Claw/灵山胜境AI导游系统/GPT-SoVITS-v2pro-20250604-nvidia50</code></li>
+    <li><code>./GPT-SoVITS</code></li>
+  </ol>
+  <p>找到目录后，系统会加载 <code>tts_worker.py</code> 作为子进程运行，通过 stdin/stdout 进行进程间通信。</p>
+
+  <h3>7.3 进程通信协议</h3>
+  <pre><code># 请求格式（stdin，JSON + 换行）
+{"text": "欢迎来到灵山胜境", "text_language": "zh"}\n
+
+# 响应格式（stdout，二进制帧）
+┌──────────────┬──────────────────────────┐
+│ 4 字节长度    │ WAV 音频数据（或错误信息）  │
+│ (UInt32LE)   │                          │
+└──────────────┴──────────────────────────┘
+# 长度为 0 时，后续内容为 UTF-8 错误信息</code></pre>
+
+  <h3>7.4 GPU 加速配置</h3>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>配置项</th><th>GPU 模式</th><th>CPU 模式</th></tr></thead>
+    <tbody>
+      <tr><td>推理速度</td><td>约 6.5 秒/句</td><td>约 64 秒/句</td></tr>
+      <tr><td>CUDA 版本</td><td>CUDA 12.x</td><td>不适用</td></tr>
+      <tr><td>显存需求</td><td>4GB 以上</td><td>不适用</td></tr>
+      <tr><td>PyTorch</td><td>torch+cu121</td><td>torch+cpu</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>7.5 故障排除</h3>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th style="width:200px;">问题</th><th>排查方法</th></tr></thead>
+    <tbody>
+      <tr><td>TTS 服务不可用</td><td>检查控制台是否输出 <code>[TTS] GPT-SoVITS not found</code>，确认 GPT-SoVITS 目录存在</td></tr>
+      <tr><td>Python 未找到</td><td>确认 <code>tts_worker.py</code> 存在，安装 Python 3.10+ 并配置环境变量</td></tr>
+      <tr><td>Worker 异常退出</td><td>查看控制台 <code>[TTS stderr]</code> 输出，检查 PyTorch 与 CUDA 版本匹配</td></tr>
+      <tr><td>合成速度过慢</td><td>确认 GPU 模式已启用，检查 <code>nvidia-smi</code> 显卡状态</td></tr>
+      <tr><td>音频播放无声</td><td>检查浏览器音频权限，确认返回的 WAV 数据完整</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="note">
+    <strong>TTS 状态检查：</strong>启动后控制台会输出 <code>TTS 状态: 已启用 / 未启用</code>。访问 <code>/api/tts</code> 返回 404 表示 TTS 未启用。
+  </div>
+</section>
+
+<!-- ========== 第8章 ========== -->
+<section class="chapter" id="ch8">
+  <h2>8. 常见问题</h2>
+
+  <div class="faq-item">
+    <h4>Q1：启动时提示"端口 3000 被占用"怎么办？</h4>
+    <p>启动器会自动清理 3000 端口的残留进程。若仍被占用，可手动执行：<code>netstat -ano | findstr ":3000"</code> 查看占用进程 PID，再执行 <code>taskkill /F /PID 你的PID</code> 终止进程。或在 <code>.env</code> 中修改 <code>PORT</code> 为其他端口。</p>
+  </div>
+
+  <div class="faq-item">
+    <h4>Q2：如何重置数据库到初始状态？</h4>
+    <p>停止服务后，删除 <code>data/lingshan.db</code>、<code>data/lingshan.db-wal</code>、<code>data/lingshan.db-shm</code> 三个文件，然后运行 <code>node scripts/init-db.js</code> 重新初始化。注意：此操作会清除所有数据。</p>
+  </div>
+
+  <div class="faq-item">
+    <h4>Q3：TTS 语音合成不工作（没有声音）怎么办？</h4>
+    <p>① 检查控制台是否输出 <code>[TTS] Worker started successfully</code>；② 确认 GPT-SoVITS 目录存在且包含 <code>tts_worker.py</code>；③ 确认 Python 环境已安装 PyTorch 与 GPT-SoVITS 依赖；④ 查看 <code>[TTS stderr]</code> 错误输出排查具体问题。</p>
+  </div>
+
+  <div class="faq-item">
+    <h4>Q4：Live2D 数字人不显示怎么办？</h4>
+    <p>① 确认浏览器支持 WebGL（Chrome/Edge/Firefox 最新版）；② 检查 <code>website/live2d-models/ling/</code> 目录下模型文件完整（含 <code>ling.model3.json</code>、<code>ling.moc3</code>、textures）；③ 清除浏览器缓存后刷新；④ 打开浏览器控制台查看是否有加载错误。</p>
+  </div>
+
+  <div class="faq-item">
+    <h4>Q5：如何配置 DeepSeek API 密钥？</h4>
+    <p>在系统根目录创建或编辑 <code>.env</code> 文件，添加 <code>DEEPSEEK_API_KEY=sk-你的密钥</code>。API 密钥可在 <a href="https://platform.deepseek.com" target="_blank">DeepSeek 开放平台</a>注册获取。配置后重启服务生效。</p>
+  </div>
+
+  <div class="faq-item">
+    <h4>Q6：管理后台默认账号密码是什么？如何修改？</h4>
+    <p>默认账号 <code>admin</code>，密码 <code>admin123</code>。如需修改，可通过 <code>POST /api/admin/register</code> 创建新管理员，或直接在数据库 <code>admin_users</code> 表中修改密码字段。建议部署后立即修改默认密码。</p>
+  </div>
+
+  <div class="faq-item">
+    <h4>Q7：AI 对话回复不准确或无法连接怎么办？</h4>
+    <p>① 检查 <code>DEEPSEEK_API_KEY</code> 是否有效；② 确认网络可访问 <code>api.deepseek.com</code>；③ 查看 <code>[TTS stderr]</code> 或 <code>AI API Error</code> 日志。API 不可用时系统会自动降级为本地兜底回复（含票务、景点基础信息）。</p>
+  </div>
+
+  <div class="faq-item">
+    <h4>Q8：如何上传知识库文档增强 AI 回答？</h4>
+    <p>登录管理后台 → 知识库管理 → 点击"上传文档"，支持 txt、md、docx、pdf、html、json、csv 格式（最大 50MB）。上传后系统自动解析内容存入知识库，AI 对话时会自动检索相关文档（RAG）。CSV 文件会自动导入为 FAQ。</p>
+  </div>
+
+  <div class="faq-item">
+    <h4>Q9：数字人表情和口型不同步怎么办？</h4>
+    <p>① 在管理后台 → 数字人管理 → 口型同步，调整口型张开灵敏度与平滑系数；② 确认 TTS 音频正常播放；③ 检查表情映射配置是否正确（管理后台 → 数字人管理 → 表情映射）。</p>
+  </div>
+
+  <div class="faq-item">
+    <h4>Q10：系统启动后浏览器没有自动打开怎么办？</h4>
+    <p>手动在浏览器中输入 <code>http://localhost:3000</code> 访问。若页面无法打开，检查控制台是否显示 <code>一体化服务器已启动</code>，确认服务已正常启动。如启动器报错，检查 <code>runtime/node.exe</code> 与 <code>server.js</code> 文件是否存在。</p>
+  </div>
+
+  <div class="faq-item">
+    <h4>Q11：如何备份数据？</h4>
+    <p>停止服务后，复制 <code>data/lingshan.db</code> 文件到备份位置即可。如需完整备份，建议同时备份 <code>.env</code> 配置文件与 <code>data/uploads/</code> 知识库文档目录。WAL 文件（<code>.db-wal</code>）会在服务正常关闭后合并到主数据库。</p>
+  </div>
+
+  <div class="faq-item">
+    <h4>Q12：GPU 推理未启用，TTS 速度很慢怎么办？</h4>
+    <p>① 确认安装了 NVIDIA 显卡驱动与 CUDA 12.x；② 安装支持 CUDA 的 PyTorch：<code>pip install torch --index-url https://download.pytorch.org/whl/cu121</code>；③ 检查 <code>nvidia-smi</code> 确认显卡可用。CPU 模式下 TTS 约需 64 秒/句，建议尽量使用 GPU。</p>
+  </div>
+</section>
+
+<!-- ========== 第9章 ========== -->
+<section class="chapter" id="ch9">
+  <h2>9. 维护与更新</h2>
+
+  <h3>9.1 数据库备份</h3>
+  <p>建议定期备份数据库，避免数据丢失：</p>
+  <pre><code># 1. 停止服务
+# 2. 复制数据库文件
+copy data\lingshan.db backup\lingshan_20260720.db
+
+# 3. 如需完整备份，同时复制以下内容
+copy .env backup\.env
+xcopy /E /I data\uploads backup\uploads</code></pre>
+  <div class="note">
+    <strong>建议备份频率：</strong>日常运营建议每日备份，重大内容更新前后各备份一次。
+  </div>
+
+  <h3>9.2 知识库更新</h3>
+  <p>知识库是 AI 对话准确性的关键，建议定期维护：</p>
+  <ul>
+    <li><strong>新增文档</strong>：管理后台 → 知识库管理 → 上传文档或手动创建</li>
+    <li><strong>编辑文档</strong>：在知识库列表中点击编辑，修改标题、分类、内容</li>
+    <li><strong>下架文档</strong>：将状态改为"草稿"，AI 对话将不再检索该文档</li>
+    <li><strong>FAQ 维护</strong>：管理后台 → FAQ管理，新增/修改常见问题</li>
+    <li><strong>CSV 批量导入</strong>：上传 CSV 文件可自动导入为 FAQ（需包含"问题"和"答案"列）</li>
+  </ul>
+
+  <h3>9.3 日志查看</h3>
+  <p>系统日志通过启动器控制台窗口实时输出，主要日志类型：</p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th style="width:180px;">日志标识</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td><code>[启动]</code></td><td>启动器初始化、端口清理、浏览器打开</td></tr>
+      <tr><td><code>灵山胜境AI数字人导游系统 v2.0</code></td><td>服务器启动成功，显示各入口地址</td></tr>
+      <tr><td><code>[TTS]</code></td><td>TTS Worker 启动、状态、退出信息</td></tr>
+      <tr><td><code>[TTS stderr]</code></td><td>TTS 子进程错误输出</td></tr>
+      <tr><td><code>AI API Error</code></td><td>DeepSeek API 调用失败信息</td></tr>
+      <tr><td><code>[Server Error]</code></td><td>全局错误处理输出</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="note">
+    <strong>日志保存：</strong>控制台日志不会自动保存到文件。如需留存日志，可在启动时重定向输出：<code>灵山AI导游.exe > logs.txt 2>&1</code>。
+  </div>
+
+  <h3>9.4 系统更新</h3>
+  <ol>
+    <li>停止当前运行的服务</li>
+    <li>备份数据库与配置文件</li>
+    <li>替换新版本的程序文件（保留 <code>data/</code>、<code>.env</code>、<code>data/uploads/</code>）</li>
+    <li>如涉及数据库结构变更，运行 <code>node scripts/setup-all.js</code> 升级表结构</li>
+    <li>重新启动服务并验证功能</li>
+  </ol>
+</section>
+
+<!-- ========== 第10章 ========== -->
+<section class="chapter" id="ch10">
+  <h2>10. 技术参数</h2>
+  <p>以下是系统的核心技术参数汇总：</p>
+
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th style="width:180px;">参数项</th><th>规格</th></tr></thead>
+    <tbody>
+      <tr><td><strong>系统版本</strong></td><td>v2.0</td></tr>
+      <tr><td><strong>服务器端口</strong></td><td>3000（HTTP，单端口运行）</td></tr>
+      <tr><td><strong>后端运行时</strong></td><td>Node.js v22.22.2 + Express 4.19.2</td></tr>
+      <tr><td><strong>数据库类型</strong></td><td>SQLite（better-sqlite3 v12.11，WAL 模式）</td></tr>
+      <tr><td><strong>数据表数量</strong></td><td>13 张</td></tr>
+      <tr><td><strong>AI 模型</strong></td><td>DeepSeek Chat（deepseek-chat，temperature 0.7，max_tokens 2000）</td></tr>
+      <tr><td><strong>TTS 引擎</strong></td><td>GPT-SoVITS v2pro</td></tr>
+      <tr><td><strong>TTS 声线</strong></td><td>三月七 March7th v3（年轻活泼女声）</td></tr>
+      <tr><td><strong>Live2D 模型</strong></td><td>小灵（8 种表情 / 2 组动作 / 口型同步 / 眨眼）</td></tr>
+      <tr><td><strong>Live2D SDK</strong></td><td>Cubism SDK 5</td></tr>
+      <tr><td><strong>地图引擎</strong></td><td>腾讯地图 JSAPI GL v1</td></tr>
+      <tr><td><strong>图表库</strong></td><td>ECharts 5.4</td></tr>
+      <tr><td><strong>认证方式</strong></td><td>JWT（jsonwebtoken v9，24小时有效期）</td></tr>
+      <tr><td><strong>文件上传</strong></td><td>multer v2.2（头像 10MB / 知识库文档 50MB）</td></tr>
+      <tr><td><strong>文档解析</strong></td><td>mammoth v1.12（docx）、原生（txt/md/html/csv/json）</td></tr>
+      <tr><td><strong>GPU 推理速度</strong></td><td>约 6.5 秒/句（CUDA 12.x）</td></tr>
+      <tr><td><strong>CPU 推理速度</strong></td><td>约 64 秒/句</td></tr>
+      <tr><td><strong>API 路由模块</strong></td><td>10 个（scenic-spots / faqs / chat / routes / stats / character / ticket / admin / visualization / knowledge）</td></tr>
+      <tr><td><strong>分发方式</strong></td><td>Node.js SEA（Single Executable Application）打包</td></tr>
+      <tr><td><strong>默认管理员</strong></td><td>admin / admin123</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+</section>
+
+</main>
+</div>
+
+<!-- ========== 页脚 ========== -->
+<footer>
+  <p>灵山胜境AI数字人导游系统 v2.0 — 产品部署和使用手册</p>
+  <p>文档版本：v2.0 &nbsp;|&nbsp; 更新日期：2026-07-20</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,2 @@
+
+7fc53134e754c46dd9a2b83e4d16f6906ce369e0	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/sql.js","integrity":null,"time":1784522259605,"size":"262","metadata":{"time":1784522259605,"url":"http://registry.npm.taobao.org/sql.js","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:37:41 GMT","location":"https://registry.npmmirror.com/sql.js"},"options":{"compress":true},"status":301}}

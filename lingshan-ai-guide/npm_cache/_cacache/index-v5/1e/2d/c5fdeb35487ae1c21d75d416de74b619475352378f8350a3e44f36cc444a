@@ -1,0 +1,2 @@
+
+33ea108114839910271aaf6e47817ce472771b07	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/@typescript%2ftypescript-openbsd-arm64","integrity":null,"time":1784522614743,"size":"262","metadata":{"time":1784522614743,"url":"http://registry.npm.taobao.org/@typescript%2ftypescript-openbsd-arm64","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:36 GMT","location":"https://registry.npmmirror.com/@typescript%2ftypescript-openbsd-arm64"},"options":{"compress":true},"status":301}}

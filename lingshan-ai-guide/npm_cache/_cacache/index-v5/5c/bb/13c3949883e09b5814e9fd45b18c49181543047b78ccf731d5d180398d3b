@@ -1,0 +1,2 @@
+
+d5f986a8a7a8c4e371b5deeb13f23a91d5f603bb	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/download","integrity":null,"time":1784522609045,"size":"262","metadata":{"time":1784522609045,"url":"http://registry.npm.taobao.org/download","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:31 GMT","location":"https://registry.npmmirror.com/download"},"options":{"compress":true},"status":301}}

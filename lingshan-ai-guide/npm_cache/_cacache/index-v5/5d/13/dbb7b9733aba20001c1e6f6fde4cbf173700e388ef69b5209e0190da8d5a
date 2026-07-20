@@ -1,0 +1,2 @@
+
+5b5d7419825f679fe521b09f88919279041d4fa3	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/fs.realpath","integrity":null,"time":1784522610344,"size":"262","metadata":{"time":1784522610344,"url":"http://registry.npm.taobao.org/fs.realpath","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:32 GMT","location":"https://registry.npmmirror.com/fs.realpath"},"options":{"compress":true},"status":301}}

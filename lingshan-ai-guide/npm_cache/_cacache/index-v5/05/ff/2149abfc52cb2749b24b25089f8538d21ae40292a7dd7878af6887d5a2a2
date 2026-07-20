@@ -1,0 +1,2 @@
+
+a4288bfe3eaeaa4456e178d8d191f3907509d75a	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/is-natural-number","integrity":null,"time":1784522610950,"size":"262","metadata":{"time":1784522610950,"url":"http://registry.npm.taobao.org/is-natural-number","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:33 GMT","location":"https://registry.npmmirror.com/is-natural-number"},"options":{"compress":true},"status":301}}

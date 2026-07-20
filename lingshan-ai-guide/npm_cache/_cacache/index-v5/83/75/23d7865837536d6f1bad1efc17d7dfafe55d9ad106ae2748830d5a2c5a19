@@ -1,0 +1,2 @@
+
+869aea1c1fb0b9ab966544934178d808ef03581b	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/@xtuc%2fieee754","integrity":null,"time":1784522616238,"size":"262","metadata":{"time":1784522616238,"url":"http://registry.npm.taobao.org/@xtuc%2fieee754","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:38 GMT","location":"https://registry.npmmirror.com/@xtuc%2fieee754"},"options":{"compress":true},"status":301}}

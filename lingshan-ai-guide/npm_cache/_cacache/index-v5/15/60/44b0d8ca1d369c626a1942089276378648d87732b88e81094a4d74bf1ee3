@@ -1,0 +1,2 @@
+
+2479d855fe6a6b8a29868300ad8a7b65777f399e	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/emoji-regex","integrity":null,"time":1784522554512,"size":"262","metadata":{"time":1784522554512,"url":"http://registry.npm.taobao.org/emoji-regex","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:42:36 GMT","location":"https://registry.npmmirror.com/emoji-regex"},"options":{"compress":true},"status":301}}

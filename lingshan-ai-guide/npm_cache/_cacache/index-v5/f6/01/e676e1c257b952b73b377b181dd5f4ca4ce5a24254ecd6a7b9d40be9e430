@@ -1,0 +1,2 @@
+
+a8fe254d9521e42b89466c8e03f1a0df872f52f6	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/path-to-regexp","integrity":null,"time":1784522260025,"size":"262","metadata":{"time":1784522260025,"url":"http://registry.npm.taobao.org/path-to-regexp","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:37:42 GMT","location":"https://registry.npmmirror.com/path-to-regexp"},"options":{"compress":true},"status":301}}

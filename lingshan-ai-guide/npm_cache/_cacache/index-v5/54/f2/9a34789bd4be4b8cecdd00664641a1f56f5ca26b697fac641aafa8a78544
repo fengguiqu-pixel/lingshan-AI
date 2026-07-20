@@ -1,0 +1,2 @@
+
+4b12f2a28cbe0ed09e13149655285fd55243db8b	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/jwa","integrity":null,"time":1784522261554,"size":"262","metadata":{"time":1784522261554,"url":"http://registry.npm.taobao.org/jwa","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:37:43 GMT","location":"https://registry.npmmirror.com/jwa"},"options":{"compress":true},"status":301}}

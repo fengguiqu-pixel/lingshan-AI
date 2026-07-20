@@ -1,0 +1,2 @@
+
+a4ecfbf06452dda626f2e98c755ebb7aa05850e1	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/cli-cursor","integrity":null,"time":1784522609673,"size":"262","metadata":{"time":1784522609673,"url":"http://registry.npm.taobao.org/cli-cursor","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:31 GMT","location":"https://registry.npmmirror.com/cli-cursor"},"options":{"compress":true},"status":301}}

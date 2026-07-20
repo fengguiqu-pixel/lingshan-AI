@@ -1,0 +1,2 @@
+
+d91955ac1966b253cb60672a8aa3d18466ef09c5	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/chownr","integrity":null,"time":1784522262205,"size":"262","metadata":{"time":1784522262205,"url":"http://registry.npm.taobao.org/chownr","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:37:44 GMT","location":"https://registry.npmmirror.com/chownr"},"options":{"compress":true},"status":301}}

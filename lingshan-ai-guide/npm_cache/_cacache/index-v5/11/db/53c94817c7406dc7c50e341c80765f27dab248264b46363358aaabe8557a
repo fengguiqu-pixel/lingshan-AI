@@ -1,0 +1,2 @@
+
+bd749909b6361f46cf7911967324bf9b406b1710	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/concat-stream","integrity":null,"time":1784522260330,"size":"262","metadata":{"time":1784522260330,"url":"http://registry.npm.taobao.org/concat-stream","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:37:42 GMT","location":"https://registry.npmmirror.com/concat-stream"},"options":{"compress":true},"status":301}}

@@ -1,0 +1,2 @@
+
+d984a804d203f0252ad2628a4be29e2d78670323	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/typedarray","integrity":null,"time":1784522262067,"size":"262","metadata":{"time":1784522262067,"url":"http://registry.npm.taobao.org/typedarray","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:37:44 GMT","location":"https://registry.npmmirror.com/typedarray"},"options":{"compress":true},"status":301}}

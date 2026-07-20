@@ -1,0 +1,2 @@
+
+2946586f024555ac89350cf2e8a287efd5a3f16f	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/@typescript%2ftypescript-win32-arm64","integrity":null,"time":1784522614595,"size":"262","metadata":{"time":1784522614595,"url":"http://registry.npm.taobao.org/@typescript%2ftypescript-win32-arm64","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:36 GMT","location":"https://registry.npmmirror.com/@typescript%2ftypescript-win32-arm64"},"options":{"compress":true},"status":301}}

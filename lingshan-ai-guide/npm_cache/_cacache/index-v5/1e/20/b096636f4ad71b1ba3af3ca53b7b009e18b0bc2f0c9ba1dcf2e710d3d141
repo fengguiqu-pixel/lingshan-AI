@@ -1,0 +1,2 @@
+
+06d76544eeb844ce8d08054411eb1b36c0fcde02	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/@discoveryjs%2fjson-ext","integrity":null,"time":1784522614759,"size":"262","metadata":{"time":1784522614759,"url":"http://registry.npm.taobao.org/@discoveryjs%2fjson-ext","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:36 GMT","location":"https://registry.npmmirror.com/@discoveryjs%2fjson-ext"},"options":{"compress":true},"status":301}}

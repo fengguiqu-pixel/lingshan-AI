@@ -1,0 +1,2 @@
+
+1e2ca25e67dba2160681b184bb1ee5ebe93cc393	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/decompress-targz","integrity":null,"time":1784522610753,"size":"262","metadata":{"time":1784522610753,"url":"http://registry.npm.taobao.org/decompress-targz","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:32 GMT","location":"https://registry.npmmirror.com/decompress-targz"},"options":{"compress":true},"status":301}}

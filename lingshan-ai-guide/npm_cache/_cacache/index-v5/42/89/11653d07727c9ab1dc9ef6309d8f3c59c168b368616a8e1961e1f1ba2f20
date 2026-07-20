@@ -1,0 +1,2 @@
+
+d523fd2caa2a34765b2eeaa84c481f9ba3dc28fe	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/@szmarczak%2fhttp-timer","integrity":null,"time":1784522609588,"size":"262","metadata":{"time":1784522609588,"url":"http://registry.npm.taobao.org/@szmarczak%2fhttp-timer","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:31 GMT","location":"https://registry.npmmirror.com/@szmarczak%2fhttp-timer"},"options":{"compress":true},"status":301}}

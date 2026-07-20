@@ -1,0 +1,2 @@
+
+ea031f1e115a8cba50e9ee5df67b3f48a6544e04	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/app-builder","integrity":null,"time":1784522609037,"size":"262","metadata":{"time":1784522609037,"url":"http://registry.npm.taobao.org/app-builder","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:31 GMT","location":"https://registry.npmmirror.com/app-builder"},"options":{"compress":true},"status":301}}

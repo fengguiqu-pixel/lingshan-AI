@@ -1,0 +1,2 @@
+
+b5e8ec7b5a7f9568e27caf787946366db993d102	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/bluebird","integrity":null,"time":1784522260264,"size":"262","metadata":{"time":1784522260264,"url":"http://registry.npm.taobao.org/bluebird","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:37:42 GMT","location":"https://registry.npmmirror.com/bluebird"},"options":{"compress":true},"status":301}}

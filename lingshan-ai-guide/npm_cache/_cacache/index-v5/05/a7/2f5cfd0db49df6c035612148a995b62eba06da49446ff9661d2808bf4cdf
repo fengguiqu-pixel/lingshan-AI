@@ -1,0 +1,2 @@
+
+4dda35291505598de381997db35579cbf03fb267	{"key":"make-fetch-happen:request-cache:http://registry.npm.taobao.org/decompress","integrity":null,"time":1784522609436,"size":"262","metadata":{"time":1784522609436,"url":"http://registry.npm.taobao.org/decompress","reqHeaders":{"accept":"application/json"},"resHeaders":{"content-type":"text/html","date":"Mon, 20 Jul 2026 04:43:31 GMT","location":"https://registry.npmmirror.com/decompress"},"options":{"compress":true},"status":301}}
