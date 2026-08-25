@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>灵山胜境 AI 数字人导游 · 手机端模拟演示</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg-1: #0d0f1a;
+    --bg-2: #151a2e;
+    --panel: rgba(255,255,255,0.06);
+    --panel-border: rgba(255,255,255,0.10);
+    --text: #e8eaf2;
+    --text-dim: #8b91a8;
+    --accent: #f0b35c;
+    --accent-2: #6c8cff;
+    --ok: #4cd48a;
+  }
+
+  html, body { height: 100%; }
+
+  body {
+    font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    background:
+      radial-gradient(1200px 700px at 70% -10%, rgba(108,140,255,0.10), transparent 60%),
+      radial-gradient(900px 600px at 10% 110%, rgba(240,179,92,0.08), transparent 55%),
+      linear-gradient(160deg, var(--bg-1), var(--bg-2));
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ===== 顶部工具栏 ===== */
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 18px;
+    background: rgba(13,15,26,0.85);
+    border-bottom: 1px solid var(--panel-border);
+    backdrop-filter: blur(10px);
+    z-index: 10;
+    flex-wrap: wrap;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand-icon {
+    width: 34px; height: 34px; border-radius: 9px;
+    background: linear-gradient(135deg, #b3541e, #f0b35c);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; box-shadow: 0 2px 10px rgba(240,179,92,0.35);
+  }
+  .brand-title { font-size: 15px; font-weight: 600; letter-spacing: 0.5px; }
+  .brand-sub { font-size: 11px; color: var(--text-dim); margin-top: 1px; }
+
+  .divider { width: 1px; height: 26px; background: var(--panel-border); }
+
+  .chip-group { display: flex; gap: 6px; }
+  .chip {
+    padding: 6px 13px; font-size: 12.5px; color: var(--text-dim);
+    background: var(--panel); border: 1px solid var(--panel-border);
+    border-radius: 999px; cursor: pointer; transition: all .18s;
+    user-select: none; white-space: nowrap;
+  }
+  .chip:hover { color: var(--text); border-color: rgba(255,255,255,0.25); }
+  .chip.active {
+    color: #1a1a2e; background: linear-gradient(135deg, #f0b35c, #f6cd8a);
+    border-color: transparent; font-weight: 600;
+    box-shadow: 0 2px 12px rgba(240,179,92,0.4);
+  }
+
+  .btn {
+    padding: 7px 14px; font-size: 12.5px; color: var(--text);
+    background: var(--panel); border: 1px solid var(--panel-border);
+    border-radius: 8px; cursor: pointer; transition: all .18s;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn:hover { background: rgba(255,255,255,0.12); }
+  .btn.primary {
+    background: linear-gradient(135deg, #4a63d8, #6c8cff);
+    border-color: transparent; font-weight: 600;
+    box-shadow: 0 2px 12px rgba(108,140,255,0.35);
+  }
+  .btn.primary:hover { filter: brightness(1.1); }
+
+  .toolbar .spacer { flex: 1; }
+
+  .status-pill {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 12px; color: var(--text-dim);
+    padding: 6px 12px; border-radius: 999px;
+    background: var(--panel); border: 1px solid var(--panel-border);
+  }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #777; transition: background .3s; }
+  .status-dot.online { background: var(--ok); box-shadow: 0 0 8px var(--ok); }
+  .status-dot.offline { background: #ff5f5f; box-shadow: 0 0 8px #ff5f5f; }
+
+  select.zoom {
+    padding: 7px 10px; font-size: 12.5px; color: var(--text);
+    background: var(--panel); border: 1px solid var(--panel-border);
+    border-radius: 8px; cursor: pointer; outline: none;
+  }
+  select.zoom option { background: #151a2e; }
+
+  /* ===== 舞台 ===== */
+  .stage {
+    flex: 1; position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .stage::before {
+    content: ""; position: absolute; inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,0.045) 1px, transparent 1px);
+    background-size: 26px 26px;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+    pointer-events: none;
+  }
+
+  .phone-wrap {
+    position: relative;
+    transition: transform .35s cubic-bezier(.22,.9,.36,1);
+    transform-origin: center center;
+  }
+
+  /* ===== 手机外壳 ===== */
+  .phone {
+    position: relative;
+    background: linear-gradient(145deg, #2a2d3a, #101219 30%, #0a0b10 70%, #232632);
+    border-radius: 58px;
+    padding: 11px;
+    box-shadow:
+      0 0 0 1.5px rgba(255,255,255,0.09),
+      0 0 0 5px rgba(0,0,0,0.55),
+      0 40px 90px rgba(0,0,0,0.65),
+      0 18px 40px rgba(0,0,0,0.5),
+      inset 0 0 4px rgba(255,255,255,0.06);
+  }
+
+  /* 侧边实体按键 */
+  .side-btn { position: absolute; background: linear-gradient(90deg, #343848, #1b1e29); border-radius: 3px; }
+  .btn-power { right: -3.5px; top: 200px; width: 3.5px; height: 88px;
+    box-shadow: 1px 0 3px rgba(0,0,0,0.6); }
+  .btn-vol-up { left: -3.5px; top: 160px; width: 3.5px; height: 56px; }
+  .btn-vol-down { left: -3.5px; top: 228px; width: 3.5px; height: 56px; }
+
+  .screen {
+    position: relative;
+    width: 393px; height: 852px;
+    border-radius: 47px;
+    overflow: hidden;
+    background: #1a1a2e;
+  }
+
+  /* 屏幕内的 APP iframe */
+  .screen iframe {
+    width: 100%; height: 100%; border: 0; display: block;
+    background: #1a1a2e;
+  }
+
+  /* 状态栏（覆盖在 iframe 上方，不拦截触摸） */
+  .statusbar {
+    position: absolute; top: 0; left: 0; right: 0; height: 42px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 26px; font-size: 13.5px; font-weight: 600;
+    color: #fff; pointer-events: none; z-index: 5;
+    font-family: "Segoe UI", "PingFang SC", sans-serif;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+  }
+  .statusbar .sb-right { display: flex; align-items: center; gap: 5px; }
+  .sb-icon { display: inline-flex; align-items: center; }
+
+  /* 灵动岛 / 挖孔 */
+  .notch-island {
+    position: absolute; top: 11px; left: 50%; transform: translateX(-50%);
+    width: 118px; height: 33px; background: #000;
+    border-radius: 20px; z-index: 6; pointer-events: none;
+    box-shadow: inset 0 0 2px rgba(255,255,255,0.06);
+  }
+  .notch-hole {
+    position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+    width: 14px; height: 14px; background: #000;
+    border-radius: 50%; z-index: 6; pointer-events: none;
+    box-shadow: 0 0 0 2px rgba(0,0,0,0.85), inset 0 0 3px rgba(80,90,120,0.6);
+  }
+  .notch-none { display: none; }
+
+  /* 底部 home 指示条 */
+  .home-bar {
+    position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+    width: 132px; height: 5px; border-radius: 3px;
+    background: rgba(255,255,255,0.85); z-index: 6; pointer-events: none;
+    mix-blend-mode: difference;
+  }
+
+  /* iframe 加载遮罩 */
+  .screen-loading {
+    position: absolute; inset: 0; z-index: 8;
+    background: #1a1a2e;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
+    transition: opacity .4s;
+  }
+  .screen-loading.hide { opacity: 0; pointer-events: none; }
+  .sl-logo { font-size: 52px; }
+  .sl-title { font-size: 19px; font-weight: 600; letter-spacing: 2px; color: #f0b35c; }
+  .sl-sub { font-size: 12px; color: var(--text-dim); }
+  .sl-spinner {
+    width: 26px; height: 26px; border-radius: 50%;
+    border: 3px solid rgba(240,179,92,0.18);
+    border-top-color: #f0b35c;
+    animation: spin 0.9s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ===== 底部提示条 ===== */
+  .footer-hint {
+    padding: 8px 18px; text-align: center;
+    font-size: 12px; color: var(--text-dim);
+    background: rgba(13,15,26,0.7);
+    border-top: 1px solid var(--panel-border);
+    z-index: 10;
+  }
+  .footer-hint kbd {
+    background: var(--panel); border: 1px solid var(--panel-border);
+    border-radius: 4px; padding: 1px 6px; font-size: 11px;
+    font-family: Consolas, monospace; color: var(--text);
+  }
+
+  /* ===== 演示模式（全屏时隐藏工具栏和提示）===== */
+  body.presenting .toolbar, body.presenting .footer-hint { display: none; }
+  body.presenting .exit-hint { display: block; }
+  .exit-hint {
+    display: none; position: fixed; top: 14px; left: 50%; transform: translateX(-50%);
+    z-index: 20; font-size: 12px; color: var(--text-dim);
+    background: rgba(13,15,26,0.8); border: 1px solid var(--panel-border);
+    padding: 6px 14px; border-radius: 999px;
+    animation: fadeout 4s forwards;
+  }
+  @keyframes fadeout { 0%,60% { opacity: 1; } 100% { opacity: 0; } }
+
+  /* 演示模式的聚光灯效果 */
+  body.presenting .stage::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse 62% 78% at center, transparent 55%, rgba(0,0,0,0.5) 100%);
+  }
+
+  /* 旋转动画时的宽高过渡 */
+  .screen, .phone { transition: width .35s cubic-bezier(.22,.9,.36,1), height .35s cubic-bezier(.22,.9,.36,1); }
+</style>
+</head>
+<body>
+
+  <!-- 顶部工具栏 -->
+  <div class="toolbar">
+    <div class="brand">
+      <div class="brand-icon">🛕</div>
+      <div>
+        <div class="brand-title">灵山胜境 AI 数字人导游</div>
+        <div class="brand-sub">手机端模拟演示 · Simulated on PC</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="chip-group" id="deviceGroup">
+      <div class="chip active" data-device="iphone15">iPhone 15 Pro</div>
+      <div class="chip" data-device="pixel8">Pixel 8 Pro</div>
+      <div class="chip" data-device="se">iPhone SE</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <select class="zoom" id="zoomSel" title="缩放比例">
+      <option value="auto" selected>自动适配</option>
+      <option value="1">100%</option>
+      <option value="0.85">85%</option>
+      <option value="0.7">70%</option>
+      <option value="0.55">55%</option>
+      <option value="0.4">40%</option>
+    </select>
+
+    <button class="btn" id="rotateBtn" title="横竖屏切换">🔄 旋转</button>
+    <button class="btn" id="reloadBtn" title="重新加载手机端应用">⟳ 刷新</button>
+    <button class="btn" id="newTabBtn" title="在新标签页打开手机版">↗ 新窗口</button>
+
+    <div class="spacer"></div>
+
+    <div class="status-pill">
+      <span class="status-dot" id="statusDot"></span>
+      <span id="statusText">检测服务器中…</span>
+    </div>
+
+    <button class="btn primary" id="presentBtn">⛶ 全屏演示</button>
+  </div>
+
+  <!-- 舞台 -->
+  <div class="stage" id="stage">
+    <div class="phone-wrap" id="phoneWrap">
+      <div class="phone" id="phone">
+        <div class="side-btn btn-power"></div>
+        <div class="side-btn btn-vol-up"></div>
+        <div class="side-btn btn-vol-down"></div>
+
+        <div class="screen" id="screen">
+          <!-- 状态栏 -->
+          <div class="statusbar" id="statusbar">
+            <span id="sbTime">9:41</span>
+            <span class="sb-right">
+              <span class="sb-icon" title="信号">
+                <svg width="17" height="12" viewBox="0 0 17 12" fill="none">
+                  <rect x="0" y="7" width="3" height="5" rx="1" fill="white"/>
+                  <rect x="4.5" y="5" width="3" height="7" rx="1" fill="white"/>
+                  <rect x="9" y="2.5" width="3" height="9.5" rx="1" fill="white"/>
+                  <rect x="13.5" y="0" width="3" height="12" rx="1" fill="white"/>
+                </svg>
+              </span>
+              <span class="sb-icon" title="WiFi">
+                <svg width="16" height="12" viewBox="0 0 16 12" fill="none">
+                  <path d="M8 10.8 L6.2 8.6 A2.8 2.8 0 0 1 9.8 8.6 Z" fill="white"/>
+                  <path d="M3.6 5.9 A6.5 6.5 0 0 1 12.4 5.9" stroke="white" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+                  <path d="M1.2 3.2 A10 10 0 0 1 14.8 3.2" stroke="white" stroke-width="1.6" stroke-linecap="round" fill="none" opacity="0.9"/>
+                </svg>
+              </span>
+              <span class="sb-icon" title="电池">
+                <svg width="25" height="12" viewBox="0 0 25 12" fill="none">
+                  <rect x="0.5" y="0.5" width="21" height="11" rx="3" stroke="white" stroke-opacity="0.5" fill="none"/>
+                  <rect x="2" y="2" width="15" height="8" rx="1.6" fill="white"/>
+                  <path d="M23 4 L23 8 C24.1 7.6 24.1 4.4 23 4 Z" fill="white" fill-opacity="0.5"/>
+                </svg>
+              </span>
+            </span>
+          </div>
+
+          <!-- 灵动岛（iPhone 15）/ 挖孔（Pixel）/ 无（SE）-->
+          <div class="notch-island" id="notch"></div>
+
+          <!-- 底部指示条 -->
+          <div class="home-bar" id="homeBar"></div>
+
+          <!-- 加载遮罩 -->
+          <div class="screen-loading" id="screenLoading">
+            <div class="sl-logo">🛕</div>
+            <div class="sl-title">灵山胜境</div>
+            <div class="sl-sub">AI 数字人导游 · 手机版</div>
+            <div class="sl-spinner"></div>
+          </div>
+
+          <!-- 手机端应用（真实运行） -->
+          <iframe id="appFrame" src="/mobile/"
+            allow="geolocation; camera; microphone; autoplay; fullscreen; xr-spatial-tracking"
+            allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部提示 -->
+  <div class="footer-hint">
+    💡 演示提示：首次请先<b style="color:var(--accent)">点击手机屏幕任意位置</b>以激活语音播放（浏览器自动播放策略） ·
+    快捷键：<kbd>F</kbd> 全屏演示 · <kbd>R</kbd> 刷新应用 · <kbd>T</kbd> 旋转 · <kbd>Esc</kbd> 退出全屏
+  </div>
+
+  <div class="exit-hint">演示模式 · 按 Esc 退出全屏</div>
+
+<script>
+(function () {
+  // ===== 设备预设 =====
+  var DEVICES = {
+    iphone15: { name: 'iPhone 15 Pro', w: 393, h: 852, radius: 47, phoneRadius: 58, notch: 'island' },
+    pixel8:   { name: 'Pixel 8 Pro',   w: 412, h: 915, radius: 38, phoneRadius: 48, notch: 'hole'  },
+    se:       { name: 'iPhone SE',     w: 375, h: 667, radius: 38, phoneRadius: 48, notch: 'none'  }
+  };
+
+  var state = {
+    device: 'iphone15',
+    zoom: 'auto',
+    landscape: false
+  };
+
+  var phoneEl     = document.getElementById('phone');
+  var screenEl    = document.getElementById('screen');
+  var phoneWrap   = document.getElementById('phoneWrap');
+  var stageEl     = document.getElementById('stage');
+  var frameEl     = document.getElementById('appFrame');
+  var loadingEl   = document.getElementById('screenLoading');
+  var notchEl     = document.getElementById('notch');
+  var statusbarEl = document.getElementById('statusbar');
+
+  // ===== 应用设备外观 =====
+  function applyDevice() {
+    var d = DEVICES[state.device];
+    var w = state.landscape ? d.h : d.w;
+    var h = state.landscape ? d.w : d.h;
+
+    screenEl.style.width = w + 'px';
+    screenEl.style.height = h + 'px';
+    screenEl.style.borderRadius = d.radius + 'px';
+    phoneEl.style.borderRadius = d.phoneRadius + 'px';
+
+    // 挖孔样式
+    notchEl.className = 'notch-none';
+    if (!state.landscape) {
+      if (d.notch === 'island') notchEl.className = 'notch-island';
+      if (d.notch === 'hole')   notchEl.className = 'notch-hole';
+    }
+
+    // 状态栏：横屏时隐藏（手机横屏一般沉浸）
+    statusbarEl.style.display = state.landscape ? 'none' : 'flex';
+
+    fit();
+  }
+
+  // ===== 缩放适配 =====
+  function fit() {
+    var d = DEVICES[state.device];
+    var w = state.landscape ? d.h : d.w;
+    var h = state.landscape ? d.w : d.h;
+    // 外壳 padding 11px + 边框阴影余量
+    var phoneW = w + 22, phoneH = h + 22;
+
+    var rect = stageEl.getBoundingClientRect();
+    var availW = rect.width - 60, availH = rect.height - 60;
+
+    var s;
+    if (state.zoom === 'auto') {
+      s = Math.min(1, availW / phoneW, availH / phoneH);
+    } else {
+      s = parseFloat(state.zoom);
+    }
+    phoneWrap.style.transform = 'scale(' + s + ')';
+  }
+
+  window.addEventListener('resize', fit);
+
+  // ===== 设备切换 =====
+  document.getElementById('deviceGroup').addEventListener('click', function (e) {
+    var chip = e.target.closest('.chip');
+    if (!chip) return;
+    document.querySelectorAll('#deviceGroup .chip').forEach(function (c) { c.classList.remove('active'); });
+    chip.classList.add('active');
+    state.device = chip.dataset.device;
+    applyDevice();
+  });
+
+  // ===== 缩放切换 =====
+  document.getElementById('zoomSel').addEventListener('change', function () {
+    state.zoom = this.value;
+    fit();
+  });
+
+  // ===== 旋转 =====
+  function rotate() {
+    state.landscape = !state.landscape;
+    applyDevice();
+  }
+  document.getElementById('rotateBtn').addEventListener('click', rotate);
+
+  // ===== 刷新应用 =====
+  function reloadApp() {
+    loadingEl.classList.remove('hide');
+    frameEl.src = '/mobile/?t=' + Date.now();
+  }
+  document.getElementById('reloadBtn').addEventListener('click', reloadApp);
+
+  // ===== 新窗口打开 =====
+  document.getElementById('newTabBtn').addEventListener('click', function () {
+    window.open('/mobile/', '_blank');
+  });
+
+  // ===== iframe 加载完成 =====
+  frameEl.addEventListener('load', function () {
+    setTimeout(function () { loadingEl.classList.add('hide'); }, 600);
+  });
+
+  // ===== 全屏演示 =====
+  var presentBtn = document.getElementById('presentBtn');
+  function enterPresent() {
+    document.body.classList.add('presenting');
+    if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen().catch(function () {});
+    }
+    setTimeout(fit, 100);
+    setTimeout(fit, 400);
+  }
+  function exitPresent() {
+    document.body.classList.remove('presenting');
+    if (document.fullscreenElement && document.exitFullscreen) {
+      document.exitFullscreen().catch(function () {});
+    }
+    setTimeout(fit, 100);
+  }
+  presentBtn.addEventListener('click', function () {
+    if (document.body.classList.contains('presenting')) exitPresent();
+    else enterPresent();
+  });
+  document.addEventListener('fullscreenchange', function () {
+    if (!document.fullscreenElement) {
+      document.body.classList.remove('presenting');
+      setTimeout(fit, 100);
+    }
+  });
+
+  // ===== 快捷键 =====
+  document.addEventListener('keydown', function (e) {
+    // 输入框内不拦截
+    var tag = (e.target.tagName || '').toLowerCase();
+    if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;
+    var k = e.key.toLowerCase();
+    if (k === 'f') { document.body.classList.contains('presenting') ? exitPresent() : enterPresent(); }
+    else if (k === 'r') { reloadApp(); }
+    else if (k === 't') { rotate(); }
+  });
+
+  // ===== 状态栏时间 =====
+  function updateTime() {
+    var now = new Date();
+    var h = now.getHours();
+    var m = now.getMinutes();
+    var mm = m < 10 ? '0' + m : m;
+    document.getElementById('sbTime').textContent = h + ':' + mm;
+  }
+  updateTime();
+  setInterval(updateTime, 20000);
+
+  // ===== 服务器状态检测 =====
+  function checkServer() {
+    var dot = document.getElementById('statusDot');
+    var text = document.getElementById('statusText');
+    fetch('/api/health', { cache: 'no-store' })
+      .then(function (r) {
+        if (r.ok) { dot.className = 'status-dot online'; text.textContent = '服务器已连接'; }
+        else throw new Error('bad status');
+      })
+      .catch(function () {
+        dot.className = 'status-dot offline';
+        text.textContent = '服务器未连接';
+      });
+  }
+  checkServer();
+  setInterval(checkServer, 10000);
+
+  // ===== 初始化 =====
+  applyDevice();
+  // 页面尺寸稳定后再校准一次（全屏/窗口变化）
+  setTimeout(fit, 300);
+})();
+</script>
+</body>
+</html>

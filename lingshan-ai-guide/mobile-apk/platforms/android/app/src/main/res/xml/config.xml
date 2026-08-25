@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.lingshan.aiguide" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <feature name="StatusBar">
+        <param name="android-package" value="org.apache.cordova.statusbar.StatusBar" />
+        <param name="onload" value="true" />
+    </feature>
+    <name>灵山胜境AI数字人导游</name>
+    <description>灵山胜境景区 AI 数字人导游手机客户端（独立手机版前端）</description>
+    <author email="dev@lingshan.local" href="http://lingshan.local">
+        灵山胜境AI导游团队
+    </author>
+    <icon src="res/icon/android/icon-192.png" />
+    <icon density="ldpi" src="res/icon/android/icon-192.png" />
+    <icon density="mdpi" src="res/icon/android/icon-192.png" />
+    <icon density="hdpi" src="res/icon/android/icon-192.png" />
+    <icon density="xhdpi" src="res/icon/android/icon-192.png" />
+    <icon density="xxhdpi" src="res/icon/android/icon-512.png" />
+    <icon density="xxxhdpi" src="res/icon/android/icon-512.png" />
+    <icon height="180" platform="ios" src="res/icon/ios/icon-180.png" width="180" />
+    <access origin="*" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <preference name="loglevel" value="DEBUG" />
+    <preference name="Orientation" value="default" />
+    <preference name="Fullscreen" value="true" />
+    <preference name="DisallowOverscroll" value="true" />
+    <preference name="BackgroundColor" value="#FF1A1A2E" />
+    <preference name="HideKeyboardFormAccessoryBar" value="true" />
+    <preference name="KeepRunning" value="false" />
+    <preference name="StatusBarOverlaysWebView" value="true" />
+    <preference name="StatusBarBackgroundColor" value="#FF1A1A2E" />
+    <preference name="StatusBarStyle" value="lightcontent" />
+    <preference name="AndroidWindowSplashScreenBackground" value="#FF1A1A2E" />
+    <preference name="AndroidWindowSplashScreenAnimatedIcon" value="res/icon/android/icon-192.png" />
+    <preference name="AndroidInsecureFileModeEnabled" value="true" />
+</widget>

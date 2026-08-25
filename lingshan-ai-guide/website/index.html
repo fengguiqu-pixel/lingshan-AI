@@ -2,11 +2,47 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>灵山胜境 · AI数字人导游系统</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#1a1a2e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="灵山AI导游">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="format-detection" content="telephone=no">
   <meta name="description" content="灵山胜境AI数字人导游系统 - 智能导览、景点介绍、路线规划">
-  <link rel="stylesheet" href="css/style.css?v=14">
+  <title>灵山胜境 · AI数字人导游系统</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="css/style.css?v=29">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%23C8A357'/><text y='68' x='50' font-size='60' text-anchor='middle' fill='white'>灵</text></svg>">
+  <script>
+    // 注册 Service Worker（PWA 离线缓存）
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js?v=2.7').then((reg) => {
+          console.log('[PWA] Service Worker registered:', reg.scope);
+          // 确保新版本立即生效
+          if (reg.waiting) {
+            reg.waiting.postMessage('SKIP_WAITING');
+          }
+          reg.addEventListener('updatefound', () => {
+            const newWorker = reg.installing;
+            if (newWorker) {
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'activated') {
+                  console.log('[PWA] New Service Worker activated');
+                }
+              });
+            }
+          });
+        }).catch((err) => {
+          console.warn('[PWA] SW registration failed:', err);
+        });
+      });
+    }
+  </script>
 </head>
 <body>
 
@@ -25,6 +61,7 @@
       <li><a data-nav="avatar-manager" onclick="navigateTo('avatar-manager')">数字人形象</a></li>
     </ul>
     <div class="nav-actions">
+      <a href="/qr" target="_blank" class="nav-btn" style="text-decoration:none;">📱 手机访问</a>
       <button id="navUserBtn" class="nav-btn nav-account-btn" onclick="navigateTo('auth')">登录 / 注册</button>
       <button class="nav-btn" onclick="navigateTo('ai-chat')">与小灵对话</button>
     </div>
@@ -47,6 +84,9 @@
         <div class="hero-buttons">
           <button class="hero-btn-primary" onclick="navigateTo('map')">
             <span>🗺️</span> 开始游览
+          </button>
+          <button class="hero-btn-ar" onclick="openARTour(0)">
+            <span>🥽</span> AR导览
           </button>
           <button class="hero-btn-secondary" onclick="navigateTo('ai-chat')">
             <span>💬</span> 咨询小灵
@@ -73,6 +113,17 @@
           </div>
           <div class="ai-guide-features" id="aiGuideFeatures"></div>
         </div>
+      </div>
+    </section>
+
+    <!-- AR 旅游 -->
+    <section class="ar-tour-section-home">
+      <div class="section-title">
+        <h2>🥽 AR 旅游</h2>
+        <p>360° 全景沉浸，身临其境地探索灵山胜境</p>
+      </div>
+      <div class="ar-tour-home-grid" id="arTourHomeGrid">
+        <!-- 动态生成 5 个场景 -->
       </div>
     </section>
   </div>
@@ -144,7 +195,10 @@
           </div>
           <div class="map-spot-card-desc" id="mapSpotDesc"></div>
           <div class="map-spot-card-distance" id="mapSpotDistance" style="display:none;"></div>
-          <button class="map-spot-card-btn" id="mapSpotDetailBtn">查看详情 →</button>
+          <div class="map-spot-card-actions">
+            <button class="map-spot-card-btn" id="mapSpotDetailBtn">查看详情 →</button>
+            <button class="map-spot-card-btn ar" id="mapSpotArBtn">🥽 AR</button>
+          </div>
           <button class="map-spot-card-btn walk" id="mapSpotWalkBtn" style="display:none;">🚶 步行导航</button>
         </div>
       </div>
@@ -731,14 +785,18 @@
     <p style="margin-top:12px;opacity:0.4;">© 2026 灵山胜境AI数字人导游系统 · 技术演示版</p>
   </footer>
 
+  <!-- Three.js 3D 引擎 -->
+  <script src="vendor/three.min.js?v=2"></script>
+
   <!-- 腾讯地图 JSAPI -->
   <script charset="utf-8" src="https://map.qq.com/api/gljs?v=1.exp&key=WW2BZ-QDOL4-WNLUD-K3M7J-AISD2-E2BKZ"></script>
 
   <!-- Live2D 数字人导游 SDK -->
   <script src="vendor/live2dcubismcore.min.js" data-runtime-src="vendor/live2dcubismcore.min.js"></script>
   <script src="vendor/cubism/framework/live2d-runtime.min.js"></script>
-  <script src="js/live2d-integration.js?v=22"></script>
-  <script src="js/data.js?v=14"></script>
-  <script src="js/app.js?v=15"></script>
+  <script src="js/live2d-integration.js?v=29"></script>
+  <script src="js/data.js?v=19"></script>
+  <script src="js/app.js?v=30"></script>
+  <script src="js/ar-tour.js?v=29"></script>
 </body>
 </html>

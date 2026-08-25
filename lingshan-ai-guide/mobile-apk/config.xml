@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.lingshan.aiguide" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+    <name>灵山胜境AI数字人导游</name>
+    <description>灵山胜境景区 AI 数字人导游手机客户端（独立手机版前端）</description>
+    <author email="dev@lingshan.local" href="http://lingshan.local">
+        灵山胜境AI导游团队
+    </author>
+
+    <!-- 启动画面配置（不依赖 cordova-plugin-splashscreen，使用纯 CSS 方案） -->
+
+    <!-- 应用图标（自动适配各 dpi） -->
+    <icon src="res/icon/android/icon-192.png" />
+    <icon density="ldpi" src="res/icon/android/icon-192.png" />
+    <icon density="mdpi" src="res/icon/android/icon-192.png" />
+    <icon density="hdpi" src="res/icon/android/icon-192.png" />
+    <icon density="xhdpi" src="res/icon/android/icon-192.png" />
+    <icon density="xxhdpi" src="res/icon/android/icon-512.png" />
+    <icon density="xxxhdpi" src="res/icon/android/icon-512.png" />
+    <icon platform="ios" src="res/icon/ios/icon-180.png" width="180" height="180" />
+
+    <!-- 启动画面（用 icon 替代，纯 CSS splash） -->
+
+    <!-- 核心偏好 -->
+    <preference name="Orientation" value="default" />
+    <preference name="Fullscreen" value="true" />
+    <preference name="DisallowOverscroll" value="true" />
+    <preference name="BackgroundColor" value="#FF1A1A2E" />
+    <preference name="HideKeyboardFormAccessoryBar" value="true" />
+    <preference name="KeepRunning" value="false" />
+    <preference name="StatusBarOverlaysWebView" value="true" />
+    <preference name="StatusBarBackgroundColor" value="#FF1A1A2E" />
+    <preference name="StatusBarStyle" value="lightcontent" />
+    <preference name="AndroidWindowSplashScreenBackground" value="#FF1A1A2E" />
+    <preference name="AndroidWindowSplashScreenAnimatedIcon" value="res/icon/android/icon-192.png" />
+    <preference name="AndroidInsecureFileModeEnabled" value="true" />
+
+    <!-- 允许的域名（局域网 IP 配置） -->
+    <access origin="*" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+
+    <!-- 必需插件 -->
+    <plugin name="cordova-plugin-whitelist" spec="^1.3.5" />
+    <plugin name="cordova-plugin-statusbar" spec="^3.0.0" />
+    <plugin name="cordova-plugin-camera" spec="^7.0.0" />
+    <plugin name="cordova-plugin-geolocation" spec="^5.0.0" />
+    <plugin name="cordova-plugin-device-orientation" spec="^3.0.0" />
+
+    <!-- Android 平台 -->
+    <engine name="android" spec="^12.0.0" />
+
+    <!-- Android 权限 -->
+    <platform name="android">
+        <config-file parent="/*" target="AndroidManifest.xml">
+            <uses-permission android:name="android.permission.INTERNET" />
+            <uses-permission android:name="android.permission.CAMERA" />
+            <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+            <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+            <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+            <uses-feature android:name="android.hardware.camera" android:required="false" />
+            <uses-feature android:name="android.hardware.location.gps" android:required="false" />
+        </config-file>
+    </platform>
+</widget>

@@ -1,7 +1,7 @@
 import sys, os, json, struct, io
 
 # 工作空间基础路径 - 所有缓存和临时文件都放在 D 盘工作空间内，绝不写入 C 盘
-_WORKSPACE = r"D:\workbuddyplace\Claw\灵山胜境AI导游系统"
+_WORKSPACE = r"D:\lingshandaolan_live2d1\Claw\灵山胜境AI导游系统"
 _GPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # 必须在 import 任何库之前设置所有缓存路径

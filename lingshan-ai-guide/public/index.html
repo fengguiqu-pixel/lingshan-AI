@@ -2,8 +2,16 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#1a1a2e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
   <title>灵山胜境AI导游 - 管理后台</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: #f5f7fa; color: #333; }
@@ -121,14 +129,14 @@
   
   <div class="nav">
     <ul>
-      <li class="active" onclick="switchPage('dashboard')"><a href="#dashboard">数据概览</a></li>
-      <li><a href="/visualization.html" target="_blank">📊 数据可视化大屏</a></li>
-      <li onclick="switchPage('spots')"><a href="#spots">景点管理</a></li>
-      <li onclick="switchPage('faqs')"><a href="#faqs">FAQ管理</a></li>
-      <li onclick="switchPage('chat')"><a href="#chat">对话记录</a></li>
-      <li onclick="switchPage('routes')"><a href="#routes">路线管理</a></li>
-      <li onclick="switchPage('ticket')"><a href="#ticket">票务信息</a></li>
-      <li onclick="switchPage('knowledge')"><a href="#knowledge">📚 知识库</a></li>
+      <li class="active" data-page="dashboard" onclick="switchPage('dashboard')"><a href="#dashboard">数据概览</a></li>
+      <li data-page="visualization" onclick="openVisualization(event)"><a href="/admin/visualization" target="_blank">📊 数据可视化大屏</a></li>
+      <li data-page="spots" onclick="switchPage('spots')"><a href="#spots">景点管理</a></li>
+      <li data-page="faqs" onclick="switchPage('faqs')"><a href="#faqs">FAQ管理</a></li>
+      <li data-page="chat" onclick="switchPage('chat')"><a href="#chat">对话记录</a></li>
+      <li data-page="routes" onclick="switchPage('routes')"><a href="#routes">路线管理</a></li>
+      <li data-page="ticket" onclick="switchPage('ticket')"><a href="#ticket">票务信息</a></li>
+      <li data-page="knowledge" onclick="switchPage('knowledge')"><a href="#knowledge">📚 知识库</a></li>
     </ul>
   </div>
   
@@ -404,15 +412,17 @@
     let currentData = {};
     
     function switchPage(pageId) {
+      // 数据可视化大屏是独立的大屏页面，不参与本页 active 切换
+      if (pageId === 'visualization') return;
+
       document.querySelectorAll('.nav li').forEach(li => li.classList.remove('active'));
-      document.querySelectorAll('.nav li').forEach((li, idx) => {
-        const pages = ['dashboard', 'spots', 'faqs', 'chat', 'routes', 'ticket', 'knowledge'];
-        if (pages[idx] === pageId) li.classList.add('active');
-      });
-      
+      const navItem = document.querySelector(`.nav li[data-page="${pageId}"]`);
+      if (navItem) navItem.classList.add('active');
+
       document.querySelectorAll('.page-content').forEach(page => page.classList.remove('active'));
-      document.getElementById(pageId).classList.add('active');
-      
+      const pageEl = document.getElementById(pageId);
+      if (pageEl) pageEl.classList.add('active');
+
       if (pageId === 'dashboard') loadDashboard();
       if (pageId === 'spots') loadSpots();
       if (pageId === 'faqs') loadFaqs();
@@ -420,6 +430,15 @@
       if (pageId === 'routes') loadRoutes();
       if (pageId === 'ticket') loadTicketInfo();
       if (pageId === 'knowledge') loadKnowledge();
+    }
+
+    // 跳转到后台数据可视化大屏
+    function openVisualization(e) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      window.open('/admin/visualization', '_blank');
     }
     
     async function loadDashboard() {
@@ -1106,7 +1125,31 @@
       }
     }
     
-    document.addEventListener('DOMContentLoaded', loadDashboard);
+    function initFromHash() {
+      const hash = (location.hash || '#dashboard').replace('#', '');
+      // visualization 是独立页面，这里仅兜底；如果被 hash 化，跳转到大屏
+      if (hash === 'visualization') {
+        window.open('/admin/visualization', '_blank');
+        switchPage('dashboard');
+        return;
+      }
+      const validPages = ['dashboard', 'spots', 'faqs', 'chat', 'routes', 'ticket', 'knowledge'];
+      switchPage(validPages.includes(hash) ? hash : 'dashboard');
+    }
+
+    window.addEventListener('hashchange', initFromHash);
+    document.addEventListener('DOMContentLoaded', initFromHash);
+
+    // 注册 Service Worker（PWA 离线缓存）
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').then((reg) => {
+          console.log('[PWA] Service Worker registered:', reg.scope);
+        }).catch((err) => {
+          console.warn('[PWA] SW registration failed:', err);
+        });
+      });
+    }
   </script>
 </body>
 </html>

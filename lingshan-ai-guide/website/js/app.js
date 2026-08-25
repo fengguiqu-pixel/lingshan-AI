@@ -1,5 +1,29 @@
 // ===== 灵山胜境 AI数字人导游系统 - 应用逻辑 =====
 
+// 轻量 Toast 提示
+function showToast(message, type) {
+  type = type || 'info';
+  let toast = document.getElementById('appToast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'appToast';
+    toast.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);padding:12px 24px;border-radius:8px;font-size:14px;font-weight:500;z-index:100000;box-shadow:0 4px 16px rgba(0,0,0,0.2);transition:opacity 0.3s;opacity:0;pointer-events:none;';
+    document.body.appendChild(toast);
+  }
+  const colors = {
+    info: 'background:#D4A846;color:#fff;',
+    error: 'background:#E74C3C;color:#fff;',
+    success: 'background:#4CAF50;color:#fff;'
+  };
+  toast.style.cssText = toast.style.cssText.replace(/background:[^;]+;color:[^;]+;/, '') + (colors[type] || colors.info);
+  toast.textContent = message;
+  toast.style.opacity = '1';
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(function() {
+    toast.style.opacity = '0';
+  }, 3000);
+}
+
 // 当前状态
 let currentPage = 'home';
 let currentSpotIndex = 0;
@@ -10,6 +34,7 @@ function init() {
   renderParticles();
   renderStats();
   renderAIGuideFeatures();
+  renderARTourHomeGrid();
   renderMapSpotGrid();
   renderRoutes();
   renderTicketInfo();
@@ -20,6 +45,11 @@ function init() {
 
 // ===== 导航 =====
 function navigateTo(page, params) {
+  // 切换页面时先停止当前说话，避免地图页/AI导游页两个对话入口音频状态互相干扰
+  if (window.Live2DGuide?.stopSpeaking) {
+    window.Live2DGuide.stopSpeaking();
+  }
+
   // 隐藏所有页面
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
 
@@ -124,6 +154,24 @@ function renderAIGuideFeatures() {
       <div class="ai-feature-content">
         <h4>${f.title}</h4>
         <p>${f.text}</p>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ===== 首页 - AR 旅游入口 =====
+function renderARTourHomeGrid() {
+  const grid = document.getElementById('arTourHomeGrid');
+  if (!grid) return;
+  grid.innerHTML = SCENIC_SPOTS.map((spot, i) => `
+    <div class="ar-tour-home-card" onclick="openARTour(${i})">
+      <div class="ar-tour-home-card-img" style="background-image:url('${spot.heroImage}')">
+        <div class="ar-tour-home-card-badge">🥽 AR</div>
+        <div class="ar-tour-home-card-play">▶</div>
+      </div>
+      <div class="ar-tour-home-card-body">
+        <div class="ar-tour-home-card-name">${spot.name}</div>
+        <div class="ar-tour-home-card-tag">${spot.tag}</div>
       </div>
     </div>
   `).join('');
@@ -430,7 +478,25 @@ function updateSpotDistances() {
 }
 
 function selectSpot(index) {
+  console.log('[App] selectSpot called, index=', index);
+  // 点击景点卡片/标记：进入详细介绍页
   navigateTo('detail', index);
+}
+
+// 打开 AR 实景导览（手机版摄像头AR）
+function openARTour(index) {
+  console.log('[AR] openARTour called, index=', index, 'ARTour=', typeof window.ARTour);
+  if (window.ARTour && window.ARTour.open) {
+    try {
+      window.ARTour.open(index);
+    } catch (err) {
+      console.error('[AR] 打开 AR 导览失败:', err);
+      showToast('AR 导览启动失败: ' + err.message, 'error');
+    }
+  } else {
+    console.warn('[AR] ARTour 未加载');
+    showToast('AR 导览模块尚未加载，请刷新页面重试', 'error');
+  }
 }
 
 // ===== 标记点击 - 小灵介绍景点 =====
@@ -448,11 +514,27 @@ function onMarkerClick(index) {
     document.getElementById('mapSpotName').textContent = spot.name;
     document.getElementById('mapSpotDesc').textContent = spot.description.substring(0, 80) + '...';
 
-    // 绑定查看详情按钮（使用闭包，避免 inline onclick 作用域问题）
+    // 绑定 查看详情 按钮
     const detailBtn = document.getElementById('mapSpotDetailBtn');
     if (detailBtn) {
-      detailBtn.onclick = function() {
+      detailBtn.onclick = function(e) {
+        if (e) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+        console.log('[App] 点击查看详情, index=', index);
         navigateTo('detail', index);
+      };
+    }
+    // 绑定 AR 导览按钮
+    const arBtn = document.getElementById('mapSpotArBtn');
+    if (arBtn) {
+      arBtn.onclick = function(e) {
+        if (e) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+        openARTour(index);
       };
     }
     // 绑定步行导航按钮
@@ -514,7 +596,10 @@ function renderMapSpotGrid() {
           <div class="map-spot-card-item-tag">${it.spot.tag}</div>
           <div class="map-spot-card-item-desc">${it.spot.description.substring(0, 100)}...</div>
           ${distHtml}
-          <div class="map-spot-card-item-more">查看详情 →</div>
+          <div class="map-spot-card-item-actions" onclick="event.stopPropagation();">
+            <span class="map-spot-card-item-more detail">查看详情 →</span>
+            <span class="map-spot-card-item-more ar" onclick="openARTour(${it.index})">🥽 AR导览</span>
+          </div>
         </div>
       </div>
     `;
@@ -608,6 +693,18 @@ function renderDetail(index) {
         `).join('')}
       </div>
 
+      <!-- AR 实景导览入口 -->
+      <div class="detail-ar-section">
+        <div class="detail-ar-card" onclick="openARTour(${index})">
+          <div class="detail-ar-icon">🥽</div>
+          <div class="detail-ar-text">
+            <h3>AR 实景导览</h3>
+            <p>到达景区现场后，可开启摄像头实景导航与趣味互动</p>
+          </div>
+          <div class="detail-ar-arrow">→</div>
+        </div>
+      </div>
+
       <!-- 导航按钮 -->
       <div class="detail-nav">
         <div class="detail-nav-btn prev" onclick="navigateTo('detail', ${prevIndex})">
@@ -674,6 +771,37 @@ const QUICK_QUESTIONS = [
   '九龙灌浴几点开始？'
 ];
 
+// ===== 预合成快捷问题回复 =====
+const PREBUILT_RESPONSES = [
+  {
+    question: "灵山大佛有多高？",
+    answer: "小灵来啦！😊 灵山大佛可是咱们灵山胜境的“镇山之宝”哦！\n\n灵山大佛**通高88米**，其中佛体高79米，莲花座高9米，是我国最高的巨型青铜佛像。它由锡青铜铸造，总用铜量达**725吨**，可以抵御14级台风和八级地震，非常坚固！大佛右手施“无畏印”，左手施“与愿印”，寓意“天上天下，唯我独尊”，面朝太湖，背倚灵山，气势恢宏。\n\n如果您想近距离感受它的震撼，可以登上**218级台阶**的登云道，寓意“二谛十八界”，登顶后还能俯瞰太湖全景和整个灵山胜境，绝对不虚此行！🏔️\n\n还有什么想了解的吗？小灵随时为您解答～",
+    audioUrl: 'audio/prebuilt/q0.wav'
+  },
+  {
+    question: "推荐一条亲子游览路线",
+    answer: "小灵来啦！带宝贝来灵山胜境，那可要好好规划一下，让大人孩子都玩得开心又轻松～根据咱们景区的特色，小灵为您推荐这样一条亲子路线：\n\n**上午：吉祥开篇，欢乐互动**\n1. **入口广场**：先去看看“天下第一掌”和“百子戏弥勒”铜雕，孩子们可以摸摸佛手，讨个吉利，百子弥勒的憨态可掬最适合拍照打卡。\n2. **九龙灌浴（看准表演时间）**：这是孩子们最喜欢的动态景观！音乐响起时，九条巨龙喷水沐浴太子佛，太子像缓缓旋转，场面非常震撼。记得带个小瓶子，接一点“吉祥圣水”哦。\n3. **菩提大道与登云道**：带着孩子数一数218级台阶，象征“二谛十八界”，边走边讲小故事，登顶后俯瞰太湖全景，成就感满满。\n\n**中午：能量补给，梵宫奇观**\n4. **灵山梵宫**：进入“东方卢浮宫”，穹顶琉璃壁画、东阳木雕、敦煌壁画……孩子们会惊叹于这里的金碧辉煌。可以看一场《灵山吉祥颂》演出，声光电的佛祖成道故事，很吸引小朋友。\n\n**下午：文化探索，静心收尾**\n5. **五印坛城**：藏式建筑的白墙金顶、转经筒，对小朋友来说很新奇，可以体验一下藏文化展览，感受多元佛教文化。\n6. **祥符禅寺**：看看千年银杏树和古碑刻，在古刹里走走，给孩子讲讲玄奘法师弟子建寺的故事，安静又有韵味。\n\n**小贴士**：\n- 景区面积大，建议穿舒适的鞋子，推婴儿车的话主要走平缓路线。\n- 九龙灌浴每天有多场表演，进园时先拍下时间表，别错过。\n- 如果时间充裕，还可以顺道去山下的**禅意小镇·拈花湾**，晚上看《禅行》光影秀，适合亲子夜游。\n\n这条路线动静结合，既有孩子喜欢的动态景观，也有艺术震撼和自然风光，希望您和宝贝在灵山度过吉祥平安的一天！如果还有具体想了解的，随时问小灵～",
+    audioUrl: 'audio/prebuilt/q1.wav'
+  },
+  {
+    question: "灵山梵宫有什么看点？",
+    answer: "游客您好呀！说到灵山梵宫，小灵可太喜欢啦！它被誉为“东方卢浮宫”，是世界佛教论坛的永久会址，外观是五座华塔，融合了传统佛教建筑和现代建筑艺术，非常震撼。\n\n它的看点可不少，小灵给您列几个重点：\n\n1. **穹顶琉璃壁画**：梵宫内部的穹顶和琉璃壁画非常华丽，色彩斑斓，是工匠们精心打造的佛教艺术精品。\n2. **东阳木雕（金丝楠木）**：用珍贵的金丝楠木雕刻而成，细节栩栩如生，展现了高超的传统工艺。\n3. **敦煌手工壁画**：把敦煌壁画的艺术精髓搬到了这里，让人仿佛置身于千年佛国。\n4. **圣坛剧场《灵山吉祥颂》**：这是一场大型音乐史诗情景剧，用声光电技术重现释迦牟尼成佛的过程，非常震撼，值得一看！\n5. **珍宝馆**：里面展出了许多佛教文物和艺术珍品，能让人大开眼界。\n\n如果您来灵山胜境，梵宫绝对是必打卡的地方！建议您留出充足时间，慢慢欣赏它的每一处细节哦～有其他想了解的，随时问小灵！😊",
+    audioUrl: 'audio/prebuilt/q2.wav'
+  },
+  {
+    question: "门票多少钱？",
+    answer: "您好呀，我是小灵！😊 关于灵山胜境的门票价格，小灵的知识库里暂时没有最新的票价信息呢。不过我可以告诉您一些实用建议：\n\n1. **建议您通过官方渠道查询**：可以关注“灵山胜境”官方微信公众号或官网，获取最新的门票价格和优惠政策。\n2. **常见票种**：通常景区会分为成人票、学生票、老年票等，可能还会有联票（比如包含拈花湾的套票）。\n3. **优惠信息**：一般会有儿童、学生、军人、残疾人等优惠，具体以景区当日公布为准。\n4. **节假日提醒**：法定节假日或旺季价格可能会有调整，建议提前预订。\n\n如果您需要更准确的信息，可以拨打景区客服电话咨询，或者到现场售票窗口了解。希望您来灵山胜境玩得开心，感受“东方佛国”的宁静与庄严！🙏 有其他问题随时问小灵哦~",
+    audioUrl: 'audio/prebuilt/q3.wav'
+  },
+  {
+    question: "九龙灌浴几点开始？",
+    answer: "小灵来啦～关于九龙灌浴的表演时间，这可是很多游客关心的重点呢！\n\n根据灵山胜境景区的安排，**九龙灌浴每天有多场定时表演**，具体时间会随季节和节假日有所调整。一般来说，白天的常规场次大致在上午和下午各有一到两场，比如常见的时间段是 **10:00** 和 **14:00** 左右。\n\n不过，小灵要提醒你哦：\n1. **节假日或特殊活动期间**，场次可能会增加，比如浴佛节（农历四月初八）会有特别场次。\n2. **具体时间以景区当天公告为准**，建议你入园时在入口处或通过官方小程序确认一下，免得错过精彩瞬间～\n\n小贴士：九龙灌浴表演时，中央的鎏金太子像会徐徐旋转，九条巨龙喷水沐浴，场面非常震撼！记得提前10分钟到场，找个好位置，还能在结束后接一杯“吉祥圣水”呢～😊\n\n如果还有其他问题，随时问小灵！",
+    audioUrl: 'audio/prebuilt/q4.wav'
+  }
+];
+// ===== 预合成快捷问题回复结束 =====
+
+
 const GPT_SOVITS_CONFIG = { character: '三月七' };
 window.GPT_SOVITS_CONFIG = GPT_SOVITS_CONFIG;
 
@@ -728,11 +856,16 @@ function initChat() {
   // 欢迎消息
   addChatMessage('ai', welcomeMsg);
 
-  // Live2D 数字人说欢迎语
+  // Live2D 数字人说欢迎语（预合成音频，语速固定不波动）
   if (window.Live2DGuide) {
     window.Live2DGuide.onReady(() => {
       window.Live2DGuide.setExpression('wave');
-      window.Live2DGuide.speak('您好！我是小灵，很高兴为您服务！');
+      const welcomeSpeech = '您好！我是小灵，很高兴为您服务！';
+      if (window.Live2DGuide.speakAudio) {
+        window.Live2DGuide.speakAudio(welcomeSpeech, '/audio/prebuilt/welcome.wav');
+      } else {
+        window.Live2DGuide.speak(welcomeSpeech);
+      }
     });
   }
 
@@ -744,6 +877,16 @@ function initChat() {
 }
 
 function askQuickQuestion(question) {
+  const prebuilt = PREBUILT_RESPONSES.find(p => p.question === question);
+  if (prebuilt && window.Live2DGuide?.isReady()) {
+    // 使用预合成音频：显示用户问题 + AI 回答，并直接播放本地音频
+    addChatMessage('user', question);
+    document.getElementById('chatInput').value = '';
+    addChatMessage('ai', prebuilt.answer);
+    window.Live2DGuide.speakAudio(prebuilt.answer, prebuilt.audioUrl);
+    return;
+  }
+  // 兜底：走正常后端对话
   document.getElementById('chatInput').value = question;
   sendMessage();
 }

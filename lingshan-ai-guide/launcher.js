@@ -2,10 +2,24 @@
 const { spawn, exec } = require('child_process');
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
 
 const APP_DIR = path.dirname(process.execPath);
 const NODE_EXE = path.join(APP_DIR, 'runtime', 'node.exe');
 const SERVER_JS = path.join(APP_DIR, 'server.js');
+
+// 检测局域网 IP
+function getLocalIPs() {
+  const interfaces = os.networkInterfaces();
+  const ips = [];
+  for (const name of Object.keys(interfaces)) {
+    for (const iface of interfaces[name]) {
+      if (iface.internal || iface.family !== 'IPv4') continue;
+      ips.push({ name, address: iface.address });
+    }
+  }
+  return ips;
+}
 
 // 检查文件存在
 if (!fs.existsSync(NODE_EXE)) {
@@ -65,8 +79,8 @@ child.on('error', (err) => {
 setTimeout(() => {
   console.log('[启动] 正在打开浏览器...');
   const url = 'http://localhost:3000';
-  const cmd = process.platform === 'win32' 
-    ? 'start "" "' + url + '"' 
+  const cmd = process.platform === 'win32'
+    ? 'start "" "' + url + '"'
     : 'open "' + url + '"';
   exec(cmd, (err) => {
     if (err) {
@@ -75,13 +89,24 @@ setTimeout(() => {
       console.log('[启动] 浏览器已打开!');
     }
   });
+
+  const localIPs = getLocalIPs();
   console.log('');
   console.log('  ┌──────────────────────────────────┐');
-  console.log('  │  主前端:   http://localhost:3000  │');
-  console.log('  │  管理后台: http://localhost:3000/admin  │');
-  console.log('  │  数据大屏: http://localhost:3000/admin/visualization  │');
-  console.log('  │  关闭此窗口将停止服务            │');
+  console.log('  │  电脑访问:  http://localhost:3000 │');
+  console.log('  │  管理后台:  http://localhost:3000/admin  │');
+  console.log('  │  数据大屏:  http://localhost:3000/admin/visualization  │');
+  console.log('  │  手机扫码:  http://localhost:3000/qr  │');
   console.log('  └──────────────────────────────────┘');
+  if (localIPs.length > 0) {
+    console.log('');
+    console.log('  手机局域网访问 (手机需连同一 WiFi):');
+    localIPs.forEach(({ name, address }) => {
+      console.log('    [' + name + ']  http://' + address + ':3000/');
+    });
+  }
+  console.log('');
+  console.log('  关闭此窗口将停止服务');
   console.log('');
 }, 3000);
 

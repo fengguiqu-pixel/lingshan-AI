@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#1a1a2e">
+  <title>手机访问 · 灵山胜境AI导游</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/png" href="/icons/favicon-32.png">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(200, 163, 87, 0.3);
+      border-radius: 20px;
+      padding: 40px 30px;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+    }
+    .icon {
+      font-size: 60px;
+      margin-bottom: 16px;
+    }
+    h1 {
+      color: #C8A357;
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 14px;
+      margin-bottom: 30px;
+    }
+    .step {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 14px;
+      text-align: left;
+    }
+    .step-num {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      line-height: 24px;
+      text-align: center;
+      background: #C8A357;
+      color: #1a1a2e;
+      border-radius: 50%;
+      font-weight: bold;
+      font-size: 12px;
+      margin-right: 8px;
+    }
+    .step-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #C8A357;
+      margin-bottom: 6px;
+    }
+    .step-content {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.6;
+      margin-left: 32px;
+    }
+    .ip-list {
+      background: rgba(200, 163, 87, 0.1);
+      border: 1px dashed rgba(200, 163, 87, 0.4);
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 8px;
+    }
+    .ip-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 14px;
+    }
+    .ip-name {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 12px;
+    }
+    .ip-addr {
+      color: #C8A357;
+      font-weight: bold;
+    }
+    .copy-btn {
+      background: transparent;
+      border: 1px solid #C8A357;
+      color: #C8A357;
+      padding: 2px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 11px;
+      margin-left: 8px;
+    }
+    .copy-btn:hover { background: #C8A357; color: #1a1a2e; }
+    .url-box {
+      background: #1a1a2e;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-family: 'Consolas', monospace;
+      font-size: 13px;
+      color: #C8A357;
+      word-break: break-all;
+      user-select: all;
+      margin-top: 8px;
+    }
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 24px;
+    }
+    .btn {
+      flex: 1;
+      padding: 12px 20px;
+      border-radius: 8px;
+      border: none;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+    }
+    .btn-primary {
+      background: #C8A357;
+      color: #1a1a2e;
+    }
+    .btn-primary:hover { background: #b89347; }
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid #C8A357;
+      color: #C8A357;
+    }
+    .btn-secondary:hover { background: rgba(200, 163, 87, 0.1); }
+    .tip {
+      margin-top: 20px;
+      padding: 12px;
+      background: rgba(255, 152, 0, 0.1);
+      border-left: 3px solid #FF9800;
+      border-radius: 4px;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.7);
+      text-align: left;
+    }
+    .pwa-tip {
+      margin-top: 16px;
+      padding: 14px;
+      background: rgba(76, 175, 80, 0.1);
+      border-left: 3px solid #4CAF50;
+      border-radius: 4px;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.8);
+      text-align: left;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon">📱</div>
+    <h1>手机访问灵山AI导游</h1>
+    <p class="subtitle">手机扫码后即可在浏览器中使用<br>支持「添加到主屏幕」安装为应用</p>
+
+    <div class="step">
+      <div class="step-title"><span class="step-num">1</span>确保手机和电脑连同一个 WiFi</div>
+    </div>
+
+    <div class="step">
+      <div class="step-title"><span class="step-num">2</span>手机浏览器输入下面的地址</div>
+      <div class="step-content">
+        <div class="ip-list" id="ipList">
+          <div style="color:rgba(255,255,255,0.5);font-size:13px;">正在检测局域网 IP...</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-title"><span class="step-num">3</span>访问后点击「添加到主屏幕」</div>
+      <div class="step-content">
+        <div class="pwa-tip">
+          ✅ <b>iOS Safari</b>：底部「分享」按钮 → 添加到主屏幕<br>
+          ✅ <b>Android Chrome</b>：右上角菜单 → 安装应用 / 添加到主屏幕
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <a href="/" class="btn btn-primary">打开主页面</a>
+      <a href="/admin" class="btn btn-secondary">管理后台</a>
+    </div>
+
+    <div class="tip">
+      💡 <b>提示</b>：手机和电脑必须连同一个 WiFi（不能一个连 WiFi 一个连 4G）。<br>
+      如果打不开，请检查电脑防火墙是否放行了端口 3000。
+    </div>
+  </div>
+
+  <script>
+    // 从服务器获取局域网 IP 列表
+    fetch('/api/network')
+      .then((r) => r.json())
+      .then((data) => {
+        const list = document.getElementById('ipList');
+        if (!data.success || !data.ips || data.ips.length === 0) {
+          list.innerHTML = '<div style="color:#FF9800;font-size:13px;">未检测到局域网 IP，请手动查看电脑 IP</div>';
+          return;
+        }
+        list.innerHTML = data.ips
+          .filter((ip) => !ip.name.toLowerCase().includes('vmware') && !ip.name.toLowerCase().includes('virtualbox') && !ip.name.toLowerCase().includes('hyper-v'))
+          .map((ip) => {
+            const fullUrl = `http://${ip.address}:${data.port}/`;
+            return `
+              <div class="ip-item">
+                <span class="ip-name">[${ip.name}]</span>
+                <span class="ip-addr">${ip.address}:${data.port}</span>
+                <button class="copy-btn" onclick="copyText('${fullUrl}', this)">复制</button>
+              </div>
+              <div class="url-box">${fullUrl}</div>
+            `;
+          })
+          .join('');
+      })
+      .catch(() => {
+        document.getElementById('ipList').innerHTML =
+          '<div style="color:#FF9800;font-size:13px;">获取 IP 失败，请手动查看电脑网络信息</div>';
+      });
+
+    function copyText(text, btn) {
+      navigator.clipboard.writeText(text).then(() => {
+        const orig = btn.textContent;
+        btn.textContent = '已复制';
+        btn.style.background = '#4CAF50';
+        btn.style.color = '#fff';
+        btn.style.borderColor = '#4CAF50';
+        setTimeout(() => {
+          btn.textContent = orig;
+          btn.style.background = '';
+          btn.style.color = '';
+          btn.style.borderColor = '';
+        }, 1500);
+      });
+    }
+  </script>
+</body>
+</html>

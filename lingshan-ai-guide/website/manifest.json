@@ -1,0 +1,65 @@
+{
+  "name": "灵山胜境 AI 数字人导游",
+  "short_name": "灵山AI导游",
+  "description": "灵山胜境景区 AI 数字人导游系统，支持景点讲解、智能问答、路线推荐",
+  "start_url": "/?utm_source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#1a1a2e",
+  "theme_color": "#1a1a2e",
+  "lang": "zh-CN",
+  "dir": "ltr",
+  "categories": ["travel", "education", "lifestyle"],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-256.png",
+      "sizes": "256x256",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "灵山胜境 AI 数字人导游"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "数据可视化大屏",
+      "short_name": "数据大屏",
+      "description": "查看景区实时数据可视化大屏",
+      "url": "/admin/visualization?utm_source=pwa",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "管理后台",
+      "short_name": "后台",
+      "description": "进入管理后台",
+      "url": "/admin?utm_source=pwa",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#1a1a2e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>灵山胜境 · AI导游（手机版）</title>
+  <meta name="description" content="灵山胜境AI数字人导游手机版 - 地图导览、智能问答、路线推荐">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="icons/favicon-32.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="css/mobile.css">
+  <script charset="utf-8" src="https://map.qq.com/api/gljs?v=1.exp&key=WW2BZ-QDOL4-WNLUD-K3M7J-AISD2-E2BKZ"></script>
+</head>
+<body>
+  <!-- 启动画面 -->
+  <div id="splash" class="splash">
+    <div class="splash-logo">🛕</div>
+    <div class="splash-title">灵山胜境</div>
+    <div class="splash-sub">AI 数字人导游 · 手机版</div>
+    <div class="splash-loader"></div>
+  </div>
+
+  <!-- 应用容器 -->
+  <div id="app" class="app">
+    <!-- 顶部导航 -->
+    <header class="app-header">
+      <div class="header-left" id="headerLeft">
+        <button class="header-btn" id="backBtn" style="display:none">←</button>
+      </div>
+      <div class="header-title" id="headerTitle">灵山胜境</div>
+      <div class="header-right">
+        <button class="header-btn" id="userBtn" onclick="navigateTo('profile')">👤</button>
+      </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="app-main" id="appMain">
+      <!-- 首页 -->
+      <section class="page active" id="page-home">
+        <div class="home-hero">
+          <div class="home-welcome">
+            <h1 id="homeGreeting">您好，欢迎来到灵山胜境</h1>
+            <p>AI 导游小灵陪您智慧游灵山</p>
+          </div>
+          <div class="home-search" onclick="focusSearch()">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="homeSearchInput" placeholder="搜索景点、路线、问题..." readonly>
+          </div>
+          <div class="home-quick-actions">
+            <button class="quick-btn" onclick="navigateTo('map')">
+              <span class="quick-icon">🗺️</span>
+              <span>景点地图</span>
+            </button>
+            <button class="quick-btn" onclick="navigateTo('chat')">
+              <span class="quick-icon">💬</span>
+              <span>问小灵</span>
+            </button>
+            <button class="quick-btn" onclick="scrollToRoutes()">
+              <span class="quick-icon">🗺️</span>
+              <span>路线</span>
+            </button>
+            <button class="quick-btn" onclick="scrollToTickets()">
+              <span class="quick-icon">🎫</span>
+              <span>票务</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-header">
+            <h2>🔥 热门景点</h2>
+            <a onclick="navigateTo('map')">查看全部 →</a>
+          </div>
+          <div class="spot-scroll" id="homeSpotScroll">
+            <!-- 动态生成 -->
+          </div>
+        </div>
+
+        <div class="section" id="routesSection">
+          <div class="section-header">
+            <h2>🚩 推荐路线</h2>
+          </div>
+          <div class="route-list" id="homeRouteList">
+            <!-- 动态生成 -->
+          </div>
+        </div>
+
+        <div class="section" id="ticketsSection">
+          <div class="section-header">
+            <h2>🎫 票务信息</h2>
+          </div>
+          <div class="ticket-card">
+            <div class="ticket-price">
+              <span class="price-label">成人通票</span>
+              <span class="price-value">¥210<span>/人</span></span>
+            </div>
+            <ul class="ticket-list" id="homeTicketList">
+              <!-- 动态生成 -->
+            </ul>
+            <button class="ticket-btn" onclick="navigateTo('chat'); setTimeout(()=>askQuick('门票怎么买？'), 300)">咨询购票</button>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-header">
+            <h2>✨ 景区数据</h2>
+          </div>
+          <div class="stats-grid" id="homeStatsGrid">
+            <!-- 动态生成 -->
+          </div>
+        </div>
+      </section>
+
+      <!-- 地图页 -->
+      <section class="page" id="page-map">
+        <div class="map-container">
+          <div id="tencentMap" class="tencent-map"></div>
+          <button class="locate-btn" id="locateBtn" onclick="locateMe()" title="定位我的位置">📍</button>
+          <button class="nearest-btn" id="nearestBtn" onclick="navigateToNearest()" title="最近景点">🏃</button>
+        </div>
+        <div class="map-spot-card" id="mapSpotCard" style="display:none">
+          <div class="card-drag-handle"></div>
+          <div class="map-spot-header">
+            <div class="map-spot-num" id="mapSpotNum">1</div>
+            <div class="map-spot-info">
+              <div class="map-spot-name" id="mapSpotName">景点名称</div>
+              <div class="map-spot-tag" id="mapSpotTag">标签</div>
+            </div>
+            <button class="map-spot-close" onclick="closeMapCard()">×</button>
+          </div>
+          <div class="map-spot-desc" id="mapSpotDesc">景点简介...</div>
+          <div class="map-spot-distance" id="mapSpotDistance"></div>
+          <div class="map-spot-actions">
+            <button class="map-action-btn primary" onclick="openSpotDetailFromMap()">查看详情</button>
+            <button class="map-action-btn" onclick="startWalkNav()">步行导航</button>
+          </div>
+        </div>
+        <div class="map-hint" id="mapHint">点击地图标记查看景点</div>
+      </section>
+
+      <!-- 聊天页 -->
+      <section class="page" id="page-chat">
+        <div class="chat-header">
+          <div class="chat-avatar">🧘‍♀️</div>
+          <div class="chat-meta">
+            <div class="chat-name">小灵</div>
+            <div class="chat-status" id="chatStatus">AI 数字人导游</div>
+          </div>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+          <!-- 动态生成 -->
+        </div>
+        <div class="chat-quick" id="chatQuick">
+          <!-- 快捷问题 -->
+        </div>
+        <div class="chat-input-bar">
+          <input type="text" id="chatInput" class="chat-input" placeholder="输入您的问题..." onkeydown="if(event.key==='Enter') sendChat()">
+          <button class="chat-send" onclick="sendChat()">➤</button>
+        </div>
+      </section>
+
+      <!-- 我的/个人页 -->
+      <section class="page" id="page-profile">
+        <div class="profile-header">
+          <div class="profile-avatar">👤</div>
+          <div class="profile-info">
+            <div class="profile-name" id="profileName">游客</div>
+            <div class="profile-email" id="profileEmail">登录后可同步偏好</div>
+          </div>
+          <button class="profile-login-btn" id="profileLoginBtn" onclick="toggleLoginPanel()">登录 / 注册</button>
+        </div>
+
+        <div class="profile-menu">
+          <div class="menu-item" onclick="navigateTo('home')">
+            <span class="menu-icon">🏠</span>
+            <span>返回首页</span>
+          </div>
+          <div class="menu-item" onclick="navigateTo('map')">
+            <span class="menu-icon">🗺️</span>
+            <span>景点地图</span>
+          </div>
+          <div class="menu-item" onclick="navigateTo('chat')">
+            <span class="menu-icon">💬</span>
+            <span>问小灵</span>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-header">
+            <h2>🎯 我的兴趣</h2>
+          </div>
+          <div class="interest-grid" id="profileInterests">
+            <!-- 动态生成 -->
+          </div>
+          <button class="save-interest-btn" id="saveInterestBtn" onclick="saveInterests()">保存兴趣偏好</button>
+        </div>
+
+        <div class="profile-footer">
+          <p>灵山胜境 AI 数字人导游 · 手机版</p>
+          <p class="profile-version">v1.0.0</p>
+        </div>
+      </section>
+
+      <!-- 景点详情页（叠加在首页之上） -->
+      <section class="page page-detail" id="page-detail">
+        <div class="detail-scroll" id="detailScroll">
+          <div class="detail-hero" id="detailHero">
+            <button class="detail-back" onclick="closeDetail()">← 返回</button>
+            <div class="detail-hero-content">
+              <div class="detail-tag" id="detailTag">标签</div>
+              <h1 id="detailName">景点名称</h1>
+              <p id="detailSubtitle">副标题</p>
+            </div>
+          </div>
+          <div class="detail-body">
+            <div class="detail-info-bar" id="detailInfoBar">
+              <!-- 动态生成 -->
+            </div>
+            <h2 class="detail-section-title">景点介绍</h2>
+            <div class="detail-desc" id="detailDesc"></div>
+            <h2 class="detail-section-title">核心亮点</h2>
+            <div class="detail-highlights" id="detailHighlights"></div>
+            <h2 class="detail-section-title">游览须知</h2>
+            <div class="detail-tips" id="detailTips"></div>
+            <div class="detail-actions">
+              <button class="detail-action-btn primary" onclick="navigateTo('chat'); setTimeout(()=>askQuick('介绍一下' + currentSpot.name), 300)">问小灵</button>
+              <button class="detail-action-btn" onclick="navigateTo('map')">在地图中查看</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 登录面板 -->
+      <div class="login-panel" id="loginPanel" style="display:none">
+        <div class="login-card">
+          <button class="login-close" onclick="toggleLoginPanel()">×</button>
+          <h2 id="loginTitle">登录</h2>
+          <div class="login-tabs">
+            <button class="login-tab active" onclick="switchLoginTab('login')">登录</button>
+            <button class="login-tab" onclick="switchLoginTab('register')">注册</button>
+          </div>
+          <form id="loginForm" onsubmit="handleLogin(event)">
+            <input type="text" id="loginUsername" class="login-input" placeholder="用户名 / 邮箱" required>
+            <input type="password" id="loginPassword" class="login-input" placeholder="密码" required>
+            <button type="submit" class="login-submit">登录</button>
+            <div class="login-msg" id="loginMsg"></div>
+          </form>
+          <form id="registerForm" style="display:none" onsubmit="handleRegister(event)">
+            <input type="text" id="regUsername" class="login-input" placeholder="用户名（2-16字符）" required>
+            <input type="email" id="regEmail" class="login-input" placeholder="邮箱" required>
+            <input type="password" id="regPassword" class="login-input" placeholder="密码（6-20位）" required>
+            <input type="password" id="regPasswordConfirm" class="login-input" placeholder="确认密码" required>
+            <button type="submit" class="login-submit">注册</button>
+            <div class="login-msg" id="registerMsg"></div>
+          </form>
+        </div>
+      </div>
+    </main>
+
+    <!-- 底部导航 -->
+    <nav class="tab-bar" id="tabBar">
+      <button class="tab-item active" data-tab="home" onclick="switchTab('home')">
+        <span class="tab-icon">🏠</span>
+        <span class="tab-label">首页</span>
+      </button>
+      <button class="tab-item" data-tab="map" onclick="switchTab('map')">
+        <span class="tab-icon">🗺️</span>
+        <span class="tab-label">地图</span>
+      </button>
+      <button class="tab-item tab-main" data-tab="chat" onclick="switchTab('chat')">
+        <span class="tab-icon">💬</span>
+        <span class="tab-label">小灵</span>
+      </button>
+      <button class="tab-item" data-tab="profile" onclick="switchTab('profile')">
+        <span class="tab-icon">👤</span>
+        <span class="tab-label">我的</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Live2D 数字人导游 SDK -->
+  <script src="vendor/live2dcubismcore.min.js" data-runtime-src="vendor/live2dcubismcore.min.js"></script>
+  <script src="vendor/cubism/framework/live2d-runtime.min.js"></script>
+  <script>
+    // TTS 语音合成配置（与电脑版一致）
+    window.GPT_SOVITS_CONFIG = { character: '三月七' };
+  </script>
+  <script src="js/live2d-integration.js?v=1"></script>
+  <script src="js/config.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/mobile-app.js?v=3"></script>
+</body>
+</html>

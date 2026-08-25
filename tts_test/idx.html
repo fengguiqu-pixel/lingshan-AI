@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#1a1a2e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="灵山AI导游">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="description" content="灵山胜境AI数字人导游系统 - 智能导览、景点介绍、路线规划">
+  <title>灵山胜境 · AI数字人导游系统</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="css/style.css?v=27">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%23C8A357'/><text y='68' x='50' font-size='60' text-anchor='middle' fill='white'>灵</text></svg>">
+  <script>
+    // 注册 Service Worker（PWA 离线缓存）
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js?v=2.7').then((reg) => {
+          console.log('[PWA] Service Worker registered:', reg.scope);
+          // 确保新版本立即生效
+          if (reg.waiting) {
+            reg.waiting.postMessage('SKIP_WAITING');
+          }
+          reg.addEventListener('updatefound', () => {
+            const newWorker = reg.installing;
+            if (newWorker) {
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'activated') {
+                  console.log('[PWA] New Service Worker activated');
+                }
+              });
+            }
+          });
+        }).catch((err) => {
+          console.warn('[PWA] SW registration failed:', err);
+        });
+      });
+    }
+  </script>
+</head>
+<body>
+
+  <!-- 导航栏 -->
+  <nav class="navbar">
+    <div class="nav-logo" onclick="navigateTo('home')">
+      <div class="nav-logo-icon">灵</div>
+      <div class="nav-logo-text">灵山胜境<span>·AI导览</span></div>
+    </div>
+    <ul class="nav-menu">
+      <li><a data-nav="recommend" onclick="navigateTo('recommend')">🎯 个性推荐</a></li>
+      <li><a data-nav="map" onclick="navigateTo('map')">景点导览</a></li>
+      <li><a data-nav="routes" onclick="navigateTo('routes')">路线规划</a></li>
+      <li><a data-nav="ai-chat" onclick="navigateTo('ai-chat')">AI导游</a></li>
+      <li><a data-nav="ticket" onclick="navigateTo('ticket')">票务信息</a></li>
+      <li><a data-nav="avatar-manager" onclick="navigateTo('avatar-manager')">数字人形象</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="/qr" target="_blank" class="nav-btn" style="text-decoration:none;">📱 手机访问</a>
+      <button id="navUserBtn" class="nav-btn nav-account-btn" onclick="navigateTo('auth')">登录 / 注册</button>
+      <button class="nav-btn" onclick="navigateTo('ai-chat')">与小灵对话</button>
+    </div>
+  </nav>
+
+  <!-- 首页 -->
+  <div id="page-home" class="page">
+    <section class="hero">
+      <div class="hero-particles" id="particles"></div>
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="hero-badge-dot"></span>
+          AI数字人导游 · 实时在线
+        </div>
+        <h1 class="hero-title">灵山胜境<br>AI数字人导游系统</h1>
+        <p class="hero-subtitle">
+          融合大语言模型与计算机视觉技术，为每一位游客提供智能、个性化、多语言的沉浸式游览体验。<br>
+          88米灵山大佛、7.2万㎡梵宫艺术殿堂、千年禅寺古刹 —— 开启一场心灵之旅。
+        </p>
+        <div class="hero-buttons">
+          <button class="hero-btn-primary" onclick="navigateTo('map')">
+            <span>🗺️</span> 开始游览
+          </button>
+          <button class="hero-btn-ar" onclick="openARTour(0)">
+            <span>🥽</span> AR导览
+          </button>
+          <button class="hero-btn-secondary" onclick="navigateTo('ai-chat')">
+            <span>💬</span> 咨询小灵
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="stats-section">
+      <div class="stats-grid" id="statsGrid"></div>
+    </section>
+
+    <section class="ai-guide-section">
+      <div class="ai-guide-container">
+        <div class="section-title">
+          <h2>AI数字人导游 · 小灵</h2>
+          <p>您的专属智能游览伴侣</p>
+        </div>
+        <div class="ai-guide-card">
+          <div class="ai-guide-avatar">
+            <div class="ai-avatar-circle"><img src="assets/march7th-avatar.png" alt="三月七"></div>
+            <div class="ai-guide-name">小灵</div>
+            <div class="ai-guide-title">AI Digital Guide</div>
+          </div>
+          <div class="ai-guide-features" id="aiGuideFeatures"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AR 旅游 -->
+    <section class="ar-tour-section-home">
+      <div class="section-title">
+        <h2>🥽 AR 旅游</h2>
+        <p>360° 全景沉浸，身临其境地探索灵山胜境</p>
+      </div>
+      <div class="ar-tour-home-grid" id="arTourHomeGrid">
+        <!-- 动态生成 5 个场景 -->
+      </div>
+    </section>
+  </div>
+
+  <!-- 景点导览页 -->
+  <div id="page-map" class="page map-page">
+    <!-- 左侧竖向菜单 -->
+    <div class="map-sidebar">
+      <button class="map-sidebar-btn active" id="sidebarMapBtn" onclick="switchMapMode('map')" title="地图">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
+          <line x1="8" y1="2" x2="8" y2="18"/>
+          <line x1="16" y1="6" x2="16" y2="22"/>
+        </svg>
+        <span>地图</span>
+      </button>
+      <button class="map-sidebar-btn" id="sidebarListBtn" onclick="switchMapMode('list')" title="景点列表">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="8" y1="6" x2="21" y2="6"/>
+          <line x1="8" y1="12" x2="21" y2="12"/>
+          <line x1="8" y1="18" x2="21" y2="18"/>
+          <line x1="3" y1="6" x2="3.01" y2="6"/>
+          <line x1="3" y1="12" x2="3.01" y2="12"/>
+          <line x1="3" y1="18" x2="3.01" y2="18"/>
+        </svg>
+        <span>景点列表</span>
+      </button>
+    </div>
+
+    <!-- 地图模式 -->
+    <div class="map-content" id="mapContent">
+      <!-- 数字人区域（Live2D 面板会通过 CSS 定位到这里） -->
+      <div class="map-char-zone">
+        <div class="map-char-placeholder">
+          <div class="map-char-hint">小灵正在为您导览</div>
+        </div>
+      </div>
+      <!-- 腾讯地图 -->
+      <div class="map-map-zone">
+        <div id="tencentMap" style="width:100%;height:100%;"></div>
+        <!-- 定位控制按钮 -->
+        <div class="map-locate-control">
+          <button class="map-locate-btn" id="locateMeBtn" onclick="locateMe()" title="定位我的位置">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3" fill="currentColor"/>
+              <circle cx="12" cy="12" r="8"/>
+              <line x1="12" y1="2" x2="12" y2="5"/>
+              <line x1="12" y1="19" x2="12" y2="22"/>
+              <line x1="2" y1="12" x2="5" y2="12"/>
+              <line x1="19" y1="12" x2="22" y2="12"/>
+            </svg>
+          </button>
+          <button class="map-locate-btn nearest" id="nearestBtn" onclick="navigateToNearestSpot()" title="导航到最近景点" style="display:none;">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="3 11 22 2 13 21 11 13 3 11"/>
+            </svg>
+          </button>
+        </div>
+        <!-- 游客位置状态条 -->
+        <div class="map-locate-status" id="locateStatus" style="display:none;">
+          <span class="map-locate-status-dot"></span>
+          <span class="map-locate-status-text" id="locateStatusText">正在定位...</span>
+        </div>
+        <!-- 景点信息浮层 -->
+        <div class="map-spot-card" id="mapSpotCard" style="display:none;">
+          <div class="map-spot-card-header">
+            <span class="map-spot-card-num" id="mapSpotNum">1</span>
+            <span class="map-spot-card-name" id="mapSpotName">灵山大佛</span>
+          </div>
+          <div class="map-spot-card-desc" id="mapSpotDesc"></div>
+          <div class="map-spot-card-distance" id="mapSpotDistance" style="display:none;"></div>
+          <div class="map-spot-card-actions">
+            <button class="map-spot-card-btn" id="mapSpotDetailBtn">查看详情 →</button>
+            <button class="map-spot-card-btn ar" id="mapSpotArBtn">🥽 AR</button>
+          </div>
+          <button class="map-spot-card-btn walk" id="mapSpotWalkBtn" style="display:none;">🚶 步行导航</button>
+        </div>
+      </div>
+      <!-- 地图页常驻对话 -->
+      <div class="map-chat-widget" id="mapChatWidget">
+        <div class="map-chat-panel" id="mapChatPanel">
+            <div class="map-chat-panel-header" id="mapChatHeader">
+              <span class="map-chat-panel-title">💬 问小灵<span class="drag-hint">（按住拖动）</span></span>
+            </div>
+          <div class="map-chat-messages" id="mapChatMessages"></div>
+          <div class="map-chat-input-area">
+            <input type="text" class="map-chat-input" id="mapChatInput" placeholder="输入您的问题..." onkeypress="if(event.key==='Enter') sendMapChatMessage()">
+            <button class="map-chat-send-btn" onclick="sendMapChatMessage()">➤</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 景点列表模式 -->
+    <div class="map-list-content" id="mapListContent" style="display:none;">
+      <div class="map-list-header">
+        <h2>景点列表</h2>
+        <p>选择景点查看详细介绍</p>
+      </div>
+      <div class="map-spot-grid" id="mapSpotGrid"></div>
+    </div>
+  </div>
+
+  <!-- 景点详情页 -->
+  <div id="page-detail" class="page detail-page">
+    <div id="detailContent"></div>
+  </div>
+
+  <!-- 路线规划页 -->
+  <div id="page-routes" class="page routes-page">
+    <div class="routes-header">
+      <h1>智能路线规划</h1>
+      <p>AI根据时间、兴趣与体力，为您推荐三条精选游览路线</p>
+    </div>
+    <div class="routes-container" id="routesContainer"></div>
+  </div>
+
+  <!-- AI导游对话页 -->
+  <div id="page-ai-chat" class="page ai-chat-page">
+    <div class="ai-chat-left">
+      <div class="ai-chat-header">
+        <h1>AI数字人导游 · 小灵</h1>
+        <p>有任何问题都可以问我，我随时为您服务</p>
+      </div>
+      <div class="ai-chat-container">
+        <div class="ai-chat-messages" id="chatMessages"></div>
+        <div class="chat-quick-questions" id="quickQuestions"></div>
+        <div class="chat-input-area">
+          <input type="text" class="chat-input" id="chatInput" placeholder="输入您的问题..." onkeypress="if(event.key==='Enter') sendMessage()">
+          <button class="chat-send-btn" onclick="sendMessage()">➤</button>
+        </div>
+      </div>
+    </div>
+    <div class="ai-chat-right">
+      <div class="ai-chat-char-bg"></div>
+    </div>
+  </div>
+
+  <!-- 票务信息页 -->
+  <div id="page-ticket" class="page" style="padding-top:64px;">
+    <div class="ticket-section">
+      <div class="ticket-card">
+        <div class="ticket-info">
+          <h2>灵山胜境门票</h2>
+          <p>一票通游五大核心景点</p>
+          <ul class="ticket-list" id="ticketList"></ul>
+        </div>
+        <div class="ticket-price-display">
+          <div class="ticket-price">¥210</div>
+          <div class="ticket-price-unit">/人</div>
+          <div class="ticket-price-label">成人通票</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 个性化推荐页 -->
+  <div id="page-recommend" class="page recommend-page">
+    <!-- Step 1: 兴趣选择 -->
+    <div class="recommend-section" id="recommendStep1">
+      <div class="recommend-header">
+        <h1>🎯 个性化游览推荐</h1>
+        <p>告诉我您的兴趣偏好，小灵为您量身定制专属游览方案</p>
+      </div>
+      <div class="interest-tags" id="interestTags">
+        <button class="interest-tag" data-id="history" onclick="toggleInterest('history', this)">
+          <span class="interest-icon">🏛️</span>
+          <span class="interest-name">历史文化</span>
+          <span class="interest-desc">千年古刹、佛教传承</span>
+        </button>
+        <button class="interest-tag" data-id="nature" onclick="toggleInterest('nature', this)">
+          <span class="interest-icon">🌿</span>
+          <span class="interest-name">自然风光</span>
+          <span class="interest-desc">太湖山水、园林景致</span>
+        </button>
+        <button class="interest-tag" data-id="architecture" onclick="toggleInterest('architecture', this)">
+          <span class="interest-icon">🏗️</span>
+          <span class="interest-name">建筑艺术</span>
+          <span class="interest-desc">梵宫壁画、坛城藏韵</span>
+        </button>
+        <button class="interest-tag" data-id="buddhism" onclick="toggleInterest('buddhism', this)">
+          <span class="interest-icon">🙏</span>
+          <span class="interest-name">佛教文化</span>
+          <span class="interest-desc">礼佛祈福、禅意体验</span>
+        </button>
+        <button class="interest-tag" data-id="photo" onclick="toggleInterest('photo', this)">
+          <span class="interest-icon">📸</span>
+          <span class="interest-name">摄影打卡</span>
+          <span class="interest-desc">出片圣地、光影之美</span>
+        </button>
+        <button class="interest-tag" data-id="family" onclick="toggleInterest('family', this)">
+          <span class="interest-icon">👨‍👩‍👧‍👦</span>
+          <span class="interest-name">亲子同游</span>
+          <span class="interest-desc">趣味互动、寓教于乐</span>
+        </button>
+        <button class="interest-tag" data-id="zen" onclick="toggleInterest('zen', this)">
+          <span class="interest-icon">🍵</span>
+          <span class="interest-name">禅意慢游</span>
+          <span class="interest-desc">静心品茗、修身养性</span>
+        </button>
+        <button class="interest-tag" data-id="food" onclick="toggleInterest('food', this)">
+          <span class="interest-icon">🍜</span>
+          <span class="interest-name">美食体验</span>
+          <span class="interest-desc">素斋文化、地方风味</span>
+        </button>
+      </div>
+      <div class="recommend-actions">
+        <button class="recommend-submit-btn" id="recommendSubmitBtn" onclick="generateRecommendation()" disabled>
+          生成推荐方案 ✨
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 2: 推荐结果 -->
+    <div class="recommend-section" id="recommendStep2" style="display:none;">
+      <div class="recommend-results-header">
+        <button class="recommend-back-btn" onclick="backToInterests()">← 重新选择</button>
+        <div class="recommend-results-title">
+          <h2>您的专属推荐方案</h2>
+          <p id="recommendInterestSummary"></p>
+        </div>
+      </div>
+
+      <!-- 推荐路线 -->
+      <div class="recommend-routes" id="recommendRoutes"></div>
+
+      <!-- 推荐景点 -->
+      <div class="recommend-spots-section">
+        <h3>为您精选的必游景点</h3>
+        <div class="recommend-spots-grid" id="recommendSpots"></div>
+      </div>
+
+      <!-- 讲解重点 -->
+      <div class="recommend-focus-section">
+        <h3>🤖 AI导游 · 讲解侧重</h3>
+        <div class="recommend-focus-card">
+          <div class="recommend-focus-intro">根据您的兴趣，小灵将重点为您讲解以下内容：</div>
+          <div class="recommend-focus-items" id="recommendFocusItems"></div>
+        </div>
+      </div>
+
+      <div class="recommend-cta">
+        <button class="recommend-start-btn" onclick="startPersonalizedTour()">
+          🤖 开始个性化AI导览之旅 →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 数字人形象管理页 -->
+  <div id="page-avatar-manager" class="page avatar-manager-page">
+    <div class="am-container">
+      <div class="am-header">
+        <h1>🤖 数字人形象管理</h1>
+        <p>配置数字人导游的外观、服装与声音，打造贴合灵山胜境文化特色的专属形象</p>
+      </div>
+
+      <div class="am-layout">
+        <!-- 左侧：实时预览 -->
+        <div class="am-preview-panel">
+          <div class="am-preview-stage" id="amPreviewStage">
+            <div class="am-preview-avatar">
+              <img id="amPreviewImage" src="assets/march7th-avatar.png" alt="数字人预览">
+            </div>
+            <div class="am-preview-outfit-badge" id="amOutfitBadge">禅意汉服</div>
+          </div>
+          <div class="am-preview-info">
+            <div class="am-preview-name" id="amPreviewName">小灵</div>
+            <div class="am-preview-subtitle" id="amPreviewSubtitle">AI Digital Guide</div>
+          </div>
+          <div class="am-preview-stats">
+            <div class="am-preview-stat">
+              <span class="am-preview-stat-label">当前声线</span>
+              <span class="am-preview-stat-value" id="amPreviewVoice">三月七 v3</span>
+            </div>
+            <div class="am-preview-stat">
+              <span class="am-preview-stat-label">情感风格</span>
+              <span class="am-preview-stat-value" id="amPreviewEmotion">温暖亲切</span>
+            </div>
+          </div>
+          <button class="am-test-btn" id="amTestVoiceBtn" onclick="testVoice()">
+            🔊 试听声音
+          </button>
+        </div>
+
+        <!-- 右侧：设置区 -->
+        <div class="am-settings-panel">
+          <!-- Tab -->
+          <div class="am-tabs">
+            <button class="am-tab active" onclick="switchAvatarTab('appearance', this)">🎨 外观</button>
+            <button class="am-tab" onclick="switchAvatarTab('clothing', this)">👘 服装</button>
+            <button class="am-tab" onclick="switchAvatarTab('voice', this)">🎤 声音</button>
+            <button class="am-tab" onclick="switchAvatarTab('expression', this)">😊 表情&口型</button>
+            <button class="am-tab" onclick="switchAvatarTab('motion', this)">🏃 动作</button>
+          </div>
+
+          <!-- 外观面板 -->
+          <div class="am-tab-content active" id="amTabAppearance">
+            <div class="am-field">
+              <label>数字人名称</label>
+              <input type="text" id="amNameInput" placeholder="请输入名称" value="小灵" maxlength="12">
+            </div>
+            <div class="am-field">
+              <label>副标题</label>
+              <input type="text" id="amSubtitleInput" placeholder="如: AI Digital Guide" value="AI Digital Guide" maxlength="30">
+            </div>
+            <div class="am-field">
+              <label>欢迎语</label>
+              <textarea id="amGreetingInput" rows="3" placeholder="输入默认欢迎语">您好！我是小灵，灵山胜境AI数字人导游，很高兴为您服务。</textarea>
+            </div>
+            <div class="am-field">
+              <label>主题色</label>
+              <div class="am-color-row">
+                <input type="color" id="amColorInput" value="#C8A357">
+                <span class="am-color-hex" id="amColorHex">#C8A357</span>
+                <button class="am-color-preset" style="background:#C8A357" onclick="setAvatarColor('#C8A357')" title="灵山金"></button>
+                <button class="am-color-preset" style="background:#8B2628" onclick="setAvatarColor('#8B2628')" title="朱砂红"></button>
+                <button class="am-color-preset" style="background:#2F4F4F" onclick="setAvatarColor('#2F4F4F')" title="禅意青"></button>
+                <button class="am-color-preset" style="background:#4A6741" onclick="setAvatarColor('#4A6741')" title="竹韵绿"></button>
+                <button class="am-color-preset" style="background:#6B4C8A" onclick="setAvatarColor('#6B4C8A')" title="梵宫紫"></button>
+              </div>
+            </div>
+            <div class="am-field">
+              <label>背景色</label>
+              <div class="am-color-row">
+                <input type="color" id="amBgColorInput" value="#f5f0e8">
+                <span class="am-color-hex" id="amBgColorHex">#f5f0e8</span>
+              </div>
+            </div>
+            <div class="am-field">
+              <label>头像更换</label>
+              <div class="am-upload-area" id="amUploadArea" onclick="document.getElementById('amAvatarFile').click()">
+                <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="17 8 12 3 7 8"/>
+                  <line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+                <p>点击上传新头像 (PNG/JPG/GIF/WEBP)</p>
+                <input type="file" id="amAvatarFile" accept="image/png,image/jpeg,image/gif,image/webp" style="display:none" onchange="handleAvatarUpload(this)">
+              </div>
+              <div id="amUploadStatus" class="am-upload-status"></div>
+            </div>
+            <button class="am-save-btn" onclick="saveAppearance()">保存外观设置</button>
+          </div>
+
+          <!-- 服装面板 -->
+          <div class="am-tab-content" id="amTabClothing">
+            <p class="am-tab-desc">选择与灵山胜境文化特色相匹配的服装方案</p>
+            <div class="am-outfit-grid" id="amOutfitGrid">
+              <!-- JS 动态渲染 -->
+            </div>
+          </div>
+
+          <!-- 声音面板 -->
+          <div class="am-tab-content" id="amTabVoice">
+            <div class="am-field">
+              <label>声线选择</label>
+              <div class="am-voice-cards" id="amVoiceCards">
+                <!-- JS 动态渲染 -->
+              </div>
+            </div>
+            <div class="am-field">
+              <label>情感风格</label>
+              <div class="am-emotion-row" id="amEmotionRow">
+                <button class="am-emotion-btn active" data-emotion="warm" onclick="setVoiceEmotion('warm', this)">😊 温暖亲切</button>
+                <button class="am-emotion-btn" data-emotion="gentle" onclick="setVoiceEmotion('gentle', this)">🌸 温柔婉约</button>
+                <button class="am-emotion-btn" data-emotion="professional" onclick="setVoiceEmotion('professional', this)">🎙️ 专业沉稳</button>
+                <button class="am-emotion-btn" data-emotion="lively" onclick="setVoiceEmotion('lively', this)">🎵 活泼灵动</button>
+              </div>
+            </div>
+            <div class="am-field">
+              <label>语速 <span class="am-slider-val" id="amSpeedVal">1.0x</span></label>
+              <input type="range" class="am-slider" id="amSpeedSlider" min="0.5" max="2.0" step="0.1" value="1.0" oninput="updateSliderVal('amSpeedVal', this.value, 'x')">
+            </div>
+            <div class="am-field">
+              <label>音调 <span class="am-slider-val" id="amPitchVal">1.0</span></label>
+              <input type="range" class="am-slider" id="amPitchSlider" min="0.5" max="2.0" step="0.1" value="1.0" oninput="updateSliderVal('amPitchVal', this.value, '')">
+            </div>
+            <div class="am-field">
+              <label>音量 <span class="am-slider-val" id="amVolumeVal">80%</span></label>
+              <input type="range" class="am-slider" id="amVolumeSlider" min="0" max="100" step="5" value="80" oninput="updateSliderVal('amVolumeVal', this.value, '%')">
+            </div>
+            <button class="am-save-btn" onclick="saveVoice()">保存声音设置</button>
+          </div>
+
+          <!-- 表情&口型面板 -->
+          <div class="am-tab-content" id="amTabExpression">
+            <div class="am-subtabs">
+              <button class="am-subtab active" onclick="switchExprSubTab('expression', this)">🎭 表情映射</button>
+              <button class="am-subtab" onclick="switchExprSubTab('lipsync', this)">👄 口型同步</button>
+            </div>
+
+            <!-- 表情映射子面板 -->
+            <div class="am-expr-panel active" id="amExprPanel">
+              <p class="am-tab-desc">配置 AI 情绪关键词到 Live2D 表情/动作的映射关系，让数字人根据对话内容做出相应表情</p>
+
+              <div class="am-expr-list" id="amExprList">
+                <!-- JS 动态渲染 -->
+              </div>
+
+              <div class="am-expr-add-form" id="amExprAddForm">
+                <h4>➕ 新增表情映射</h4>
+                <div class="am-expr-add-row">
+                  <div class="am-expr-add-field">
+                    <label>触发词</label>
+                    <input type="text" id="amNewExprTrigger" placeholder="如: happy, think" maxlength="20">
+                  </div>
+                  <div class="am-expr-add-field">
+                    <label>类型</label>
+                    <select id="amNewExprKind" onchange="toggleExprMotionFields()">
+                      <option value="expression">表情 (Expression)</option>
+                      <option value="motion">动作 (Motion)</option>
+                    </select>
+                  </div>
+                  <div class="am-expr-add-field" id="amExprNameField">
+                    <label>表情名</label>
+                    <input type="text" id="amNewExprName" placeholder="如: smile, sad" maxlength="30">
+                  </div>
+                  <div class="am-expr-add-field" id="amExprGroupField" style="display:none;">
+                    <label>动作组</label>
+                    <input type="text" id="amNewExprGroup" placeholder="如: Greeting" maxlength="30">
+                  </div>
+                  <div class="am-expr-add-field" id="amExprIndexField" style="display:none;">
+                    <label>索引</label>
+                    <input type="number" id="amNewExprIndex" value="0" min="0" max="10">
+                  </div>
+                  <div class="am-expr-add-field" style="align-self:flex-end;">
+                    <button class="am-expr-add-btn" onclick="addExpressionMapping()">添加</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 口型同步子面板 -->
+            <div class="am-expr-panel" id="amLipSyncPanel">
+              <p class="am-tab-desc">调整数字人说话时的嘴部动画参数，让口型与语音更加自然同步</p>
+
+              <!-- 实时预览 -->
+              <div class="am-lipsync-preview" id="amLipSyncPreview">
+                <div class="am-lipsync-face" id="amLipSyncFace">
+                  <div class="am-lipsync-mouth" id="amLipSyncMouth">
+                    <svg viewBox="0 0 80 40" id="amMouthSvg">
+                      <path d="M10,20 Q40,10 70,20" fill="none" stroke="#5D4037" stroke-width="2.5" stroke-linecap="round"/>
+                    </svg>
+                  </div>
+                  <div class="am-lipsync-eyes">
+                    <div class="am-lipsync-eye"></div>
+                    <div class="am-lipsync-eye"></div>
+                  </div>
+                </div>
+                <button class="am-lipsync-test-btn" id="amLipSyncTestBtn" onclick="testLipSyncPreview()">▶ 预览动画</button>
+              </div>
+
+              <div class="am-field">
+                <label>嘴部参数 ID</label>
+                <input type="text" id="amLipParamId" value="ParamMouthOpenY" class="am-text-input">
+                <span class="am-field-hint">Live2D 模型中的嘴部开合参数名</span>
+              </div>
+
+              <div class="am-field">
+                <label>嘴巴张合幅度 <span class="am-slider-val" id="amLipAmpVal">0.6</span></label>
+                <input type="range" class="am-slider" id="amLipAmplitude" min="0.2" max="1.0" step="0.05" value="0.6" oninput="updateSliderVal('amLipAmpVal', this.value, '')">
+                <span class="am-field-hint">值越大嘴张得越开，建议 0.4-0.8</span>
+              </div>
+
+              <div class="am-field">
+                <label>平滑因子 <span class="am-slider-val" id="amLipSmoothVal">0.15</span></label>
+                <input type="range" class="am-slider" id="amLipSmoothFactor" min="0.01" max="0.50" step="0.01" value="0.15" oninput="updateSliderVal('amLipSmoothVal', this.value, '')">
+                <span class="am-field-hint">口型过渡平滑度，越小越丝滑</span>
+              </div>
+
+              <div class="am-field">
+                <label>更新间隔 <span class="am-slider-val" id="amLipPollVal">50ms</span></label>
+                <input type="range" class="am-slider" id="amLipPollInterval" min="20" max="120" step="5" value="50" oninput="updateSliderVal('amLipPollVal', this.value, 'ms')">
+                <span class="am-field-hint">嘴型刷新频率，越小越细腻</span>
+              </div>
+
+              <div class="am-field">
+                <label>张合速度 <span class="am-slider-val" id="amLipSpeedVal">10</span></label>
+                <input type="range" class="am-slider" id="amLipSpeedBase" min="4" max="20" step="1" value="10" oninput="updateSliderVal('amLipSpeedVal', this.value, '')">
+                <span class="am-field-hint">嘴部运动节奏感</span>
+              </div>
+
+              <button class="am-save-btn" onclick="saveLipSync()">💾 保存口型配置</button>
+            </div>
+          </div>
+
+          <!-- 动作面板 -->
+          <div class="am-tab-content" id="amTabMotion">
+            <p class="am-tab-desc">管理数字人的空闲动作播放、触发动作映射和动作预览，让数字人更灵动自然</p>
+
+            <!-- 动作预览区 -->
+            <div class="am-motion-preview-section">
+              <h4>🎬 可用动作</h4>
+              <div class="am-motion-cards" id="amMotionCards">
+                <!-- JS 动态渲染 -->
+              </div>
+            </div>
+
+            <!-- 空闲动作配置 -->
+            <div class="am-motion-config-section">
+              <h4>⏱️ 空闲动作设置</h4>
+              <div class="am-motion-config-row">
+                <div class="am-motion-config-item">
+                  <label>
+                    <input type="checkbox" id="amMotionIdleAuto" onchange="saveMotionConfig()">
+                    <span>启用自动空闲动作</span>
+                  </label>
+                  <span class="am-field-hint">数字人静止时自动播放 Idle 组动作</span>
+                </div>
+                <div class="am-motion-config-item">
+                  <label>
+                    <input type="checkbox" id="amMotionRandomize" onchange="saveMotionConfig()">
+                    <span>随机选择动作</span>
+                  </label>
+                  <span class="am-field-hint">关闭则按顺序循环播放</span>
+                </div>
+              </div>
+
+              <div class="am-field">
+                <label>空闲动作间隔 <span class="am-slider-val" id="amMotionIntVal">12秒</span></label>
+                <input type="range" class="am-slider" id="amMotionInterval" min="5" max="60" step="1" value="12" oninput="updateSliderVal('amMotionIntVal', this.value, '秒'); saveMotionConfig()">
+                <span class="am-field-hint">每隔多少秒触发一次随机空闲动作，建议 8-20 秒</span>
+              </div>
+
+              <div class="am-field">
+                <label>启用动作（勾选后生效）</label>
+                <div class="am-motion-checkboxes" id="amMotionCheckboxes">
+                  <!-- JS 动态渲染 -->
+                </div>
+              </div>
+
+              <div class="am-motion-config-item" style="margin-top:8px;">
+                <label>
+                  <input type="checkbox" id="amMotionAutoEmotion" onchange="saveMotionConfig()">
+                  <span>表情切换时联动播放动作</span>
+                </label>
+                <span class="am-field-hint">数字人做出表情时同时播放关联闲动作增强表现力</span>
+              </div>
+            </div>
+
+            <!-- 触发动作映射 -->
+            <div class="am-motion-config-section">
+              <h4>🔗 触发动作映射</h4>
+              <p style="font-size:12px;color:#999;margin-bottom:12px;">配置特定场景触发词对映的动作，如"打招呼"时播放问候动作</p>
+              <div class="am-motion-triggers" id="amMotionTriggers">
+                <!-- JS 动态渲染 -->
+              </div>
+
+              <div class="am-motion-add-trigger" id="amMotionAddForm">
+                <h5>➕ 新增触发映射</h5>
+                <div class="am-motion-add-row">
+                  <input type="text" id="amNewTriggerWord" placeholder="触发词 (如 greet, bye)" maxlength="20">
+                  <select id="amNewTriggerMotion" style="flex:1;">
+                    <!-- JS 动态渲染 -->
+                  </select>
+                  <button class="am-expr-add-btn" onclick="addMotionTrigger()">添加</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 登录/注册页 -->
+  <div id="page-auth" class="page auth-page">
+    <div class="auth-container">
+      <div class="auth-card">
+        <!-- 卡片左侧：品牌装饰 -->
+        <div class="auth-card-left">
+          <div class="auth-brand">
+            <div class="auth-brand-icon">灵</div>
+            <h2>灵山胜境</h2>
+            <p>AI数字人导游系统</p>
+          </div>
+          <div class="auth-brand-quote">
+            "开启智慧旅行，遇见更好的自己"
+          </div>
+          <div class="auth-brand-decor"></div>
+        </div>
+
+        <!-- 卡片右侧：表单区 -->
+        <div class="auth-card-right">
+          <!-- Tab 切换 -->
+          <div class="auth-tabs">
+            <button class="auth-tab active" onclick="switchAuthTab('login')">登录</button>
+            <button class="auth-tab" onclick="switchAuthTab('register')">注册</button>
+          </div>
+
+          <!-- 登录表单 -->
+          <form class="auth-form" id="loginForm" onsubmit="handleLogin(event)">
+            <div class="auth-field">
+              <label for="loginUsername">用户名 / 邮箱</label>
+              <div class="auth-input-wrap">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <input type="text" id="loginUsername" placeholder="请输入用户名或邮箱" required>
+              </div>
+            </div>
+            <div class="auth-field">
+              <label for="loginPassword">密码</label>
+              <div class="auth-input-wrap">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <input type="password" id="loginPassword" placeholder="请输入密码" required>
+                <button type="button" class="auth-pw-toggle" onclick="togglePassword('loginPassword')">👁</button>
+              </div>
+            </div>
+            <div class="auth-msg" id="loginMsg"></div>
+            <button type="submit" class="auth-submit-btn">登 录</button>
+            <div class="auth-hint">还没有账号？<a href="javascript:void(0)" onclick="switchAuthTab('register')">立即注册</a></div>
+          </form>
+
+          <!-- 注册表单 -->
+          <form class="auth-form" id="registerForm" style="display:none;" onsubmit="handleRegister(event)">
+            <div class="auth-field">
+              <label for="regUsername">用户名</label>
+              <div class="auth-input-wrap">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <input type="text" id="regUsername" placeholder="设置您的用户名" required minlength="2" maxlength="16">
+              </div>
+            </div>
+            <div class="auth-field">
+              <label for="regEmail">邮箱</label>
+              <div class="auth-input-wrap">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                <input type="email" id="regEmail" placeholder="请输入邮箱地址" required>
+              </div>
+            </div>
+            <div class="auth-field">
+              <label for="regPassword">密码</label>
+              <div class="auth-input-wrap">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <input type="password" id="regPassword" placeholder="设置密码（6-20位）" required minlength="6" maxlength="20">
+                <button type="button" class="auth-pw-toggle" onclick="togglePassword('regPassword')">👁</button>
+              </div>
+            </div>
+            <div class="auth-field">
+              <label for="regPasswordConfirm">确认密码</label>
+              <div class="auth-input-wrap">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <input type="password" id="regPasswordConfirm" placeholder="再次输入密码" required>
+              </div>
+            </div>
+            <div class="auth-msg" id="registerMsg"></div>
+            <button type="submit" class="auth-submit-btn">注 册</button>
+            <div class="auth-hint">已有账号？<a href="javascript:void(0)" onclick="switchAuthTab('login')">去登录</a></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-brand">灵山胜境 · AI数字人导游系统</div>
+    <p>智能导览 · 个性化推荐 · 多语言服务 · 实时定位</p>
+    <p style="margin-top:12px;opacity:0.4;">© 2026 灵山胜境AI数字人导游系统 · 技术演示版</p>
+  </footer>
+
+  <!-- Three.js 3D 引擎 -->
+  <script src="vendor/three.min.js?v=2"></script>
+
+  <!-- 腾讯地图 JSAPI -->
+  <script charset="utf-8" src="https://map.qq.com/api/gljs?v=1.exp&key=WW2BZ-QDOL4-WNLUD-K3M7J-AISD2-E2BKZ"></script>
+
+  <!-- Live2D 数字人导游 SDK -->
+  <script src="vendor/live2dcubismcore.min.js" data-runtime-src="vendor/live2dcubismcore.min.js"></script>
+  <script src="vendor/cubism/framework/live2d-runtime.min.js"></script>
+  <script src="js/live2d-integration.js?v=27"></script>
+  <script src="js/data.js?v=19"></script>
+  <script src="js/app.js?v=27"></script>
+  <script src="js/ar-tour.js?v=27"></script>
+</body>
+</html>

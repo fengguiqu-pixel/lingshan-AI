@@ -42,6 +42,7 @@
   let statusIndex = 0
   let modelReadyResolve = null
   let modelReadyPromise = null
+  let _hasPlayedGreeting = false  // 是否已播放过点击欢迎语
 
   // ---- DOM 缓存 ----
   let charPanel, charCanvas, charStatus, charLabel, toggleBtn, chatToggle
@@ -51,6 +52,8 @@
     isReady: () => isModelLoaded,
     say: speak,
     speak: speak,
+    speakAudio: speakAudio,
+    stopSpeaking: stopSpeaking,
     think: startThinking,
     stopThink: stopThinking,
     setExpression: setExpression,
@@ -212,6 +215,8 @@
       // 自检：确认嘴形参数可用
       testMouthParameter()
       startIdleCycle()
+      // ====== 首次点击 Live2D 角色自动播放欢迎语 ======
+      bindGreetingClick()
       modelReadyResolve?.()
       console.log('[Live2D] 数字人导游已就绪！')
     } catch (err) {
@@ -251,6 +256,49 @@
         <button class="l2d-retry-btn" onclick="location.reload()" style="margin-top:8px;padding:6px 16px;background:var(--primary);color:white;border:none;border-radius:6px;cursor:pointer;font-size:12px;">重试</button>
       </div>
     `
+  }
+
+  // ============================================================
+  //  首次点击 Live2D 角色 — 自动播放欢迎语音（验证 TTS 可用）
+  // ============================================================
+  function bindGreetingClick () {
+    const canvas = document.getElementById('l2dCanvas')
+    const container = document.getElementById('l2dCanvasContainer')
+    if (!canvas || !container) return
+    // 防止重复绑定
+    if (container.dataset.greetingBound === '1') return
+    container.dataset.greetingBound = '1'
+
+    const onGreetingClick = async (e) => {
+      // 点击的是按钮（关闭/收起），不触发欢迎语
+      if (e.target.closest('.l2d-action-btn, .l2d-close-btn, .l2d-toggle-btn')) return
+      if (_hasPlayedGreeting) {
+        // 已播放过：聚焦到聊天输入框，方便用户对话
+        const chatInput = document.getElementById('chatInput')
+        if (chatInput) {
+          chatInput.focus()
+        }
+        return
+      }
+      _hasPlayedGreeting = true
+      const greeting = '您好！欢迎来到灵山胜境 AI 数字人导游系统，我是小灵，很高兴为您服务。'
+      console.log('[Greeting] 首次点击 Live2D，自动播放欢迎语音...')
+      // 等待 speak 就绪
+      if (typeof window.Live2DGuide?.speak === 'function') {
+        try {
+          await window.Live2DGuide.speak(greeting)
+        } catch (err) {
+          console.warn('[Greeting] 播放失败:', err)
+        }
+      }
+    }
+
+    // 绑定到 canvas 和 container（让用户点击角色本体时触发）
+    canvas.addEventListener('click', onGreetingClick)
+    container.addEventListener('click', onGreetingClick)
+    // 移动端兼容
+    canvas.addEventListener('touchend', onGreetingClick)
+    console.log('[Greeting] 首次点击监听已绑定')
   }
 
   function showFallbackAvatar () {
@@ -443,10 +491,46 @@
   }
 
   // ============================================================
-  //  TTS 语音合成（GPT-SoVITS 三月七声线）
+  //  TTS 语音合成（GPT-SoVITS 三月七声线）+ 实时音频振幅分析
   // ============================================================
   let currentAudio = null
   let currentAbort = null
+  let audioContext = null       // Web Audio API context
+  let audioAnalyser = null      // 实时频谱分析器
+  let audioSourceNode = null    // 音频源节点
+  let audioDataArray = null     // 频谱数据缓冲
+
+  // 获取或创建 AudioContext（浏览器自动播放策略需要用户交互后才能恢复）
+  function getAudioContext () {
+    if (!audioContext) {
+      try {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)()
+      } catch (e) {
+        console.warn('[TTS] Web Audio API 不可用:', e.message)
+        return null
+      }
+    }
+    // 浏览器策略：suspended 状态下需要 resume
+    if (audioContext.state === 'suspended') {
+      audioContext.resume().catch(() => {})
+    }
+    return audioContext
+  }
+
+  // 从 AnalyserNode 读取当前音频振幅（0~1）
+  function getAudioAmplitude () {
+    if (!audioAnalyser || !audioDataArray) return -1
+    audioAnalyser.getByteTimeDomainData(audioDataArray)
+    // 计算 RMS（均方根）振幅，byte 数据范围 0~255，中心 128
+    let sum = 0
+    for (let i = 0; i < audioDataArray.length; i++) {
+      const v = (audioDataArray[i] - 128) / 128  // 归一化到 -1~1
+      sum += v * v
+    }
+    const rms = Math.sqrt(sum / audioDataArray.length)
+    // 归一化到 0~1，乘以增益系数让嘴形更明显
+    return Math.min(1, rms * 3.5)
+  }
 
   function speakTTS (text, onDone) {
     const config = window.GPT_SOVITS_CONFIG
@@ -454,12 +538,23 @@
     const plainText = text.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}\u{2600}-\u{27BF}\u{2700}-\u{27BF}]|[\u{1F000}-\u{1F9FF}]|[\u{1FA00}-\u{1FA6F}]|[\u{1FA70}-\u{1FAFF}]|[\u{2B50}]|[\u{2795}-\u{2797}]|[\u{2728}]|[\u{2764}]|[\u{2934}-\u{2935}]|[\u{2B05}-\u{2B07}]|[\u{2B1B}-\u{2B1C}]|[\u{25AA}-\u{25AB}]|[\u{25FB}-\u{25FE}]|[\u{23F0}-\u{23F3}]|[\u{23F8}-\u{23FA}]|[\u{231A}-\u{231B}]|[\u{23E9}-\u{23EC}]|🧘|🧧/gu, '').trim()
     if (!plainText) { onDone?.(); return }
 
+    // 新请求替换旧请求：先中止上一次尚未完成的合成，绝不堆积
+    if (currentAbort) { try { currentAbort.abort() } catch (e) {} }
     currentAbort = new AbortController()
+    const abortCtrl = currentAbort
+
+    // 130 秒硬超时：长文本 TTS 后端超时 120s，前端兜底比后端稍长
+    let ttsTimedOut = false
+    const timeoutId = setTimeout(() => {
+      ttsTimedOut = true
+      try { abortCtrl.abort() } catch (e) {}
+    }, 130000)
+
     fetch('/api/tts', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ text: plainText, character: config.character }),
-      signal: currentAbort.signal
+      signal: abortCtrl.signal
     })
     .then(resp => {
       if (!resp.ok) throw new Error('TTS error: ' + resp.status)
@@ -469,18 +564,75 @@
       const url = URL.createObjectURL(blob)
       const audio = new Audio(url)
       currentAudio = audio
-      audio.onended = () => { URL.revokeObjectURL(url); currentAudio = null; onDone?.() }
-      audio.onerror = () => { URL.revokeObjectURL(url); currentAudio = null; onDone?.() }
-      audio.play().catch(() => { URL.revokeObjectURL(url); currentAudio = null; onDone?.() })
+
+      // ===== Web Audio API: 连接 AnalyserNode 进行实时振幅分析 =====
+      try {
+        const ctx = getAudioContext()
+        if (ctx) {
+          // 断开旧连接
+          if (audioSourceNode) { try { audioSourceNode.disconnect() } catch(e){} }
+          // 创建新的媒体元素源
+          audioSourceNode = ctx.createMediaElementSource(audio)
+          // 创建分析器
+          audioAnalyser = ctx.createAnalyser()
+          audioAnalyser.fftSize = 512
+          audioAnalyser.smoothingTimeConstant = 0.6
+          audioDataArray = new Uint8Array(audioAnalyser.frequencyBinCount)
+          // 连接：source -> analyser -> destination
+          audioSourceNode.connect(audioAnalyser)
+          audioAnalyser.connect(ctx.destination)
+          console.log('[TTS] Web Audio Analyser 已连接，口型将跟随真实音频振幅')
+        }
+      } catch (e) {
+        console.warn('[TTS] Web Audio 连接失败，回退到正弦波嘴形:', e.message)
+        audioAnalyser = null
+      }
+
+      // 只响应当前这张 audio 的事件，防止旧音频在切换/打断后误触发 onDone
+      audio.onended = () => {
+        if (currentAudio !== audio) return
+        URL.revokeObjectURL(url)
+        currentAudio = null
+        if (audioSourceNode) { try { audioSourceNode.disconnect() } catch(e){} }
+        audioSourceNode = null
+        onDone?.()
+      }
+      audio.onerror = (e) => {
+        if (currentAudio !== audio) return
+        console.warn('[TTS] 音频播放错误:', e?.message || e)
+        URL.revokeObjectURL(url)
+        currentAudio = null
+        if (audioSourceNode) { try { audioSourceNode.disconnect() } catch(e){} }
+        audioSourceNode = null
+        onDone?.()
+      }
+      audio.play().catch((err) => {
+        if (currentAudio !== audio) return
+        console.warn('[TTS] 音频播放被阻止:', err?.message || err)
+        URL.revokeObjectURL(url)
+        currentAudio = null
+        if (audioSourceNode) { try { audioSourceNode.disconnect() } catch(e){} }
+        audioSourceNode = null
+        onDone?.()
+      })
     })
     .catch(err => {
-      if (err.name !== 'AbortError') console.warn('[TTS] GPT-SoVITS failed:', err)
-      onDone?.()
+      if (ttsTimedOut) {
+        console.warn('[TTS] 语音生成超时（130 秒），已自动取消')
+      } else if (err.name !== 'AbortError') {
+        console.warn('[TTS] GPT-SoVITS failed:', err)
+      }
+      // 关键修复：被主动 abort 的旧请求不再触发 onDone，
+      // 否则 stopSpeaking() 会把当前正在进行的新请求也一起杀死
+      if (err.name !== 'AbortError' && !ttsTimedOut) {
+        onDone?.()
+      }
     })
+    .finally(() => clearTimeout(timeoutId))
   }
 
   // ============================================================
-  //  说话 - 嘴形同步 + TTS
+  //  说话 - 真实音频驱动口型同步 + TTS
   // ============================================================
   function speak (text, callback) {
     const bubble = document.getElementById('l2dBubble')
@@ -493,37 +645,62 @@
     stopSpeaking()
     setStatus('speaking', '正在说话...')
 
+    // 确保 AudioContext 在用户交互后处于运行状态，避免切页后被浏览器挂起
+    const ctx = getAudioContext()
+    if (ctx && ctx.state === 'suspended') {
+      ctx.resume().catch(e => console.warn('[TTS] AudioContext resume failed:', e.message))
+    }
+
     if (live2dModel && isModelLoaded) {
       isSpeaking = true
 
-      // ===== 基于时间的正弦波嘴形动画 =====
+      // ===== 音频振幅驱动嘴形 + 正弦波混合 =====
+      // 优先使用 Web Audio API 的实时振幅数据
+      // 无音频数据时回退到正弦波（等待 TTS 生成中）
       const startTime = Date.now()
       const amplitude = CONFIG.speakParamValue            // 最大张嘴幅度
-      const speedHz = (CONFIG.speedBase || 8) + Math.random() * 4  // 每秒张合次数
-      const periodMs = 1000 / speedHz                     // 一个周期 ms
+      const speedHz = (CONFIG.speedBase || 8) + Math.random() * 4  // 正弦波频率
+      const periodMs = 1000 / speedHz
+      let smoothMouth = 0  // 平滑后的嘴形值
 
-      console.log('[Live2D Speak] 嘴形动画启动:', text.substring(0, 40),
-        '| amp=' + amplitude, 'speedHz=' + speedHz.toFixed(1),
-        'period=' + periodMs.toFixed(0) + 'ms',
-        'paramId=' + CONFIG.speakParamId)
+      console.log('[Live2D Speak] 嘴形动画启动（音频驱动模式）:', text.substring(0, 40),
+        '| amp=' + amplitude, 'paramId=' + CONFIG.speakParamId)
 
       speakTimer = setInterval(() => {
         if (!live2dModel || !isSpeaking) { clearInterval(speakTimer); return }
 
         const elapsed = Date.now() - startTime
-        const phase = (elapsed % periodMs) / periodMs          // 0..1
-        const mouthValue = phase < 0.5
-          ? amplitude * (phase * 2)          // 张嘴 0 → max
-          : amplitude * (2 - phase * 2)      // 闭嘴 max → 0
+        let mouthValue = 0
 
-        live2dModel.setParameterValue(CONFIG.speakParamId, mouthValue, 1.0)
+        // 尝试读取真实音频振幅
+        const audioAmp = getAudioAmplitude()
+        if (audioAmp >= 0 && currentAudio && !currentAudio.paused) {
+          // ===== 真实音频振幅驱动 =====
+          // 振幅映射到嘴形，叠加轻微正弦波让动作更自然
+          const sineWave = Math.sin(elapsed * 2 * Math.PI / periodMs) * 0.08
+          mouthValue = Math.max(0, Math.min(amplitude, audioAmp * amplitude + sineWave))
+        } else {
+          // ===== 正弦波回退模式（TTS 生成中，音频尚未播放） =====
+          const phase = (elapsed % periodMs) / periodMs
+          mouthValue = phase < 0.5
+            ? amplitude * (phase * 2) * 0.4          // 回退时减小幅度
+            : amplitude * (2 - phase * 2) * 0.4
+        }
+
+        // 平滑过渡（避免嘴形抖动过大）
+        const smoothFactor = CONFIG.smoothFactor || 0.15
+        smoothMouth = smoothMouth + (mouthValue - smoothMouth) * (1 / smoothFactor) * 0.05
+        smoothMouth = Math.max(0, Math.min(amplitude, smoothMouth))
+
+        live2dModel.setParameterValue(CONFIG.speakParamId, smoothMouth, 1.0)
 
         // 每秒输出一次调试
         const sec = Math.floor(elapsed / 1000)
         if (!window._lastLipLogSec || window._lastLipLogSec !== sec) {
           window._lastLipLogSec = sec
-          console.log('[Live2D Mouth] val=' + mouthValue.toFixed(3) +
-            ' phase=' + phase.toFixed(2) + ' t=' + sec + 's')
+          console.log('[Live2D Mouth] val=' + smoothMouth.toFixed(3) +
+            ' audioAmp=' + (audioAmp >= 0 ? audioAmp.toFixed(3) : 'N/A') +
+            ' t=' + sec + 's')
         }
       }, CONFIG.pollInterval)
     }
@@ -534,9 +711,133 @@
     })
   }
 
+  // ============================================================
+  //  播放预合成音频（带口型同步，不走 TTS）
+  // ============================================================
+  function speakAudio (text, audioUrl, callback) {
+    const bubble = document.getElementById('l2dBubble')
+    const bubbleText = document.getElementById('l2dBubbleText')
+    if (bubble && bubbleText) {
+      bubbleText.textContent = text
+      bubble.classList.add('active')
+    }
+
+    stopSpeaking()
+    setStatus('speaking', '正在说话...')
+
+    const ctx = getAudioContext()
+    if (ctx && ctx.state === 'suspended') {
+      ctx.resume().catch(e => console.warn('[TTS] AudioContext resume failed:', e.message))
+    }
+
+    if (live2dModel && isModelLoaded) {
+      isSpeaking = true
+      const startTime = Date.now()
+      const amplitude = CONFIG.speakParamValue
+      const speedHz = (CONFIG.speedBase || 8) + Math.random() * 4
+      const periodMs = 1000 / speedHz
+      let smoothMouth = 0
+
+      console.log('[Live2D SpeakAudio] 嘴形动画启动（预合成音频）:', text.substring(0, 40))
+
+      speakTimer = setInterval(() => {
+        if (!live2dModel || !isSpeaking) { clearInterval(speakTimer); return }
+
+        const elapsed = Date.now() - startTime
+        let mouthValue = 0
+        const audioAmp = getAudioAmplitude()
+        if (audioAmp >= 0 && currentAudio && !currentAudio.paused) {
+          const sineWave = Math.sin(elapsed * 2 * Math.PI / periodMs) * 0.08
+          mouthValue = Math.max(0, Math.min(amplitude, audioAmp * amplitude + sineWave))
+        } else {
+          const phase = (elapsed % periodMs) / periodMs
+          mouthValue = phase < 0.5
+            ? amplitude * (phase * 2) * 0.4
+            : amplitude * (2 - phase * 2) * 0.4
+        }
+
+        const smoothFactor = CONFIG.smoothFactor || 0.15
+        smoothMouth = smoothMouth + (mouthValue - smoothMouth) * (1 / smoothFactor) * 0.05
+        smoothMouth = Math.max(0, Math.min(amplitude, smoothMouth))
+        live2dModel.setParameterValue(CONFIG.speakParamId, smoothMouth, 1.0)
+      }, CONFIG.pollInterval)
+    }
+
+    const audio = new Audio(audioUrl)
+    currentAudio = audio
+
+    try {
+      const ctx = getAudioContext()
+      if (ctx) {
+        if (audioSourceNode) { try { audioSourceNode.disconnect() } catch(e){} }
+        audioSourceNode = ctx.createMediaElementSource(audio)
+        audioAnalyser = ctx.createAnalyser()
+        audioAnalyser.fftSize = 512
+        audioAnalyser.smoothingTimeConstant = 0.6
+        audioDataArray = new Uint8Array(audioAnalyser.frequencyBinCount)
+        audioSourceNode.connect(audioAnalyser)
+        audioAnalyser.connect(ctx.destination)
+        console.log('[TTS] Web Audio Analyser 已连接（预合成音频）')
+      }
+    } catch (e) {
+      console.warn('[TTS] Web Audio 连接失败（预合成）:', e.message)
+      audioAnalyser = null
+    }
+
+    const onDone = () => {
+      stopSpeaking()
+      if (callback) callback()
+    }
+
+    audio.onended = () => {
+      if (currentAudio !== audio) return
+      currentAudio = null
+      if (audioSourceNode) { try { audioSourceNode.disconnect() } catch(e){} }
+      audioSourceNode = null
+      onDone()
+    }
+    audio.onerror = (e) => {
+      if (currentAudio !== audio) return
+      console.warn('[TTS] 预合成音频播放错误:', e?.message || e)
+      currentAudio = null
+      if (audioSourceNode) { try { audioSourceNode.disconnect() } catch(e){} }
+      audioSourceNode = null
+      onDone()
+    }
+    audio.play().catch((err) => {
+      if (currentAudio !== audio) return
+      console.warn('[TTS] 预合成音频播放被阻止:', err?.message || err)
+      currentAudio = null
+      if (audioSourceNode) { try { audioSourceNode.disconnect() } catch(e){} }
+      audioSourceNode = null
+      onDone()
+    })
+  }
+
   function stopSpeaking () {
     if (currentAbort) { currentAbort.abort(); currentAbort = null }
-    if (currentAudio) { currentAudio.pause(); currentAudio = null }
+
+    // 彻底停止并释放旧音频，防止旧 Web Audio 节点占用 AudioContext 输出
+    if (currentAudio) {
+      try {
+        currentAudio.pause()
+        currentAudio.onended = null
+        currentAudio.onerror = null
+        currentAudio.oncanplay = null
+        currentAudio.onloadedmetadata = null
+        currentAudio.src = ''
+        currentAudio.load()
+      } catch (e) { /* ignore */ }
+      currentAudio = null
+    }
+
+    // 断开并清空 Web Audio 链路
+    if (audioSourceNode) { try { audioSourceNode.disconnect() } catch(e){} }
+    audioSourceNode = null
+    if (audioAnalyser) { try { audioAnalyser.disconnect() } catch(e){} }
+    audioAnalyser = null
+    audioDataArray = null
+
     if (speakTimer) { clearInterval(speakTimer); speakTimer = null }
     if (live2dModel) {
       live2dModel.setParameterValue(CONFIG.speakParamId, 0, 1)
